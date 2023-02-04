@@ -9,6 +9,10 @@ src/main.cpp
 
 src/CoreLayer/Math/Transform.cpp
 
+src/FunctionLayer/Camera/Camera.cpp
+src/FunctionLayer/Camera/Pinhole.cpp
+
+
 src/ResourceLayer/Image.cpp
 )
 target_include_directories(Moer PUBLIC ./externals)

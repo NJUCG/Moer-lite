@@ -165,3 +165,4 @@ private:
 
 using Vector2f = vecmat::vec2f;
 using Vector2i = vecmat::vec2i;
+using Matrix4f = vecmat::mat44f;

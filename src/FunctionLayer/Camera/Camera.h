@@ -1,6 +1,8 @@
 #pragma once
 #include "Ray.h"
 #include <FunctionLayer/Film/Film.h>
+#include <ResourceLayer/Factory.h>
+#include <ResourceLayer/JsonUtil.h>
 
 struct CameraSample {
   Vector2f xy;
@@ -13,10 +15,7 @@ class Camera : public Transformable {
 public:
   Camera() = delete;
 
-  Camera(float _tNear, float _tFar, float _timeStart, float _timeEnd,
-         std::shared_ptr<Film> _film)
-      : Transformable(), tNear(_tNear), tFar(_tFar), timeStart(_timeStart),
-        timeEnd(_timeEnd), film(_film) {}
+  Camera(const Json &json);
 
   //* sampleRay接受一个随机采样sample（包含5个随机数），产生一条光线
   //* NDC是Normalized Device Coordinate
@@ -41,8 +40,10 @@ class PerspectiveCamera : public Camera {
 public:
   PerspectiveCamera() = delete;
 
-  PerspectiveCamera(const Point3f &position, const Point3f &lookAt,
-                    const Vector3f &up);
+  PerspectiveCamera(const Json &json);
 
   virtual Ray sampleRay(const CameraSample &, Vector2f) const = 0;
+
+protected:
+  float verticalFov, aspectRatio;
 };

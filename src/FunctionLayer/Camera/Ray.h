@@ -6,8 +6,8 @@ struct Ray {
 
   Ray(Point3f _origin, Vector3f _direction, float _tNear = 1e-4f,
       float _tFar = 1e10f, float _time = .0f)
-      : origin(_origin), direction(_direction), tNear(_tNear), tFar(_tFar),
-        time(_time) {}
+      : origin(_origin), direction(normalize(_direction)), tNear(_tNear),
+        tFar(_tFar), time(_time) {}
   Ray(Point3f _origin, Point3f _destination, float _time = .0f)
       : origin(_origin), tNear(1e-4f), time(_time) {
     Vector3f o2d = _destination - _origin;
