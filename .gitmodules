@@ -1,0 +1,6 @@
+[submodule "externals/FastMath"]
+	path = externals/FastMath
+	url = https://github.com/NJUCG/FastMath.git
+[submodule "externals/stb"]
+	path = externals/stb
+	url = https://github.com/nothings/stb.git
