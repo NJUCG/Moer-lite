@@ -1,12 +1,16 @@
 #pragma once
 #include <CoreLayer/ColorSpace/Spectrum.h>
 #include <ResourceLayer/Image.h>
+#include <ResourceLayer/JsonUtil.h>
 
 class Film {
 public:
   Film() = delete;
 
-  Film(Vector2i _size) : size(_size) { image = std::make_shared<Image>(size); }
+  Film(const Json &json) {
+    size = fetchRequired<Vector2i>(json, "size");
+    image = std::make_shared<Image>(size);
+  }
 
   void deposit(const Vector2i xy, const Spectrum &spectrum) {
     //* 无论光谱内部实现如何，写入图片时均转为3通道格式

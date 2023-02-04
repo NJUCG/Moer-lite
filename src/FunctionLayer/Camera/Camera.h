@@ -8,6 +8,7 @@ struct CameraSample {
   float time;
 };
 
+//* 所有相机的基类
 class Camera : public Transformable {
 public:
   Camera() = delete;
@@ -17,6 +18,7 @@ public:
       : Transformable(), tNear(_tNear), tFar(_tFar), timeStart(_timeStart),
         timeEnd(_timeEnd), film(_film) {}
 
+  //* sampleRay接受一个随机采样sample（包含5个随机数），产生一条光线
   //* NDC是Normalized Device Coordinate
   //* 其范围[0, 0] - [1, 1], NDC与相机Film的对应如下
   //*     ----------[1, 1]
@@ -32,7 +34,15 @@ protected:
 };
 
 //* 透视相机
+//* 透视相机使得渲染出的图片拥有近大远小的特点
+//* 创建一个透视相机需要指定相机的位置、指向的点以及向上方向
+//* 透视相机还可以分为针孔相机、薄透镜相机两种，因此透视相机仍然是一个抽象类
 class PerspectiveCamera : public Camera {
 public:
-protected:
+  PerspectiveCamera() = delete;
+
+  PerspectiveCamera(const Point3f &position, const Point3f &lookAt,
+                    const Vector3f &up);
+
+  virtual Ray sampleRay(const CameraSample &, Vector2f) const = 0;
 };
