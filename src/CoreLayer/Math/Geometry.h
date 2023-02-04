@@ -2,7 +2,6 @@
 
 #include <FastMath/FastMath.h>
 #include <FastMath/VecMat.h>
-#include <ResourceLayer/JsonUtil.h>
 //* 对于绝大部分图形应用来说，32位的浮点数足以满足计算精度需求且速度更快，故lite版仅支持float
 //* 在4维齐次坐标下对点以及向量进行变换时会有不同处理，故相较于直接使用数学意义上的向量，我们进行了一个简单的封装
 
@@ -141,6 +140,10 @@ public:
     return Vector3f(xyz - rhs.xyz);
   }
 
+  //* 访问x, y, z，此处不对i进行检查
+  float operator[](int i) const { return xyz[i]; }
+  float &operator[](int i) { return xyz[i]; }
+
   //* 打印点的值
   void debugPrint() const {
     printf("[point<%d>](", 3);
@@ -162,12 +165,3 @@ private:
 
 using Vector2f = vecmat::vec2f;
 using Vector2i = vecmat::vec2i;
-
-inline void from_json(const Json &json, Vector2i &vec2) {
-  if (!json.is_array() || json.size() != 2) {
-    std::cerr << "Json doesn't match Vector2i\n";
-    exit(1);
-  }
-  for (int i = 0; i < 2; ++i)
-    json[i].get_to<int>(vec2[i]);
-}
