@@ -23,5 +23,5 @@ public:
 
   //* 将一个.obj文件加载到内存中
   //* 请确保加载的.obj文件中只包含一个Mesh
-  static std::shared_ptr<Mesh> loadFromFile(const std::string &filepath);
+  static std::shared_ptr<Mesh> loadFromFile(std::string filepath);
 };

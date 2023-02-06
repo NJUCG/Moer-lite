@@ -1,0 +1,41 @@
+{
+  "output" : {
+    "filename" : "dev-4.png"
+  },
+  "camera" : {
+    "type" : "pinhole",
+    "transform" : {
+      "position" : [0, 2, 3],
+      "up" : [0, 1, 0],
+      "lookAt" : [0, 0.5, 0]
+    },
+    "tNear" : 0.1,
+    "tFar" : 10000,
+    "verticalFov" : 45,
+    "timeStart" : 0,
+    "timeEnd" : 0,
+    "film" : {
+      "size" : [1200, 800]
+    }
+  },
+  "integrator" : {
+    "type" : "normal"
+  },
+  "scene" : {
+    "acceleration" : "embree",
+    "shapes" : [
+      {
+        "type" : "triangle",
+        "file" : "models/bunny.obj",
+        "transform" : {
+          "translate" : [0, 0, -1],
+          "scale" : [1, 1, 1],
+          "rotate" : {
+            "axis" : [0, 1, 0],
+            "radian" : 0.5
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,11 +1,12 @@
 #pragma once
 #include "Shape.h"
+#include <ResourceLayer/Factory.h>
 #include <ResourceLayer/Mesh.h>
 class Triangle : public Shape {
 public:
   Triangle() = default;
 
-  Triangle(const Transform &_transform, std::shared_ptr<Mesh> _mesh);
+  Triangle(const Json &json);
 
   virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const;
 

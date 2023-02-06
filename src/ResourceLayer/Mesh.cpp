@@ -1,9 +1,12 @@
 #include "Mesh.h"
+#include "FileUtil.h"
 #include <map>
 #include <tiny_obj_loader.h>
 
 using namespace tinyobj;
-std::shared_ptr<Mesh> Mesh::loadFromFile(const std::string &filepath) {
+std::shared_ptr<Mesh> Mesh::loadFromFile(std::string filepath) {
+  filepath = FileUtil::getFullPath(filepath);
+
   //* 避免同一个Mesh文件被加载多次，每次加载前先进行查询
   static std::map<std::string, std::shared_ptr<Mesh>> meshPool{};
 

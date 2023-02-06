@@ -26,10 +26,11 @@ public:
   //*   [0, 0]----X----
   virtual Ray sampleRay(const CameraSample &sample, Vector2f NDC) const = 0;
 
+  std::shared_ptr<Film> film = nullptr;
+
 protected:
   //* 可视最近距离、最远距离、快门开启时间和结束时间
   float tNear, tFar, timeStart, timeEnd;
-  std::shared_ptr<Film> film = nullptr;
 };
 
 //* 透视相机

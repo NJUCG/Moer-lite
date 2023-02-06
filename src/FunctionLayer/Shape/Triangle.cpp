@@ -1,7 +1,9 @@
 #include "Triangle.h"
 
-Triangle::Triangle(const Transform &_transform, std::shared_ptr<Mesh> _mesh)
-    : Shape(_transform), mesh(_mesh) {}
+Triangle::Triangle(const Json &json) : Shape(json) {
+  const auto &filepath = fetchRequired<std::string>(json, "file");
+  mesh = Mesh::loadFromFile(filepath);
+}
 
 RTCGeometry Triangle::getEmbreeGeometry(RTCDevice device) const {
   RTCGeometry geometry = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_TRIANGLE);
@@ -27,3 +29,5 @@ RTCGeometry Triangle::getEmbreeGeometry(RTCDevice device) const {
   rtcCommitGeometry(geometry);
   return geometry;
 }
+
+REGISTER_CLASS(Triangle, "triangle")

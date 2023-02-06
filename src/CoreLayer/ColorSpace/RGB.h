@@ -8,6 +8,8 @@ public:
 
   SpectrumRGB(float r, float g, float b) : rgb(r, g, b) {}
 
+  SpectrumRGB(Vector3f _rgb) : rgb(_rgb) {}
+
   SpectrumRGB operator+(const SpectrumRGB &rhs) const {
     return SpectrumRGB(rgb + rhs.rgb);
   }
@@ -74,7 +76,6 @@ public:
   }
 
 private:
-  SpectrumRGB(Vector3f _rgb) : rgb(_rgb) {}
   Vector3f rgb;
 };
 

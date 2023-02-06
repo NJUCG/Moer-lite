@@ -16,10 +16,16 @@ src/main.cpp
 
 src/CoreLayer/Math/Transform.cpp
 
+src/FunctionLayer/Acceleration/EmbreeBVH.cpp
+src/FunctionLayer/Integrator/NormalIntegrator.cpp
 src/FunctionLayer/Camera/Camera.cpp
 src/FunctionLayer/Camera/Pinhole.cpp
+src/FunctionLayer/Scene/Scene.cpp
+src/FunctionLayer/Shape/Triangle.cpp
+
 
 src/ResourceLayer/Image.cpp
+src/ResourceLayer/Mesh.cpp
 )
 
 target_include_directories(Moer PUBLIC ./externals)
@@ -27,5 +33,5 @@ target_include_directories(Moer PUBLIC ./src)
 target_include_directories(Moer PUBLIC ./externals/json/include)
 target_include_directories(Moer PUBLIC ./externals/embree/include)
  
-target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/target/lib)
-target_link_libraries(Moer tinyobjloader)
+target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}libs/linux)
+target_link_libraries(Moer tinyobjloader embree3)
