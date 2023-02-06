@@ -1,6 +1,6 @@
 #pragma once
-#include "Ray.h"
 #include <FunctionLayer/Film/Film.h>
+#include <FunctionLayer/Ray/Ray.h>
 #include <ResourceLayer/Factory.h>
 #include <ResourceLayer/JsonUtil.h>
 
