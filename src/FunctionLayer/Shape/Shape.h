@@ -27,4 +27,6 @@ public:
   }
 
   virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const = 0;
+
+  int geometryID;
 };

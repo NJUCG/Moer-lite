@@ -18,7 +18,10 @@ public:
   virtual void build() = 0;
 
   //* 向加速结构中增加一个几何体
-  void attachShape(std::shared_ptr<Shape> shape) { shapes.emplace_back(shape); }
+  void attachShape(std::shared_ptr<Shape> shape) {
+    shape->geometryID = shapes.size();
+    shapes.emplace_back(shape);
+  }
 
 protected:
   std::vector<std::shared_ptr<Shape>> shapes; //* 场景中的所有几何体

@@ -8,7 +8,7 @@ public:
 
   Triangle(const Json &json);
 
-  virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const;
+  virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const override;
 
 private:
   std::shared_ptr<Mesh> mesh;

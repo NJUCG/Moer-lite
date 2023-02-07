@@ -22,7 +22,7 @@ src/FunctionLayer/Camera/Camera.cpp
 src/FunctionLayer/Camera/Pinhole.cpp
 src/FunctionLayer/Scene/Scene.cpp
 src/FunctionLayer/Shape/Triangle.cpp
-
+src/FunctionLayer/Shape/Sphere.cpp
 
 src/ResourceLayer/Image.cpp
 src/ResourceLayer/Mesh.cpp
@@ -33,5 +33,5 @@ target_include_directories(Moer PUBLIC ./src)
 target_include_directories(Moer PUBLIC ./externals/json/include)
 target_include_directories(Moer PUBLIC ./externals/embree/include)
  
-target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}libs/linux)
-target_link_libraries(Moer tinyobjloader embree3)
+target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/libs/linux)
+target_link_libraries(Moer embree3 tinyobjloader)
