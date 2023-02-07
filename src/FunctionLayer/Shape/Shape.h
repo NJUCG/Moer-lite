@@ -1,6 +1,7 @@
 #pragma once
 #include "Intersection.h"
 #include <FunctionLayer/Ray/Ray.h>
+#include <FunctionLayer/Texture/Texture.h>
 #include <ResourceLayer/JsonUtil.h>
 #include <embree3/rtcore.h>
 class Shape : public Transformable {
@@ -27,6 +28,10 @@ public:
   }
 
   virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const = 0;
+
+  virtual Vector2f getUVTexcod(int primID, float u, float v) const {
+    return Vector2f(.0f);
+  }
 
   int geometryID;
 };

@@ -23,7 +23,7 @@ src/FunctionLayer/Camera/Pinhole.cpp
 src/FunctionLayer/Scene/Scene.cpp
 src/FunctionLayer/Shape/Triangle.cpp
 src/FunctionLayer/Shape/Sphere.cpp
-
+src/FunctionLayer/Texture/ImageTexture.cpp
 src/ResourceLayer/Image.cpp
 src/ResourceLayer/Mesh.cpp
 )

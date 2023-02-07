@@ -30,4 +30,17 @@ RTCGeometry Triangle::getEmbreeGeometry(RTCDevice device) const {
   return geometry;
 }
 
+Vector2f Triangle::getUVTexcod(int primID, float u, float v) const {
+  if (mesh->texcodBuffer.size() == 0)
+    return Vector2f(.0f);
+  const auto &faceInfo = mesh->faceBuffer[primID];
+  Vector2f texcodw = mesh->texcodBuffer[faceInfo[0].texcodIndex],
+           texcodu = mesh->texcodBuffer[faceInfo[1].texcodIndex],
+           texcodv = mesh->texcodBuffer[faceInfo[2].texcodIndex];
+
+  Vector2f res = (1.f - u - v) * texcodw + u * texcodu + v * texcodv;
+
+  return res;
+}
+
 REGISTER_CLASS(Triangle, "triangle")

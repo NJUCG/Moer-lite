@@ -51,6 +51,7 @@ std::optional<Intersection> EmbreeBVH::rayIntersect(const Ray &ray) const {
   // TODO 计算交点的切线和副切线
   intersection.tangent = intersection.bitangent = Vector3f();
   // TODO 计算交点处的纹理坐标
-  intersection.texCoord = Vector2f();
+  intersection.texCoord = intersection.shape->getUVTexcod(
+      rtcRayHit.hit.primID, rtcRayHit.hit.u, rtcRayHit.hit.v);
   return intersection;
 }
