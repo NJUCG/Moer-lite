@@ -8,7 +8,7 @@ Sphere::Sphere(const Json &json) : Shape(json) {
   center = transform.toWorld(center);
 }
 
-//* 求几何体AABB包围和的函数
+//* 求几何体AABB包围盒的函数
 void getSphereBound(const RTCBoundsFunctionArguments *args) {
   Sphere *sphere = static_cast<Sphere *>(args->geometryUserPtr);
   Point3f center = sphere->center;
@@ -37,18 +37,16 @@ void raySphereIntersect(const RTCIntersectFunctionNArguments *args) {
   Vector3f direction{rayhit->ray.dir_x, rayhit->ray.dir_y, rayhit->ray.dir_z};
 
   Vector3f u = sphere->center - origin;
-  float b = 2 * dot(u, direction);
+  float b = dot(u, direction);
   float c = u.length() * u.length() - sphere->radius * sphere->radius;
-  float delta = b * b - 4 * c;
+  float delta = b * b - c;
   if (delta <= 0)
     return; // 不相交
   float sqrtDelta = fm::sqrt(delta);
-  float t1 = (b - sqrtDelta) * .5f;
-  float t2 = (b + sqrtDelta) * .5f;
+  float t1 = b - sqrtDelta;
+  float t2 = b + sqrtDelta;
 
-  bool hit = false;
   if (rayhit->ray.tnear <= t2 && t2 <= rayhit->ray.tfar) {
-    hit = true;
     rayhit->ray.tfar = t2;
     Vector3f normal = normalize(origin + t2 * direction - sphere->center);
     rayhit->hit.Ng_x = normal[0];
@@ -57,7 +55,6 @@ void raySphereIntersect(const RTCIntersectFunctionNArguments *args) {
     rayhit->hit.geomID = sphere->geometryID;
   }
   if (rayhit->ray.tnear <= t1 && t1 <= rayhit->ray.tfar) {
-    hit = true;
     rayhit->ray.tfar = t1;
     Vector3f normal = normalize(origin + t1 * direction - sphere->center);
     rayhit->hit.Ng_x = normal[0];

@@ -1,13 +1,13 @@
 {
   "output" : {
-    "filename" : "dev-12.png"
+    "filename" : "dev-15.png"
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
-      "position" : [0, 2, 500],
+      "position" : [0, -1, 5],
       "up" : [0, 1, 0],
-      "lookAt" : [0, 0.5, 0]
+      "lookAt" : [0, -2, 0]
     },
     "tNear" : 0.1,
     "tFar" : 10000,
@@ -25,12 +25,17 @@
     "acceleration" : "embree",
     "shapes" : [
       {
-        "type" : "triangle",
-        "file" : "models/poly.obj",
+        "type" : "parallelogram",
+        "base" : [-3, -3, 0],
+        "edge0" : [6, 0, 0],
+        "edge1" : [0, 6, 0],
         "transform" : {
-          "translate" : [0, -50, 0],
-          "scale" : [1, 1, 1]
-        }
+          "rotate" : {
+            "axis" : [1, 0, 0],
+            "radian" : -1.57
+          },
+          "translate" : [0, -2, 0]
+        }      
       }
     ]
   }

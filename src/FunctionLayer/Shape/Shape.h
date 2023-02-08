@@ -17,7 +17,7 @@ public:
     Matrix4f translateMat = Transform::translation(translate);
     Matrix4f scaleMat = Transform::scalation(scale);
     Matrix4f rotateMat = Matrix4f::identity();
-    if (json["transform"].contains("rotate")) {
+    if (json.contains("transform") && json["transform"].contains("rotate")) {
       Vector3f axis =
           fetchRequired<Vector3f>(json["transform"]["rotate"], "axis");
       float radian =
