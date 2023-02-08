@@ -5,12 +5,12 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
-Vector3f Image::get(const Vector2i &xy) const {
+Vector3f Image::getValue(const Vector2i &xy) const {
   int offset = (xy[0] + xy[1] * size[0]) * channels;
   return Vector3f(data[offset], data[offset + 1], data[offset + 2]);
 }
 
-void Image::set(const Vector2i &xy, const Vector3f &val) {
+void Image::setValue(const Vector2i &xy, const Vector3f &val) {
   int offset = (xy[0] + xy[1] * size[0]) * channels;
   for (int i = 0; i < 3; ++i) {
     data[offset + i] = val[i];

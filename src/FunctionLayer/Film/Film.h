@@ -15,7 +15,7 @@ public:
   void deposit(const Vector2i xy, const Spectrum &spectrum) {
     //* 无论光谱内部实现如何，写入图片时均转为3通道格式
     Vector3f v = toVec3(spectrum);
-    image->set(xy, v);
+    image->setValue(xy, v);
   }
 
   void savePNG(const char *filename) { image->savePNG(filename); }

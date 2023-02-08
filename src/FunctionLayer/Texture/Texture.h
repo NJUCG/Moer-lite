@@ -5,11 +5,14 @@
 #include <ResourceLayer/JsonUtil.h>
 
 // TODO 目前只考虑二维纹理
+
+struct TextureCoord {
+  Vector2f coord;
+  Vector2f dcdx;
+  Vector2f dcdy;
+};
+
 template <typename Tvalue> class Texture {
 public:
-  // TODO 增加纹理过滤需要的函数
-  virtual Tvalue evaluate(Vector2f uv) const = 0;
-
-public:
-  Vector2i size;
+  virtual Tvalue evaluate(const TextureCoord &texCoord) const = 0;
 };

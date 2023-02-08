@@ -26,10 +26,10 @@ public:
   ~Image() { delete[] data; }
 
   //* 获取坐标[x, y]处的三通道值
-  Vector3f get(const Vector2i &xy) const;
+  Vector3f getValue(const Vector2i &xy) const;
 
   //* 设置坐标[x, y]处的三通道值
-  void set(const Vector2i &xy, const Vector3f &val);
+  void setValue(const Vector2i &xy, const Vector3f &val);
 
   //* 以PNG格式保存该图片
   void savePNG(const char *filename) const;

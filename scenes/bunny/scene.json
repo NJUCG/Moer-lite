@@ -1,13 +1,13 @@
 {
   "output" : {
-    "filename" : "dev-15.png"
+    "filename" : "tex-level1.png"
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
-      "position" : [0, -1, 5],
+      "position" : [0, 0, 7],
       "up" : [0, 1, 0],
-      "lookAt" : [0, -2, 0]
+      "lookAt" : [0, 0, 0]
     },
     "tNear" : 0.1,
     "tFar" : 10000,
@@ -30,11 +30,6 @@
         "edge0" : [6, 0, 0],
         "edge1" : [0, 6, 0],
         "transform" : {
-          "rotate" : {
-            "axis" : [1, 0, 0],
-            "radian" : -1.57
-          },
-          "translate" : [0, -2, 0]
         }      
       }
     ]

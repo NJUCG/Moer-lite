@@ -9,8 +9,9 @@ public:
 
   ImageTexture(const Json &json);
 
-  virtual Spectrum evaluate(Vector2f uv) const override;
+  virtual Spectrum evaluate(const TextureCoord &texCoord) const override;
 
 private:
-  std::shared_ptr<Image> image;
+  std::vector<std::shared_ptr<Image>> mipmap;
+  Vector2i size;
 };
