@@ -20,7 +20,7 @@ void Image::setValue(const Vector2i &xy, const Vector3f &val) {
 void Image::savePNG(const char *filename) const {
   uint8_t *result = new uint8_t[size[0] * size[1] * channels]();
   for (int i = 0; i < size[0] * size[1] * channels; ++i) {
-    result[i] = clamp<uint8_t>(data[i] * 255, 0, 255);
+    result[i] = static_cast<uint8_t>(255 * clamp(data[i], .0f, 1.f));
   }
   stbi_write_png(filename, size[0], size[1], 3, result, 0);
   delete[] result;

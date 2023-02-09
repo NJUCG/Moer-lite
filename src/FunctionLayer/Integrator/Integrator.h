@@ -1,6 +1,7 @@
 #pragma once
 #include <CoreLayer/ColorSpace/Spectrum.h>
 #include <FunctionLayer/Ray/Ray.h>
+#include <FunctionLayer/Sampler/Sampler.h>
 #include <FunctionLayer/Scene/Scene.h>
 #include <ResourceLayer/Factory.h>
 #include <ResourceLayer/JsonUtil.h>
@@ -12,5 +13,6 @@ public:
 
   Integrator(const Json &json) {}
 
-  virtual Spectrum li(const Ray &ray, const Scene &scene) const = 0;
+  virtual Spectrum li(const Ray &ray, const Scene &scene,
+                      std::shared_ptr<Sampler> sampler) const = 0;
 };

@@ -1,11 +1,11 @@
 {
   "output" : {
-    "filename" : "bunny-0.png"
+    "filename" : "bunny-2.png"
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
-      "position" : [0, 1, 3],
+      "position" : [0, 2, 5],
       "up" : [0, 1, 0],
       "lookAt" : [0, 0.5, 0]
     },
@@ -18,8 +18,11 @@
       "size" : [1200, 800]
     }
   },
+  "sampler" : {
+    "type" : "independent"
+  },
   "integrator" : {
-    "type" : "normal"
+    "type" : "direct"
   },
   "scene" : {
     "acceleration" : "embree",
@@ -30,9 +33,28 @@
         "transform" : {
           "rotate" : {
             "axis" : [0, 1, 0],
-            "radian" : 3
+            "radian" : 0.01
           }
-        }      
+        }
+      },
+      {
+        "type" : "parallelogram",
+        "base" : [-2, -2, 0],
+        "edge0" : [4, 0, 0],
+        "edge1" : [0, 4, 0],
+        "transform" :{
+          "rotate" : {
+            "axis" : [1, 0, 0],
+            "radian" : -1.57
+          }
+        }
+      }
+    ],
+    "lights" : [
+      {
+        "type" : "spotLight",
+        "position" : [0, 4, 4],
+        "energy" : [10, 10, 10]
       }
     ]
   }

@@ -59,6 +59,9 @@ void rayParallelogramIntersect(const RTCIntersectFunctionNArguments *args) {
     return; // miss
   float t = -a / b;
 
+  if (t < rayhit->ray.tnear || t > rayhit->ray.tfar)
+    return;
+
   Point3f hitpoint = origin + t * direction;
   // hitpoint = base + u * e0 + v * e1, 0 <= u, v <= 1
   Vector3f v1 = cross(hitpoint - paral->base, paral->edge1),

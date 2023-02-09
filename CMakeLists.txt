@@ -18,13 +18,17 @@ src/CoreLayer/Math/Transform.cpp
 
 src/FunctionLayer/Acceleration/EmbreeBVH.cpp
 src/FunctionLayer/Integrator/NormalIntegrator.cpp
+src/FunctionLayer/Integrator/DirectIntegrator.cpp
 src/FunctionLayer/Camera/Camera.cpp
 src/FunctionLayer/Camera/Pinhole.cpp
 src/FunctionLayer/Scene/Scene.cpp
+src/FunctionLayer/Light/SpotLight.cpp
 src/FunctionLayer/Shape/Triangle.cpp
 src/FunctionLayer/Shape/Sphere.cpp
 src/FunctionLayer/Shape/Parallelogram.cpp
 src/FunctionLayer/Texture/ImageTexture.cpp
+src/FunctionLayer/Material/Matte.cpp
+src/FunctionLayer/Sampler/IndependentSampler.cpp
 src/ResourceLayer/Image.cpp
 src/ResourceLayer/Mesh.cpp
 )

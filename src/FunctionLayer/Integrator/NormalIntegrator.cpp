@@ -3,7 +3,8 @@
 
 ImageTexture tex = ImageTexture(Json());
 
-Spectrum NormalIntegrator::li(const Ray &ray, const Scene &scene) const {
+Spectrum NormalIntegrator::li(const Ray &ray, const Scene &scene,
+                              std::shared_ptr<Sampler> sampler) const {
   auto intersectionOpt = scene.rayIntersect(ray);
   if (!intersectionOpt.has_value())
     return Spectrum(.0f);
