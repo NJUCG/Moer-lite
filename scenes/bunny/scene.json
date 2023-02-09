@@ -1,13 +1,13 @@
 {
   "output" : {
-    "filename" : "tex-level1.png"
+    "filename" : "bunny-0.png"
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
-      "position" : [0, 0, 7],
+      "position" : [0, 1, 3],
       "up" : [0, 1, 0],
-      "lookAt" : [0, 0, 0]
+      "lookAt" : [0, 0.5, 0]
     },
     "tNear" : 0.1,
     "tFar" : 10000,
@@ -25,11 +25,13 @@
     "acceleration" : "embree",
     "shapes" : [
       {
-        "type" : "parallelogram",
-        "base" : [-3, -3, 0],
-        "edge0" : [6, 0, 0],
-        "edge1" : [0, 6, 0],
+        "type" : "triangle",
+        "file" : "models/bunny.obj",
         "transform" : {
+          "rotate" : {
+            "axis" : [0, 1, 0],
+            "radian" : 3
+          }
         }      
       }
     ]

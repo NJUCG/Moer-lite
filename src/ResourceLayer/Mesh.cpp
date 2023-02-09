@@ -73,16 +73,18 @@ std::shared_ptr<Mesh> Mesh::loadFromFile(std::string filepath) {
   //* 每个obj文件一定会包含Mesh的vertexBuffer和faceBuffer
   //* 但是normalBuffer和texcoordBuffer是可选的
   if (normalBuffer.size() != 0) {
-    mesh->normalBuffer.reserve(vertexCount);
-    for (int i = 0; i < vertexCount; ++i) {
+    int normalBufferSize = normalBuffer.size() / 3;
+    mesh->normalBuffer.reserve(normalBufferSize);
+    for (int i = 0; i < normalBufferSize; ++i) {
       float nx = normalBuffer[i * 3], ny = normalBuffer[i * 3 + 1],
             nz = normalBuffer[i * 3 + 2];
       mesh->normalBuffer.emplace_back(Vector3f{nx, ny, nz});
     }
   }
   if (texcodBuffer.size() != 0) {
-    mesh->texcodBuffer.reserve(vertexCount);
-    for (int i = 0; i < vertexCount; ++i) {
+    int texcodBufferSize = texcodBuffer.size() / 2;
+    mesh->texcodBuffer.reserve(texcodBufferSize);
+    for (int i = 0; i < texcodBufferSize; ++i) {
       float u = texcodBuffer[i * 2], v = texcodBuffer[i * 2 + 1];
       mesh->texcodBuffer.emplace_back(Vector2f{u, v});
     }

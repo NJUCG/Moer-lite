@@ -39,7 +39,6 @@ Vector2f Triangle::getUVTexcod(int primID, float u, float v) const {
            texcodv = mesh->texcodBuffer[faceInfo[2].texcodIndex];
 
   Vector2f res = (1.f - u - v) * texcodw + u * texcodu + v * texcodv;
-
   return res;
 }
 

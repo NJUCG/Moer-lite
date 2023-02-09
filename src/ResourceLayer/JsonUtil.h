@@ -1,4 +1,5 @@
 #pragma once
+#include <CoreLayer/ColorSpace/RGB.h>
 #include <CoreLayer/Math/Math.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -64,4 +65,15 @@ inline void from_json(const Json &json, Point3f &p) {
   json[0].get_to<float>(p[0]);
   json[1].get_to<float>(p[1]);
   json[2].get_to<float>(p[2]);
+}
+
+//* 将一个json对象转换为Spectrum
+inline void from_json(const Json &json, SpectrumRGB &s) {
+  if (!json.is_array() || json.size() != 3) {
+    std::cerr << "Json can't parse to SpectrumRGB\n";
+    exit(1);
+  }
+  json[0].get_to<float>(s[0]);
+  json[1].get_to<float>(s[1]);
+  json[2].get_to<float>(s[2]);
 }

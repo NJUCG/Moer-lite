@@ -4,6 +4,8 @@
 
 class SpectrumRGB {
 public:
+  SpectrumRGB() : rgb(0.f) {}
+
   SpectrumRGB(float f) : rgb(f) {}
 
   SpectrumRGB(float r, float g, float b) : rgb(r, g, b) {}
