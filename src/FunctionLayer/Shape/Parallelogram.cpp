@@ -8,100 +8,79 @@ Parallelogram::Parallelogram(const Json &json) : Shape(json) {
   base = transform.toWorld(base);
   edge0 = transform.toWorld(edge0);
   edge1 = transform.toWorld(edge1);
-}
 
-//* 求几何体AABB包围盒的函数
-void getParallelogramBound(const RTCBoundsFunctionArguments *args) {
-  Parallelogram *paral = static_cast<Parallelogram *>(args->geometryUserPtr);
+  //* 计算AABB包围盒
   Point3f vertices[4];
-  vertices[0] = paral->base;
-  vertices[1] = vertices[0] + paral->edge0;
-  vertices[2] = vertices[1] + paral->edge1;
-  vertices[3] = vertices[0] + paral->edge1;
-  Point3f bounds[2];                   // bounds[0]是pMin, bounds[1]是pMax
-  bounds[0] = bounds[1] = vertices[0]; // 初始化
+  vertices[0] = base;
+  vertices[1] = vertices[0] + edge0;
+  vertices[2] = vertices[1] + edge1;
+  vertices[3] = vertices[0] + edge1;
+  pMin = pMax = vertices[0]; // 初始化
   for (int dim = 0; dim < 3; ++dim) {
     for (int i = 1; i < 4; ++i) {
-      bounds[0][dim] = std::min(bounds[0][dim], vertices[i][dim]);
-      bounds[1][dim] = std::max(bounds[1][dim], vertices[i][dim]);
+      pMin[dim] = std::min(pMin[dim], vertices[i][dim]);
+      pMax[dim] = std::max(pMax[dim], vertices[i][dim]);
     }
   }
-
-  args->bounds_o->lower_x = bounds[0][0];
-  args->bounds_o->lower_y = bounds[0][1];
-  args->bounds_o->lower_z = bounds[0][2];
-
-  args->bounds_o->upper_x = bounds[1][0];
-  args->bounds_o->upper_y = bounds[1][1];
-  args->bounds_o->upper_z = bounds[1][2];
-
-  return;
 }
 
-//* 求几何体与光线求交的函数
-void rayParallelogramIntersect(const RTCIntersectFunctionNArguments *args) {
-  int *valid = args->valid;
-  if (!valid[0])
-    return;
-
-  Parallelogram *paral = static_cast<Parallelogram *>(args->geometryUserPtr);
-  RTCRayHit *rayhit = (RTCRayHit *)args->rayhit;
-
-  Point3f origin{rayhit->ray.org_x, rayhit->ray.org_y, rayhit->ray.org_z};
-  Vector3f direction{rayhit->ray.dir_x, rayhit->ray.dir_y, rayhit->ray.dir_z};
-
-  Vector3f paralNormal = normalize(cross(paral->edge0, paral->edge1));
-  float d = -dot(paralNormal,
-                 Vector3f{paral->base[0], paral->base[1], paral->base[2]});
+bool Parallelogram::rayIntersectShape(const Ray &ray, float *distance,
+                                      int *primID, float *u, float *v) const {
+  Point3f origin = ray.origin;
+  Vector3f direction = ray.direction;
+  Vector3f paralNormal = normalize(cross(edge0, edge1));
+  float d = -dot(paralNormal, Vector3f{base[0], base[1], base[2]});
   float a = dot(paralNormal, Vector3f{origin[0], origin[1], origin[2]}) + d;
   float b = dot(paralNormal, direction);
   if (b == .0f)
-    return; // miss
+    return false; // miss
   float t = -a / b;
 
-  if (t < rayhit->ray.tnear || t > rayhit->ray.tfar)
-    return;
+  if (t < ray.tNear || t > ray.tFar)
+    return false;
 
   Point3f hitpoint = origin + t * direction;
   // hitpoint = base + u * e0 + v * e1, 0 <= u, v <= 1
-  Vector3f v1 = cross(hitpoint - paral->base, paral->edge1),
-           v2 = cross(paral->edge0, paral->edge1);
-  float u = v1.length() / v2.length();
+  Vector3f v1 = cross(hitpoint - base, edge1), v2 = cross(edge0, edge1);
+  float u_ = v1.length() / v2.length();
   if (dot(v1, v2) < 0)
-    u *= -1;
+    u_ *= -1;
 
-  v1 = cross(hitpoint - paral->base, paral->edge0);
-  v2 = cross(paral->edge1, paral->edge0);
-  float v = v1.length() / v2.length();
+  v1 = cross(hitpoint - base, edge0);
+  v2 = cross(edge1, edge0);
+  float v_ = v1.length() / v2.length();
   if (dot(v1, v2) < 0)
-    v *= -1;
+    v_ *= -1;
 
-  if (0.f <= u && u <= 1.f && 0.f <= v && v <= 1.f) {
-    rayhit->ray.tfar = t;
-    rayhit->hit.Ng_x = paralNormal[0];
-    rayhit->hit.Ng_y = paralNormal[1];
-    rayhit->hit.Ng_z = paralNormal[2];
-    rayhit->hit.geomID = paral->geometryID;
-    rayhit->hit.u = u;
-    rayhit->hit.v = v;
+  if (0.f <= u_ && u_ <= 1.f && 0.f <= v_ && v_ <= 1.f) {
+    *distance = t;
+    *primID = 0;
+    *u = u_;
+    *v = v_;
+    return true;
   }
+
+  return false;
 }
 
-void rayParallelogramOcclude(const RTCOccludedFunctionNArguments *args) {}
-
-RTCGeometry Parallelogram::getEmbreeGeometry(RTCDevice device) const {
-  RTCGeometry geometry = rtcNewGeometry(device, RTC_GEOMETRY_TYPE_USER);
-  rtcSetGeometryUserPrimitiveCount(geometry, 1);
-  rtcSetGeometryUserData(geometry, (void *)this);
-  rtcSetGeometryBoundsFunction(geometry, getParallelogramBound, nullptr);
-  rtcSetGeometryIntersectFunction(geometry, rayParallelogramIntersect);
-  rtcSetGeometryOccludedFunction(geometry, rayParallelogramOcclude);
-  rtcCommitGeometry(geometry);
-  return geometry;
-}
-
-Vector2f Parallelogram::getUVTexcod(int primID, float u, float v) const {
-  return Vector2f{u, v};
+void Parallelogram::fillIntersection(float distance, int primID, float u,
+                                     float v,
+                                     Intersection *intersection) const {
+  intersection->shape = this;
+  intersection->distance = distance;
+  intersection->normal = normalize(cross(edge0, edge1));
+  intersection->texCoord = Vector2f{u, v};
+  intersection->position = base + u * edge0 + v * edge1;
+  // TODO 计算交点的切线和副切线
+  Vector3f tangent{1.f, 0.f, .0f};
+  Vector3f bitangent;
+  if (std::abs(dot(tangent, intersection->normal)) > .9f) {
+    tangent = Vector3f(.0f, 1.f, .0f);
+  }
+  bitangent = normalize(cross(tangent, intersection->normal));
+  tangent = normalize(cross(intersection->normal, bitangent));
+  intersection->tangent = tangent;
+  intersection->bitangent = bitangent;
 }
 
 REGISTER_CLASS(Parallelogram, "parallelogram")

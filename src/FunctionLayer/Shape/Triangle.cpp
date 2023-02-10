@@ -30,16 +30,49 @@ RTCGeometry Triangle::getEmbreeGeometry(RTCDevice device) const {
   return geometry;
 }
 
-Vector2f Triangle::getUVTexcod(int primID, float u, float v) const {
-  if (mesh->texcodBuffer.size() == 0)
-    return Vector2f(.0f);
-  const auto &faceInfo = mesh->faceBuffer[primID];
-  Vector2f texcodw = mesh->texcodBuffer[faceInfo[0].texcodIndex],
-           texcodu = mesh->texcodBuffer[faceInfo[1].texcodIndex],
-           texcodv = mesh->texcodBuffer[faceInfo[2].texcodIndex];
-
-  Vector2f res = (1.f - u - v) * texcodw + u * texcodu + v * texcodv;
-  return res;
+bool Triangle::rayIntersectShape(const Ray &ray, float *distance, int *primID,
+                                 float *u, float *v) const {
+  //* 当使用embree加速时，该方法不会被调用
+  // TODO 自行实现加速结构时请实现该方法
+  return false;
 }
 
+void Triangle::fillIntersection(float distance, int primID, float u, float v,
+                                Intersection *intersection) const {
+  intersection->distance = distance;
+  intersection->shape = this;
+  //* 在三角形内部用插值计算交点、法线以及纹理坐标
+  auto faceInfo = mesh->faceBuffer[primID];
+  float w = 1.f - u - v;
+
+  //* 计算交点
+  Point3f pw = transform.toWorld(mesh->vertexBuffer[faceInfo[0].vertexIndex]),
+          pu = transform.toWorld(mesh->vertexBuffer[faceInfo[1].vertexIndex]),
+          pv = transform.toWorld(mesh->vertexBuffer[faceInfo[2].vertexIndex]);
+  intersection->position = Point3f{w * pw[0] + u * pu[0] + v * pv[0],
+                                   w * pw[1] + u * pu[1] + v * pv[1],
+                                   w * pw[2] + u * pu[2] + v * pv[2]};
+  //* 计算法线
+  Vector3f nw = transform.toWorld(mesh->normalBuffer[faceInfo[0].normalIndex]),
+           nu = transform.toWorld(mesh->normalBuffer[faceInfo[1].normalIndex]),
+           nv = transform.toWorld(mesh->normalBuffer[faceInfo[2].normalIndex]);
+  intersection->normal = normalize(w * nw + u * nu + v * nv);
+
+  //* 计算纹理坐标
+  Vector2f tw = mesh->texcodBuffer[faceInfo[0].texcodIndex],
+           tu = mesh->texcodBuffer[faceInfo[1].texcodIndex],
+           tv = mesh->texcodBuffer[faceInfo[2].texcodIndex];
+  intersection->texCoord = w * tw + u * tu + v * tv;
+
+  // TODO 计算交点的切线和副切线
+  Vector3f tangent{1.f, 0.f, .0f};
+  Vector3f bitangent;
+  if (std::abs(dot(tangent, intersection->normal)) > .9f) {
+    tangent = Vector3f(.0f, 1.f, .0f);
+  }
+  bitangent = normalize(cross(tangent, intersection->normal));
+  tangent = normalize(cross(intersection->normal, bitangent));
+  intersection->tangent = tangent;
+  intersection->bitangent = bitangent;
+}
 REGISTER_CLASS(Triangle, "triangle")

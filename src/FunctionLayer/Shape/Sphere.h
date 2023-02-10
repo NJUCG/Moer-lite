@@ -7,7 +7,11 @@ public:
 
   Sphere(const Json &json);
 
-  virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const override;
+  virtual bool rayIntersectShape(const Ray &ray, float *distance, int *primID,
+                                 float *u, float *v) const override;
+
+  virtual void fillIntersection(float distance, int primID, float u, float v,
+                                Intersection *intersection) const override;
 
   Point3f center;
   float radius;

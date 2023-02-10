@@ -8,9 +8,11 @@ public:
 
   Parallelogram(const Json &json);
 
-  virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const override;
+  virtual bool rayIntersectShape(const Ray &ray, float *distance, int *primID,
+                                 float *u, float *v) const override;
 
-  virtual Vector2f getUVTexcod(int primID, float u, float v) const override;
+  virtual void fillIntersection(float distance, int primID, float u, float v,
+                                Intersection *intersection) const override;
   Point3f base;
   Vector3f edge0, edge1;
 };
