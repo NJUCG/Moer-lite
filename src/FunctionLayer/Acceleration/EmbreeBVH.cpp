@@ -49,7 +49,17 @@ std::optional<Intersection> EmbreeBVH::rayIntersect(const Ray &ray) const {
   intersection.normal = normalize(
       Vector3f{rtcRayHit.hit.Ng_x, rtcRayHit.hit.Ng_y, rtcRayHit.hit.Ng_z});
   // TODO 计算交点的切线和副切线
-  intersection.tangent = intersection.bitangent = Vector3f();
+  // intersection.tangent = intersection.bitangent = Vector3f();
+  Vector3f tangent{1.f, 0.f, .0f};
+  Vector3f bitangent;
+  if (std::abs(dot(tangent, intersection.normal)) > .9f) {
+    tangent = Vector3f(.0f, 1.f, .0f);
+  }
+  bitangent = normalize(cross(tangent, intersection.normal));
+  tangent = normalize(cross(intersection.normal, bitangent));
+  intersection.tangent = tangent;
+  intersection.bitangent = bitangent;
+
   // TODO 计算交点处的纹理坐标
   intersection.texCoord = intersection.shape->getUVTexcod(
       rtcRayHit.hit.primID, rtcRayHit.hit.u, rtcRayHit.hit.v);

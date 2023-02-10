@@ -18,6 +18,11 @@ Spectrum DirectIntegrator::li(const Ray &ray, const Scene &scene,
   if (!occlude.has_value()) {
     auto bsdf = material->computeBSDF(intersection);
     Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
+    float distance =
+        (lightSampleResult.position - intersection.position).length();
+    distance *= distance;
+    return lightSampleResult.emission * f /
+           (lightSampleResult.pdf * pdfLight * distance);
   }
   return Spectrum(.0f);
 }

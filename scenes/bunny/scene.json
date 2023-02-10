@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "bunny-2.png"
+    "filename" : "bunny-3.png"
   },
   "camera" : {
     "type" : "pinhole",
@@ -53,7 +53,7 @@
     "lights" : [
       {
         "type" : "spotLight",
-        "position" : [0, 4, 4],
+        "position" : [0, 2, 2],
         "energy" : [10, 10, 10]
       }
     ]
