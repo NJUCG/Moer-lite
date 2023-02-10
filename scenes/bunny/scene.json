@@ -1,13 +1,13 @@
 {
   "output" : {
-    "filename" : "bunny-4.png"
+    "filename" : "bunny-6.png"
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
       "position" : [0, 2, 5],
       "up" : [0, 1, 0],
-      "lookAt" : [0, 0.5, 0]
+      "lookAt" : [0, 0, 10]
     },
     "tNear" : 0.1,
     "tFar" : 10000,
@@ -48,13 +48,18 @@
             "radian" : -1.57
           }
         }
+      },
+      {
+        "type" : "sphere",
+        "center" : [0, 0, 10],
+        "radius" : 1
       }
     ],
     "lights" : [
       {
         "type" : "spotLight",
-        "position" : [0, 2, 2],
-        "energy" : [10, 10, 10]
+        "position" : [1, 2, 8],
+        "energy" : [20, 20, 20]
       }
     ]
   }

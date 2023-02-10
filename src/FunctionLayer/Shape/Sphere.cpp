@@ -34,9 +34,20 @@ bool Sphere::rayIntersectShape(const Ray &ray, float *distance, int *primID,
     hit = true;
   }
   if (hit) {
-    // TODO 计算UV
-    *u = *v = .0f;
     *primID = 0;
+    //* 计算u,v
+    // TODO 需要考虑旋转
+    Vector3f normal = normalize(ray.at(*distance) - center);
+    float cosTheta = normal[1];
+    *v = fm::acos(cosTheta);
+    if (std::abs(normal[2]) < 1e-4f) {
+      *u = (normal[0] > .0f) ? (PI * .5f) : (PI * 1.5f);
+    } else {
+      float tanPhi = normal[0] / normal[2];
+      *u = fm::atan(tanPhi); // u in [-.5f * PI, .5f * PI]
+      if (normal[2] < .0f)
+        *u += PI;
+    }
   }
   return hit;
 }
@@ -48,8 +59,8 @@ void Sphere::fillIntersection(float distance, int primID, float u, float v,
   intersection->shape = this;
   intersection->distance = distance;
   //* 计算法线
-  Vector3f normal = Vector3f{std::sin(v) * std::sin(u), std::cos(v),
-                             std::sin(v) * std::cos(u)};
+  Vector3f normal = normalize(Vector3f{std::sin(v) * std::sin(u), std::cos(v),
+                                       std::sin(v) * std::cos(u)});
   intersection->normal = normal;
 
   //* 计算交点
@@ -57,7 +68,7 @@ void Sphere::fillIntersection(float distance, int primID, float u, float v,
   intersection->position = position;
 
   //* 计算纹理坐标
-  intersection->texCoord = Vector2f{u, v};
+  intersection->texCoord = Vector2f{u * invPI * .5f, v * invPI};
 
   // TODO 计算交点的切线和副切线
   Vector3f tangent{1.f, 0.f, .0f};
