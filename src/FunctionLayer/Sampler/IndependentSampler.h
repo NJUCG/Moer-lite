@@ -6,9 +6,9 @@ class IndependentSampler : public Sampler {
 public:
   IndependentSampler(const Json &json);
 
-  virtual float next1D();
+  virtual float next1D() override;
 
-  virtual Vector2f next2D();
+  virtual Vector2f next2D() override;
 
 private:
   std::random_device rd;

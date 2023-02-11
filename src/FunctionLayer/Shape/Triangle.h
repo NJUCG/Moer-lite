@@ -17,6 +17,13 @@ public:
   virtual void fillIntersection(float distance, int primID, float u, float v,
                                 Intersection *intersection) const override;
 
+  // TODO finish this
+  virtual void uniformSampleOnSurface(Vector2f sample,
+                                      Intersection *intersection,
+                                      float *pdf) const override {
+    //
+  }
+
 private:
   std::shared_ptr<Mesh> mesh;
 };

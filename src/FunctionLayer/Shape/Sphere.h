@@ -12,7 +12,14 @@ public:
 
   virtual void fillIntersection(float distance, int primID, float u, float v,
                                 Intersection *intersection) const override;
+  // TODO finish this
+  virtual void uniformSampleOnSurface(Vector2f sample,
+                                      Intersection *intersection,
+                                      float *pdf) const override {
+    //
+  }
 
+public:
   Point3f center;
   float radius;
 };

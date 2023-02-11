@@ -28,14 +28,17 @@ int main(int argc, char **argv) {
       Factory::construct_class<Integrator>(integrator_type, json["integrator"]);
   auto sampler =
       Factory::construct_class<Sampler>(sampler_type, json["sampler"]);
-
+  int spp = sampler->xSamples * sampler->ySamples;
   int width = camera->film->size[0], height = camera->film->size[1];
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
       Vector2f NDC{(float)x / width, (float)y / height};
-      Ray ray = camera->sampleRay(CameraSample(), NDC);
-      Spectrum li = integrator->li(ray, *scene, sampler);
-      camera->film->deposit({x, y}, li);
+      Spectrum li(.0f);
+      for (int i = 0; i < spp; ++i) {
+        Ray ray = camera->sampleRay(CameraSample(), NDC);
+        li += integrator->li(ray, *scene, sampler);
+      }
+      camera->film->deposit({x, y}, li / spp);
     }
   }
   camera->film->savePNG(

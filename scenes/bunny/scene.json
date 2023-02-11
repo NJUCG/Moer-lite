@@ -1,13 +1,18 @@
 {
   "output" : {
-    "filename" : "bunny-6.png"
+    "filename" : "bunny-8.png"
+  },
+  "sampler" : {
+    "type" : "independent",
+    "xSamples" : 6,
+    "ySamples" : 6
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
-      "position" : [0, 2, 5],
+      "position" : [0, 1, 3.5],
       "up" : [0, 1, 0],
-      "lookAt" : [0, 0, 10]
+      "lookAt" : [0, 0, 0]
     },
     "tNear" : 0.1,
     "tFar" : 10000,
@@ -18,25 +23,12 @@
       "size" : [1200, 800]
     }
   },
-  "sampler" : {
-    "type" : "independent"
-  },
   "integrator" : {
     "type" : "direct"
   },
   "scene" : {
     "acceleration" : "embree",
     "shapes" : [
-      {
-        "type" : "triangle",
-        "file" : "models/bunny.obj",
-        "transform" : {
-          "rotate" : {
-            "axis" : [0, 1, 0],
-            "radian" : 0.01
-          }
-        }
-      },
       {
         "type" : "parallelogram",
         "base" : [-2, -2, 0],
@@ -51,15 +43,20 @@
       },
       {
         "type" : "sphere",
-        "center" : [0, 0, 10],
-        "radius" : 1
+        "center" : [-0.3, 0.15, 0.5],
+        "radius" : 0.15
       }
     ],
     "lights" : [
       {
-        "type" : "spotLight",
-        "position" : [1, 2, 8],
-        "energy" : [20, 20, 20]
+        "type" : "areaLight",
+        "shape" : {
+          "type" : "parallelogram",
+          "base" : [-1, 0, 1],
+          "edge0" : [0, 0, -1],
+          "edge1" : [0, 1, 0]
+        },
+        "energy" : [10, 10, 10]
       }
     ]
   }

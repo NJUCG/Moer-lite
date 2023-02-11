@@ -58,9 +58,9 @@ void Sphere::fillIntersection(float distance, int primID, float u, float v,
 
   intersection->shape = this;
   intersection->distance = distance;
-  //* 计算法线
-  Vector3f normal = normalize(Vector3f{std::sin(v) * std::sin(u), std::cos(v),
-                                       std::sin(v) * std::cos(u)});
+  Vector3f normal = Vector3f{std::sin(v) * std::sin(u), std::cos(v),
+                             std::sin(v) * std::cos(u)};
+
   intersection->normal = normal;
 
   //* 计算交点

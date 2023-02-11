@@ -13,6 +13,12 @@ public:
 
   virtual void fillIntersection(float distance, int primID, float u, float v,
                                 Intersection *intersection) const override;
+
+  virtual void uniformSampleOnSurface(Vector2f sample,
+                                      Intersection *intersection,
+                                      float *pdf) const override;
+
+public:
   Point3f base;
   Vector3f edge0, edge1;
 };

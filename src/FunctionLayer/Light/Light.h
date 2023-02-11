@@ -2,12 +2,16 @@
 #include <CoreLayer/ColorSpace/Spectrum.h>
 #include <FunctionLayer/Shape/Intersection.h>
 #include <ResourceLayer/JsonUtil.h>
+
+enum class LightType { SpotLight, AreaLight };
+
 struct LightSampleResult {
   Spectrum emission;
   Point3f position;
   Vector3f normal; // 可选的
   float pdf;
   bool isDelta;
+  LightType type;
 };
 
 class Light {
@@ -23,4 +27,7 @@ public:
   //* 在shadingPoint处对光源进行采样，返回采样结果
   virtual LightSampleResult sample(const Intersection &shadingPoint,
                                    const Vector2f &sample) const = 0;
+
+public:
+  LightType type;
 };
