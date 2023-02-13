@@ -1,13 +1,15 @@
 #pragma once
+#include <iostream>
 #include <string>
-namespace FileUtil {
-static std::string workingDirectory;
+class FileUtil {
+public:
+  static std::string workingDirectory;
 
-inline void setWorkingDirectory(const char *dir) {
-  workingDirectory = std::string(dir);
-}
+  static void setWorkingDirectory(const std::string &dir) {
+    workingDirectory = dir;
+  }
 
-inline std::string getFullPath(const std::string &relativePath) {
-  return workingDirectory + "/" + relativePath;
-}
-} // namespace FileUtil
+  static std::string getFullPath(const std::string &relativePath) {
+    return workingDirectory + "/" + relativePath;
+  }
+}; // namespace FileUtil

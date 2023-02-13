@@ -13,5 +13,4 @@ public:
 
 private:
   std::vector<std::shared_ptr<Image>> mipmap;
-  Vector2i size;
 };

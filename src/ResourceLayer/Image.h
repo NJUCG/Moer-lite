@@ -34,6 +34,9 @@ public:
   //* 以PNG格式保存该图片
   void savePNG(const char *filename) const;
 
+  //* 以HDR格式保存该图片
+  void saveHDR(const char *filename) const;
+
 public:
   Vector2i size;
   static constexpr int channels = 3;

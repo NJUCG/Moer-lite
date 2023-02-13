@@ -31,6 +31,9 @@ inline float convertPDF(const LightSampleResult &result,
     pdf *= disance * disance;
     pdf /= std::abs(dot(result.normal, normalize(its2light)));
     break;
+  //* 环境光的pdf转换在采样时已经完成
+  case LightType::EnvironmentLight:
+    break;
   }
   return pdf;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <FunctionLayer/Acceleration/Acceleration.h>
+#include <FunctionLayer/Light/EnvironmentLight.h>
 #include <FunctionLayer/Light/Light.h>
 #include <ResourceLayer/JsonUtil.h>
 class Scene {
@@ -15,6 +16,8 @@ public:
   std::shared_ptr<Light> sampleLight(float sample, float *pdf) const;
 
   float pdf(std::shared_ptr<Light> light) const;
+
+  std::shared_ptr<EnvironmentLight> infiniteLights;
 
 private:
   std::shared_ptr<Acceleration> acceleration;

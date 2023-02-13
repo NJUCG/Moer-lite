@@ -26,30 +26,43 @@ void Image::savePNG(const char *filename) const {
   delete[] result;
 }
 
+void Image::saveHDR(const char *filename) const {
+  stbi_write_hdr(filename, size[0], size[1], 3, data);
+}
+
 std::shared_ptr<Image> loadImage(const char *filepath) {
-  uint8_t *datau = nullptr;
-  int x, y, channels;
-  datau = stbi_load(filepath, &x, &y, &channels, 3);
-
-  // TODO support HDR
-  if (stbi_is_hdr(filepath)) {
-    printf("Hdr not support now!\n");
-    exit(1);
+  bool isHDR = stbi_is_hdr(filepath);
+  int width, height, channels;
+  if (isHDR) {
+    float *dataf = stbi_loadf(filepath, &width, &height, &channels, 3);
+    if (!dataf) {
+      printf("Load %s failed\n", filepath);
+      exit(1);
+    }
+    if (channels != 3) {
+      printf("Load %s failed, %d channels found\n", filepath, channels);
+      exit(1);
+    }
+    float *data = new float[width * height * channels];
+    memcpy(data, dataf, sizeof(float) * width * height * channels);
+    stbi_image_free(dataf);
+    return std::make_shared<Image>(Vector2i{width, height}, data);
+  } else {
+    uint8_t *datau = stbi_load(filepath, &width, &height, &channels, 3);
+    if (!datau) {
+      printf("Load %s failed\n", filepath);
+      exit(1);
+    }
+    if (channels != 3) {
+      printf("Load %s failed, %d channels found\n", filepath, channels);
+      exit(1);
+    }
+    float *data = new float[width * height * 3];
+    auto convert = [](uint8_t u8) -> float { return u8 / 255.f; };
+    for (int i = 0; i < width * height * 3; ++i) {
+      data[i] = convert(datau[i]);
+    }
+    stbi_image_free(datau);
+    return std::make_shared<Image>(Vector2i{width, height}, data);
   }
-  if (!datau) {
-    printf("Load %s failed\n", filepath);
-    exit(1);
-  }
-  if (channels != 3) {
-    printf("Load %s failed, %d channels found\n", filepath, channels);
-    exit(1);
-  }
-
-  float *dataf = new float[x * y * 3];
-  auto convert = [](uint8_t u8) -> float { return u8 / 255.f; };
-  for (int i = 0; i < x * y * 3; ++i) {
-    dataf[i] = convert(datau[i]);
-  }
-  stbi_image_free(datau);
-  return std::make_shared<Image>(Vector2i(x, y), dataf);
 }

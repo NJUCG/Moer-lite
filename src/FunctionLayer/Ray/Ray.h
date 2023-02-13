@@ -11,7 +11,7 @@ struct Ray {
   Ray(Point3f _origin, Point3f _destination, float _time = .0f)
       : origin(_origin), tNear(1e-4f), time(_time) {
     Vector3f o2d = _destination - _origin;
-    tFar = o2d.length() - 1e-4;
+    tFar = o2d.length() - 1e-4f;
     direction = normalize(o2d);
   }
 

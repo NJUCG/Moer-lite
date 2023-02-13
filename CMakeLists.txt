@@ -24,6 +24,7 @@ src/FunctionLayer/Camera/Pinhole.cpp
 src/FunctionLayer/Scene/Scene.cpp
 src/FunctionLayer/Light/SpotLight.cpp
 src/FunctionLayer/Light/AreaLight.cpp
+src/FunctionLayer/Light/EnvironmentLight.cpp
 src/FunctionLayer/Shape/Shape.cpp
 src/FunctionLayer/Shape/Triangle.cpp
 src/FunctionLayer/Shape/Sphere.cpp
@@ -33,6 +34,7 @@ src/FunctionLayer/Material/Matte.cpp
 src/FunctionLayer/Sampler/IndependentSampler.cpp
 src/ResourceLayer/Image.cpp
 src/ResourceLayer/Mesh.cpp
+src/ResourceLayer/FileUtil.cpp
 )
 
 target_include_directories(Moer PUBLIC ./externals)

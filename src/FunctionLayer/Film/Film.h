@@ -20,6 +20,8 @@ public:
 
   void savePNG(const char *filename) { image->savePNG(filename); }
 
+  void saveHDR(const char *filename) { image->saveHDR(filename); }
+
 public:
   Vector2i size;
 

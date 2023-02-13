@@ -1,8 +1,6 @@
 #include "NormalIntegtator.h"
 #include <FunctionLayer/Texture/ImageTexture.h>
 
-ImageTexture tex = ImageTexture(Json());
-
 Spectrum NormalIntegrator::li(const Ray &ray, const Scene &scene,
                               std::shared_ptr<Sampler> sampler) const {
   auto intersectionOpt = scene.rayIntersect(ray);

@@ -1,7 +1,7 @@
 #pragma once
 #include "Intersection.h"
+#include <FunctionLayer/Material/Material.h>
 #include <FunctionLayer/Ray/Ray.h>
-#include <FunctionLayer/Texture/Texture.h>
 #include <ResourceLayer/JsonUtil.h>
 #include <embree3/rtcore.h>
 #include <optional>
@@ -34,6 +34,7 @@ public:
 public:
   int geometryID;
   std::shared_ptr<Light> light;
+  std::shared_ptr<Material> material;
 
 protected:
   Point3f pMin, pMax; // AABB包围盒，构建时初始化

@@ -37,11 +37,10 @@ std::shared_ptr<Image> shrinkHalf(std::shared_ptr<Image> origin) {
 }
 
 ImageTexture::ImageTexture(const Json &json) : Texture<Spectrum>() {
-  //  std::string filepath = fetchRequired<std::string>(json, "file");
-  //  filepath = FileUtil::getFullPath(filepath);
-  //  image = loadImage(filepath.c_str());
-  mipmap.emplace_back(loadImage(
-      "/home/zcx/Programming/Moer-lite/scenes/bunny/textures/tex.jpg"));
+  std::string filepath = fetchRequired<std::string>(json, "file");
+  filepath = FileUtil::getFullPath(filepath);
+  auto image = loadImage(filepath.c_str());
+  mipmap.emplace_back(image);
   size = mipmap[0]->size;
 
   // TODO 目前只支持对长、宽为2的次幂的图片做mipmap
@@ -58,9 +57,13 @@ ImageTexture::ImageTexture(const Json &json) : Texture<Spectrum>() {
 }
 
 //! 因为texture的坐标是从图片左下角为[0,0]点，故需要将y做翻转，否则渲染出的纹理是上下颠倒的
+// TODO 普通纹理和环境贴图总有一个是反的
 Spectrum ImageTexture::evaluate(const TextureCoord &texCoord) const {
   int x = texCoord.coord[0] * mipmap[0]->size[0],
-      y = (1.f - texCoord.coord[1]) * mipmap[0]->size[1];
+      // y = (1.f - texCoord.coord[1]) * mipmap[0]->size[1];
+      y = texCoord.coord[1] * mipmap[0]->size[1];
+  x = clamp(x, 0, size[0] - 1);
+  y = clamp(y, 0, size[1] - 1);
   return mipmap[0]->getValue({x, y});
 }
 

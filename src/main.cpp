@@ -9,13 +9,13 @@
 #include <ResourceLayer/JsonUtil.h>
 #include <fstream>
 #include <stdio.h>
+
 int main(int argc, char **argv) {
-  const char *sceneDir = argv[1];
+  const std::string sceneDir = std::string(argv[1]);
   FileUtil::setWorkingDirectory(sceneDir);
   std::string sceneJsonPath = FileUtil::getFullPath("scene.json");
   std::ifstream fstm(sceneJsonPath);
   Json json = Json::parse(fstm);
-
   const auto &camera_type = fetchRequired<std::string>(json["camera"], "type");
   const auto &integrator_type =
       fetchRequired<std::string>(json["integrator"], "type");
@@ -41,6 +41,6 @@ int main(int argc, char **argv) {
       camera->film->deposit({x, y}, li / spp);
     }
   }
-  camera->film->savePNG(
+  camera->film->saveHDR(
       fetchRequired<std::string>(json["output"], "filename").c_str());
 }

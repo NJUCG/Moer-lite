@@ -15,4 +15,6 @@ struct TextureCoord {
 template <typename Tvalue> class Texture {
 public:
   virtual Tvalue evaluate(const TextureCoord &texCoord) const = 0;
+
+  Vector2i size;
 };

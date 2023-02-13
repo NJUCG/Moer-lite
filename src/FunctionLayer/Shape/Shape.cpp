@@ -1,4 +1,5 @@
 #include "Shape.h"
+#include <FunctionLayer/Material/Matte.h>
 
 Shape::Shape(const Json &json) {
   if (json.contains("transform")) {
@@ -18,6 +19,14 @@ Shape::Shape(const Json &json) {
       rotateMat = Transform::rotation(axis, radian);
     }
     transform = Transform{translateMat, rotateMat, scaleMat};
+  }
+  if (json.contains("material")) {
+    std::string materialType =
+        fetchRequired<std::string>(json["material"], "type");
+    material =
+        Factory::construct_class<Material>(materialType, json["material"]);
+  } else {
+    material = std::make_shared<MatteMaterial>();
   }
 }
 
