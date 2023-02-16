@@ -11,4 +11,5 @@ struct Intersection {
   Vector3f tangent, bitangent; // 交点处的切线和副切线
   Vector2f texCoord;           // 交点处的纹理坐标
   const Shape *shape;          // 指向与光线相交的物体
+  Vector3f dpdu, dpdv;         // 交点处沿u、v方向的切线
 };

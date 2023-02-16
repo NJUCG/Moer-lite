@@ -11,5 +11,5 @@ public:
   computeBSDF(const Intersection &intersection) const override;
 
 private:
-  Spectrum albedo;
+  std::shared_ptr<Texture<Spectrum>> albedo;
 };

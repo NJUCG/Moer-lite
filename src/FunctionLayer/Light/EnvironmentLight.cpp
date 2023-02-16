@@ -25,9 +25,7 @@ EnvironmentLight::EnvironmentLight(const Json &json) : InfiniteLight(json) {
     exit(1);
   }
   type = LightType::EnvironmentLight;
-  auto texType = fetchRequired<std::string>(json["texture"], "type");
-  environmentMap =
-      Factory::construct_class<Texture<Spectrum>>(texType, json["texture"]);
+  environmentMap = Factory::construct_class<Texture<Spectrum>>(json["texture"]);
 
   //* 初始化环境光的能量分布
   int witdth = environmentMap->size[0], height = environmentMap->size[1];

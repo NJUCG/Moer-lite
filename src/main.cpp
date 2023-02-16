@@ -16,18 +16,10 @@ int main(int argc, char **argv) {
   std::string sceneJsonPath = FileUtil::getFullPath("scene.json");
   std::ifstream fstm(sceneJsonPath);
   Json json = Json::parse(fstm);
-  const auto &camera_type = fetchRequired<std::string>(json["camera"], "type");
-  const auto &integrator_type =
-      fetchRequired<std::string>(json["integrator"], "type");
-  const auto &sampler_type =
-      fetchRequired<std::string>(json["sampler"], "type");
-
-  auto camera = Factory::construct_class<Camera>(camera_type, json["camera"]);
+  auto camera = Factory::construct_class<Camera>(json["camera"]);
   auto scene = std::make_shared<Scene>(json["scene"]);
-  auto integrator =
-      Factory::construct_class<Integrator>(integrator_type, json["integrator"]);
-  auto sampler =
-      Factory::construct_class<Sampler>(sampler_type, json["sampler"]);
+  auto integrator = Factory::construct_class<Integrator>(json["integrator"]);
+  auto sampler = Factory::construct_class<Sampler>(json["sampler"]);
   int spp = sampler->xSamples * sampler->ySamples;
   int width = camera->film->size[0], height = camera->film->size[1];
   for (int y = 0; y < height; ++y) {

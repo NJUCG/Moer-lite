@@ -2,8 +2,7 @@
 #include <ResourceLayer/Factory.h>
 AreaLight::AreaLight(const Json &json) : Light(json) {
   type = LightType::AreaLight;
-  auto shapeType = fetchRequired<std::string>(json["shape"], "type");
-  shape = Factory::construct_class<Shape>(shapeType, json["shape"]);
+  shape = Factory::construct_class<Shape>(json["shape"]);
   energy = fetchRequired<Spectrum>(json, "energy");
 }
 

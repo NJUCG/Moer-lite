@@ -8,6 +8,7 @@ public:
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
+    //    return normalize((normal + Vector3f(1.f)) * .5f);
     if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
       return Spectrum(.0f);
     return albedo * invPI * wiLocal[1];

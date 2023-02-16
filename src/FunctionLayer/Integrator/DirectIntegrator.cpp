@@ -6,6 +6,13 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
                                 std::shared_ptr<Sampler> sampler) const {
   Spectrum spectrum(.0f);
   auto intersectionOpt = scene.rayIntersect(ray);
+
+  // if (!intersectionOpt.has_value())
+  //   return spectrum;
+  //   auto m = intersectionOpt.value().shape->material;
+  //   auto bsdf = m->computeBSDF(intersectionOpt.value());
+  //   return bsdf->f(Vector3f(.0f), Vector3f(.0f));
+
   if (!intersectionOpt.has_value())
     return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
   auto intersection = intersectionOpt.value();

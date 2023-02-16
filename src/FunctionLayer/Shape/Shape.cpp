@@ -21,10 +21,7 @@ Shape::Shape(const Json &json) {
     transform = Transform{translateMat, rotateMat, scaleMat};
   }
   if (json.contains("material")) {
-    std::string materialType =
-        fetchRequired<std::string>(json["material"], "type");
-    material =
-        Factory::construct_class<Material>(materialType, json["material"]);
+    material = Factory::construct_class<Material>(json["material"]);
   } else {
     material = std::make_shared<MatteMaterial>();
   }

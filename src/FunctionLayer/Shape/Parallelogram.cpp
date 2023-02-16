@@ -71,16 +71,10 @@ void Parallelogram::fillIntersection(float distance, int primID, float u,
   intersection->normal = normalize(cross(edge0, edge1));
   intersection->texCoord = Vector2f{u, v};
   intersection->position = base + u * edge0 + v * edge1;
-  // TODO 计算交点的切线和副切线
-  Vector3f tangent{1.f, 0.f, .0f};
-  Vector3f bitangent;
-  if (std::abs(dot(tangent, intersection->normal)) > .9f) {
-    tangent = Vector3f(.0f, 1.f, .0f);
-  }
-  bitangent = normalize(cross(tangent, intersection->normal));
-  tangent = normalize(cross(intersection->normal, bitangent));
-  intersection->tangent = tangent;
-  intersection->bitangent = bitangent;
+  intersection->dpdu = edge0, intersection->dpdv = edge1;
+  intersection->tangent = normalize(intersection->dpdu);
+  intersection->bitangent =
+      normalize(cross(intersection->tangent, intersection->normal));
 }
 
 void Parallelogram::uniformSampleOnSurface(Vector2f sample,

@@ -30,13 +30,13 @@ public:
   }
 
   template <typename T>
-  static std::shared_ptr<T> construct_class(const std::string &name,
-                                            const Json &json) {
-    if (getMap().count(name) == 0) {
-      std::cerr << "Fatal, unknown type " << name << std::endl;
+  static std::shared_ptr<T> construct_class(const Json &json) {
+    std::string type = fetchRequired<std::string>(json, "type");
+    if (getMap().count(type) == 0) {
+      std::cerr << "Fatal, unknown type " << type << std::endl;
       std::exit(1);
     }
-    return std::static_pointer_cast<T>(getMap()[name](json));
+    return std::static_pointer_cast<T>(getMap()[type](json));
   }
 
   static std::map<std::string,

@@ -9,16 +9,14 @@ Scene::Scene(const Json &json) {
   //* 添加几何体
   auto shapes = json["shapes"];
   for (int i = 0; i < shapes.size(); ++i) {
-    const auto &shapeType = fetchRequired<std::string>(shapes[i], "type");
-    auto shape = Factory::construct_class<Shape>(shapeType, shapes[i]);
+    auto shape = Factory::construct_class<Shape>(shapes[i]);
     acceleration->attachShape(shape);
   }
   //* 添加光源
   auto lights = json["lights"];
   std::vector<std::shared_ptr<Light>> lightsVec;
   for (int i = 0; i < lights.size(); ++i) {
-    const auto &lightType = fetchRequired<std::string>(lights[i], "type");
-    auto light = Factory::construct_class<Light>(lightType, lights[i]);
+    auto light = Factory::construct_class<Light>(lights[i]);
     //* 如果是环境光源，环境光源不加入光源分布
     if (light->type == LightType::EnvironmentLight) {
       this->infiniteLights = std::static_pointer_cast<EnvironmentLight>(light);
