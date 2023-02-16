@@ -15,7 +15,15 @@ Spectrum SpotLight::evaluateEmission(const Intersection &intersection,
 
 LightSampleResult SpotLight::sample(const Intersection &shadingPoint,
                                     const Vector2f &sample) const {
-  return LightSampleResult{energy, position, Vector3f(), 1.f, true, type};
+  Vector3f shadingPoint2sample = position - shadingPoint.position;
+  return LightSampleResult{energy,
+                           normalize(shadingPoint2sample),
+                           shadingPoint2sample.length() -
+                               1e-4f, // TODO 见areaLight
+                           Vector3f(),
+                           1.f,
+                           true,
+                           type};
 }
 
 REGISTER_CLASS(SpotLight, "spotLight")

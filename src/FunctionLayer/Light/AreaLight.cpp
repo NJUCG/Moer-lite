@@ -16,7 +16,15 @@ LightSampleResult AreaLight::sample(const Intersection &shadingPoint,
   Intersection sampleResult;
   float pdf;
   shape->uniformSampleOnSurface(sample, &sampleResult, &pdf);
-  return {energy, sampleResult.position, sampleResult.normal, pdf, false, type};
+  Vector3f shadingPoint2sample = sampleResult.position - shadingPoint.position;
+
+  return {energy,
+          normalize(shadingPoint2sample),
+          shadingPoint2sample.length() - 1e-4f, // TODO 定义一个满足精度的值
+          sampleResult.normal,
+          pdf,
+          false,
+          type};
 }
 
 REGISTER_CLASS(AreaLight, "areaLight")

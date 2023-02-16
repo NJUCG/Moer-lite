@@ -69,11 +69,17 @@ LightSampleResult EnvironmentLight::sample(const Intersection &shadingPoint,
   float x = fm::sin(theta) * fm::sin(phi), y = fm::cos(theta),
         z = fm::sin(theta) * fm::cos(phi);
   TextureCoord texcod{Vector2f{u, v}};
-  Spectrum emission = environmentMap->evaluate(texcod);
+  Spectrum energy = environmentMap->evaluate(texcod);
   pdf *= environmentMap->size[0] * environmentMap->size[1] * invPI * invPI *
          .5f / (fm::sin(theta));
 
-  return {emission, Point3f(), Vector3f(x, y, z), pdf, false, type};
+  return {energy,            //
+          Vector3f{x, y, z}, // 光源相对shadingPoint的方向
+          10e5f,             // TODO 定义一个float下的最大值
+          Vector3f(),
+          pdf,
+          false,
+          type};
 }
 
 REGISTER_CLASS(EnvironmentLight, "environmentLight")

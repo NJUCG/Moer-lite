@@ -7,12 +7,13 @@
 enum class LightType { SpotLight, AreaLight, EnvironmentLight };
 
 struct LightSampleResult {
-  Spectrum emission;
-  Point3f position;
-  Vector3f normal; // 可选的
-  float pdf;
-  bool isDelta;
-  LightType type;
+  Spectrum energy;    // 光源的能量
+  Vector3f direction; // 光源的采样相对shadingPoint的方向
+  float distance;     // 光源的采样相对shadingPoint的距离
+  Vector3f normal;    // 光源采样处的法线，可选的
+  float pdf;          // 得到该采样的pdf
+  bool isDelta;       // 采样是否是一个delta分布
+  LightType type;     // 光源的类型
 };
 
 class Light {

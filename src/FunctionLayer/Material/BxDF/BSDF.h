@@ -18,6 +18,8 @@ public:
   virtual BSDFSampleResult sample(const Vector3f &wo,
                                   const Vector2f &sample) const = 0;
 
+public:
+  Vector3f normal, tangent, bitangent; // 构成局部坐标系
 protected:
   Vector3f toLocal(Vector3f world) const {
     return Vector3f{dot(tangent, world), dot(normal, world),
@@ -26,6 +28,4 @@ protected:
   Vector3f toWorld(Vector3f local) const {
     return local[0] * tangent + local[1] * normal + local[2] * bitangent;
   }
-
-  Vector3f normal, tangent, bitangent; // 构成局部坐标系
 };

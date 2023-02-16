@@ -7,12 +7,6 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   Spectrum spectrum(.0f);
   auto intersectionOpt = scene.rayIntersect(ray);
 
-  // if (!intersectionOpt.has_value())
-  //   return spectrum;
-  //   auto m = intersectionOpt.value().shape->material;
-  //   auto bsdf = m->computeBSDF(intersectionOpt.value());
-  //   return bsdf->f(Vector3f(.0f), Vector3f(.0f));
-
   if (!intersectionOpt.has_value())
     return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
   auto intersection = intersectionOpt.value();
@@ -21,14 +15,15 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   }
   {
     auto res = scene.infiniteLights->sample(intersection, sampler->next2D());
-    Ray shadowRay{intersection.position, res.normal};
+    Ray shadowRay{intersection.position, res.direction, 1e-4f,
+                  res.distance}; // TODO 封装一下
     auto occlude = scene.rayIntersect(shadowRay);
     if (!occlude.has_value()) {
       auto material = intersection.shape->material;
       auto bsdf = material->computeBSDF(intersection);
       Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
       float pdf = convertPDF(res, intersection);
-      spectrum += res.emission * f / pdf;
+      spectrum += res.energy * f / pdf;
     }
   }
   return spectrum;
@@ -40,7 +35,8 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   auto lightSampleResult = light->sample(intersection, sampler->next2D());
 
   //* 测试shadowray是否被场景遮挡
-  Ray shadowRay{intersection.position, lightSampleResult.position};
+  Ray shadowRay{intersection.position, lightSampleResult.direction, 1e-4f,
+                lightSampleResult.distance};
   auto occlude = scene.rayIntersect(shadowRay);
   if (!occlude.has_value()) {
     auto material = intersection.shape->material;
@@ -48,7 +44,7 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
     Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
     lightSampleResult.pdf *= pdfLight;
     float pdf = convertPDF(lightSampleResult, intersection);
-    spectrum += lightSampleResult.emission * f / pdf;
+    spectrum += lightSampleResult.energy * f / pdf;
   }
   return spectrum;
 }
