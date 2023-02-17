@@ -10,6 +10,7 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   if (!intersectionOpt.has_value())
     return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
   auto intersection = intersectionOpt.value();
+
   if (auto light = intersection.shape->light; light) {
     spectrum += light->evaluateEmission(intersection, -ray.direction);
   }

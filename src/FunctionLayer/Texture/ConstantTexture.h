@@ -2,14 +2,14 @@
 
 #include "Texture.h"
 #include <CoreLayer/ColorSpace/Spectrum.h>
-template <typename Tvalue> class ConstantTexture : public Texture<Tvalue> {
+template <typename TReturn> class ConstantTexture : public Texture<TReturn> {
 public:
-  ConstantTexture(const Tvalue &_data) : data(_data) {}
+  ConstantTexture(const TReturn &_data) : data(_data) {}
 
-  virtual Tvalue evaluate(const TextureCoord &texCoord) const override {
+  virtual TReturn evaluate(const TextureCoord &texCoord) const override {
     return data;
   }
 
 private:
-  Tvalue data;
+  TReturn data;
 };

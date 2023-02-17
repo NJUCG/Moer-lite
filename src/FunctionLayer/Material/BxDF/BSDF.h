@@ -9,10 +9,11 @@ struct BSDFSampleResult {
 
 class BSDF {
 public:
-  BSDF(const Intersection &intersection) {
-    normal = intersection.normal;
-    tangent = intersection.tangent;
-    bitangent = intersection.bitangent;
+  BSDF(const Vector3f &_normal, const Vector3f &_tangent,
+       const Vector3f &_bitangent) {
+    normal = _normal;
+    tangent = _tangent;
+    bitangent = _bitangent;
   }
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const = 0;
   virtual BSDFSampleResult sample(const Vector3f &wo,

@@ -2,6 +2,7 @@
 #include <CoreLayer/Math/Math.h>
 #include <memory>
 
+// TODO 实现一个模板类，提供图片多通道、多数据类型的支持
 //* 目前只支持三通道（即RGB）的图片格式
 
 //* Image的数据组织格式如下
@@ -45,5 +46,5 @@ private:
   float *data = nullptr;
 };
 
-//* 根据路径加载一张图片(PNG/JPG)
+//* 根据路径加载一张图片(PNG/JPG/HDR)
 std::shared_ptr<Image> loadImage(const char *filepath);

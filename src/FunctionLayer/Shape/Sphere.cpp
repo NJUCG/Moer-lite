@@ -68,7 +68,7 @@ void Sphere::fillIntersection(float distance, int primID, float u, float v,
   intersection->position = position;
 
   //* 计算纹理坐标
-  intersection->texCoord = Vector2f{u * invPI * .5f, v * invPI};
+  intersection->texCoord = Vector2f{u * INV_PI * .5f, v * INV_PI};
 
   // TODO 计算交点的切线和副切线
   Vector3f tangent{1.f, 0.f, .0f};

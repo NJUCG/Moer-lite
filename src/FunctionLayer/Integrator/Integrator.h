@@ -21,15 +21,14 @@ public:
 inline float convertPDF(const LightSampleResult &result,
                         const Intersection &intersection) {
   float pdf = result.pdf;
-  Vector3f its2light = result.position - intersection.position;
-  float disance = its2light.length();
+  float disance = result.distance;
   switch (result.type) {
   case LightType::SpotLight:
     pdf *= disance * disance;
     break;
   case LightType::AreaLight:
     pdf *= disance * disance;
-    pdf /= std::abs(dot(result.normal, normalize(its2light)));
+    pdf /= std::abs(dot(result.normal, result.direction));
     break;
   //* 环境光的pdf转换在采样时已经完成
   case LightType::EnvironmentLight:

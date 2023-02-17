@@ -15,9 +15,8 @@ PerspectiveCamera::PerspectiveCamera(const Json &json) : Camera(json) {
   Point3f position = fetchRequired<Point3f>(json["transform"], "position"),
           lookAt = fetchRequired<Point3f>(json["transform"], "lookAt");
   Vector3f up = fetchRequired<Vector3f>(json["transform"], "up");
-  // TODO pi统一定义
   //* 还需要提供fov
-  verticalFov = fetchRequired<float>(json, "verticalFov") / 180 * M_PI,
+  verticalFov = fetchRequired<float>(json, "verticalFov") / 180 * PI,
   aspectRatio = (float)this->film->size[0] / this->film->size[1];
 
   //* 计算

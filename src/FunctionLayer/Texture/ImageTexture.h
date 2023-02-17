@@ -12,5 +12,5 @@ public:
   virtual Spectrum evaluate(const TextureCoord &texCoord) const override;
 
 private:
-  std::vector<std::shared_ptr<Image>> mipmap;
+  std::shared_ptr<Image> image;
 };

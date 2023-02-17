@@ -29,8 +29,10 @@ src/FunctionLayer/Shape/Shape.cpp
 src/FunctionLayer/Shape/Triangle.cpp
 src/FunctionLayer/Shape/Sphere.cpp
 src/FunctionLayer/Shape/Parallelogram.cpp
+src/FunctionLayer/Texture/NormalTexture.cpp
 src/FunctionLayer/Texture/ImageTexture.cpp
 src/FunctionLayer/Material/Matte.cpp
+src/FunctionLayer/Material/Material.cpp
 src/FunctionLayer/Sampler/IndependentSampler.cpp
 src/ResourceLayer/Image.cpp
 src/ResourceLayer/Mesh.cpp

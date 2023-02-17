@@ -14,8 +14,8 @@ Vector2f direction2uv(Vector3f direction) {
     if (direction[2] < .0f)
       u += PI;
   }
-  u *= .5f * invPI;
-  v *= invPI;
+  u *= .5f * INV_PI;
+  v *= INV_PI;
   return {u, v};
 }
 
@@ -70,12 +70,12 @@ LightSampleResult EnvironmentLight::sample(const Intersection &shadingPoint,
         z = fm::sin(theta) * fm::cos(phi);
   TextureCoord texcod{Vector2f{u, v}};
   Spectrum energy = environmentMap->evaluate(texcod);
-  pdf *= environmentMap->size[0] * environmentMap->size[1] * invPI * invPI *
+  pdf *= environmentMap->size[0] * environmentMap->size[1] * INV_PI * INV_PI *
          .5f / (fm::sin(theta));
 
   return {energy,            //
           Vector3f{x, y, z}, // 光源相对shadingPoint的方向
-          10e5f,             // TODO 定义一个float下的最大值
+          FLT_MAX,           // 环境光定义在无穷远处
           Vector3f(),
           pdf,
           false,

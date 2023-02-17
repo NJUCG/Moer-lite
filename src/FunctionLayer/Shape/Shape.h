@@ -1,12 +1,12 @@
 #pragma once
 #include "Intersection.h"
-#include <FunctionLayer/Material/Material.h>
 #include <FunctionLayer/Ray/Ray.h>
 #include <ResourceLayer/JsonUtil.h>
 #include <embree3/rtcore.h>
 #include <optional>
 
 class Light;
+class Material;
 
 class Shape : public Transformable {
 public:

@@ -9,5 +9,5 @@ inline Vector3f squareToUniformHemisphere(Vector2f sample) {
 }
 
 inline float squareToUniformHemispherePdf(Vector3f v) {
-  return v[1] >= .0f ? invPI * .5f : .0f;
+  return v[1] >= .0f ? INV_PI * .5f : .0f;
 }

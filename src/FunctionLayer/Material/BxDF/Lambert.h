@@ -3,15 +3,15 @@
 #include "Warp.h"
 class LambertReflection : public BSDF {
 public:
-  LambertReflection(const Intersection &intersection, Spectrum _albedo)
-      : BSDF(intersection), albedo(_albedo) {}
+  LambertReflection(const Vector3f &_normal, const Vector3f &_tangent,
+                    const Vector3f &_bitangent, Spectrum _albedo)
+      : BSDF(_normal, _tangent, _bitangent), albedo(_albedo) {}
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
-    //    return normalize((normal + Vector3f(1.f)) * .5f);
     if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
       return Spectrum(.0f);
-    return albedo * invPI * wiLocal[1];
+    return albedo * INV_PI * wiLocal[1];
   }
 
   virtual BSDFSampleResult sample(const Vector3f &wo,

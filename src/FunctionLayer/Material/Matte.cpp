@@ -22,25 +22,12 @@ MatteMaterial::MatteMaterial(const Json &json) : Material(json) {
 
 std::shared_ptr<BSDF>
 MatteMaterial::computeBSDF(const Intersection &intersection) const {
-  Spectrum s = albedo->evaluate(TextureCoord{intersection.texCoord});
-  // TODO
+  Vector3f normal, tangent, bitangent;
+  computeShadingGeometry(intersection, &normal, &tangent, &bitangent);
 
-  Intersection its = intersection;
-  if (normalMap) {
-    Spectrum n = normalMap->evaluate(TextureCoord{intersection.texCoord});
-    Vector3f normal =
-        normalize(Vector3f{n[0], n[1], n[2]} * 2.f - Vector3f{1.f});
-    normal = normalize(normal[0] * intersection.tangent +
-                       normal[2] * intersection.normal +
-                       normal[1] * intersection.bitangent);
-    Vector3f tangent = normalize(its.dpdu);
-    Vector3f bitangent = normalize(cross(tangent, normal));
-    its.normal = normal;
-    its.tangent = tangent;
-    its.bitangent = bitangent;
-  }
+  Spectrum s = albedo->eval(intersection);
 
-  return std::make_shared<LambertReflection>(its, s);
+  return std::make_shared<LambertReflection>(normal, tangent, bitangent, s);
 }
 
 REGISTER_CLASS(MatteMaterial, "matte")

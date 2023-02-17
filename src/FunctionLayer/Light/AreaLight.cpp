@@ -20,7 +20,7 @@ LightSampleResult AreaLight::sample(const Intersection &shadingPoint,
 
   return {energy,
           normalize(shadingPoint2sample),
-          shadingPoint2sample.length() - 1e-4f, // TODO 定义一个满足精度的值
+          shadingPoint2sample.length() - EPSILON,
           sampleResult.normal,
           pdf,
           false,

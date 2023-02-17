@@ -18,8 +18,7 @@ LightSampleResult SpotLight::sample(const Intersection &shadingPoint,
   Vector3f shadingPoint2sample = position - shadingPoint.position;
   return LightSampleResult{energy,
                            normalize(shadingPoint2sample),
-                           shadingPoint2sample.length() -
-                               1e-4f, // TODO 见areaLight
+                           shadingPoint2sample.length() - EPSILON,
                            Vector3f(),
                            1.f,
                            true,
