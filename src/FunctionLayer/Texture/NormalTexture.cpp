@@ -16,3 +16,7 @@ Vector3f NormalTexture::evaluate(const TextureCoord &texCoord) const {
   Vector3f xzy = normalmap->getValue({x, y});
   return xzy * 2.f - Vector3f(1.f);
 }
+
+Vector3f NormalTexture::lookUp(Vector2i xy) const {
+  return normalmap->getValue(xy) * 2 - Vector3f(1.f);
+}

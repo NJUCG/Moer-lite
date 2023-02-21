@@ -16,4 +16,10 @@ Spectrum ImageTexture::evaluate(const TextureCoord &texCoord) const {
   return image->getValue({x, y});
 }
 
+Spectrum ImageTexture::lookUp(Vector2i xy) const {
+  xy[0] = clamp(xy[0], 0, size[0] - 1);
+  xy[1] = clamp(xy[1], 0, size[1] - 1);
+  return image->getValue(xy);
+}
+
 REGISTER_CLASS(ImageTexture, "imageTex")

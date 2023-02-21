@@ -11,6 +11,8 @@ public:
 
   virtual Vector3f evaluate(const TextureCoord &texCoord) const override;
 
+  virtual Vector3f lookUp(Vector2i xy) const override;
+
 private:
   std::shared_ptr<Image> normalmap;
 };

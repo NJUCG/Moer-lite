@@ -11,6 +11,8 @@ public:
 
   virtual Spectrum evaluate(const TextureCoord &texCoord) const override;
 
+  virtual Spectrum lookUp(Vector2i xy) const override;
+
 private:
   std::shared_ptr<Image> image;
 };

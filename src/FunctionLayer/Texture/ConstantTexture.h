@@ -10,6 +10,8 @@ public:
     return data;
   }
 
+  virtual TReturn lookUp(Vector2i xy) const override { return data; }
+
 private:
   TReturn data;
 };

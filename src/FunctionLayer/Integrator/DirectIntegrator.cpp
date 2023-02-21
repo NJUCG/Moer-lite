@@ -8,8 +8,13 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   auto intersectionOpt = scene.rayIntersect(ray);
 
   if (!intersectionOpt.has_value())
-    return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
+    // return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
+    return Spectrum(.0f);
   auto intersection = intersectionOpt.value();
+  auto material = intersection.shape->material;
+  auto bsdf = material->computeBSDF(intersection);
+  Spectrum f = bsdf->f(Vector3f(), Vector3f());
+  return f;
 
   if (auto light = intersection.shape->light; light) {
     spectrum += light->evaluateEmission(intersection, -ray.direction);

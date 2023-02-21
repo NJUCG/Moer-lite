@@ -9,9 +9,11 @@ public:
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
-    if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
-      return Spectrum(.0f);
-    return albedo * INV_PI * wiLocal[1];
+    //  TODO 测试纹理过滤
+    // if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
+    //   return Spectrum(.0f);
+    //  return albedo * INV_PI * wiLocal[1];
+    return albedo;
   }
 
   virtual BSDFSampleResult sample(const Vector3f &wo,
