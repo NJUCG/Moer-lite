@@ -17,7 +17,13 @@ struct Ray {
 
   Point3f at(float distance) const { return origin + distance * direction; }
 
+  //* 基本参数
   Point3f origin;
   Vector3f direction;
   float tFar, tNear, time;
+
+  //* 光线微分
+  bool hasDifferentials = false;
+  Point3f originX, originY;
+  Vector3f directionX, directionY;
 };

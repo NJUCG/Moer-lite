@@ -20,11 +20,14 @@ public:
   //* sampleRay接受一个随机采样sample（包含5个随机数），产生一条光线
   //* NDC是Normalized Device Coordinate
   //* 其范围[0, 0] - [1, 1], NDC与相机Film的对应如下
-  //*     ----------[1, 1]
-  //*     Y           |
-  //*     |           |
   //*   [0, 0]----X----
+  //*     |           |
+  //*     Y           |
+  //*     ----------[1, 1]
   virtual Ray sampleRay(const CameraSample &sample, Vector2f NDC) const = 0;
+
+  virtual Ray sampleRayDifferentials(const CameraSample &sample,
+                                     Vector2f NDC) const = 0;
 
   std::shared_ptr<Film> film = nullptr;
 

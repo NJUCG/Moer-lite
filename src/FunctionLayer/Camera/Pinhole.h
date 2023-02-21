@@ -7,5 +7,9 @@ public:
 
   PinholeCamera(const Json &json);
 
-  virtual Ray sampleRay(const CameraSample &sample, Vector2f NDC) const;
+  virtual Ray sampleRay(const CameraSample &sample,
+                        Vector2f NDC) const override;
+
+  virtual Ray sampleRayDifferentials(const CameraSample &sample,
+                                     Vector2f NDC) const override;
 };

@@ -27,7 +27,8 @@ int main(int argc, char **argv) {
       Vector2f NDC{(float)x / width, (float)y / height};
       Spectrum li(.0f);
       for (int i = 0; i < spp; ++i) {
-        Ray ray = camera->sampleRay(CameraSample{sampler->next2D()}, NDC);
+        Ray ray = camera->sampleRayDifferentials(
+            CameraSample{sampler->next2D()}, NDC);
         li += integrator->li(ray, *scene, sampler);
       }
       camera->film->deposit({x, y}, li / spp);

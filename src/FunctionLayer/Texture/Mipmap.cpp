@@ -46,3 +46,9 @@ MipMap::MipMap(std::shared_ptr<Image> origin) {
     pyramid.emplace_back(current);
   }
 }
+
+Vector3f MipMap::lookUp(Vector2f uv, Vector2f duv0, Vector2f duv1) const {
+  float width = std::max(std::max(std::abs(duv0[0]), std::abs(duv0[1])),
+                         std::max(std::abs(duv1[0]), std::abs(duv1[1])));
+  float level = pyramid.size() - 1 + fm::log2(std::max(width, 1e-8f));
+}
