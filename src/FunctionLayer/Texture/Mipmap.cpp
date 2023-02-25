@@ -47,8 +47,45 @@ MipMap::MipMap(std::shared_ptr<Image> origin) {
   }
 }
 
+Vector3f MipMap::texel(int level, int x, int y) const {
+  auto image = pyramid[level];
+  x = clamp(x, 0, image->size[0] - 1);
+  y = clamp(y, 0, image->size[1] - 1);
+  return image->getValue(Vector2i{x, y});
+}
+
+Vector3f MipMap::bilinear(int level, Vector2f uv) const {
+  level = clamp(level, 0, (int)pyramid.size() - 1);
+  Vector2i size = pyramid[level]->size;
+  float x = uv[0] * size[0] - .5f;
+  float y = uv[1] * size[1] - .5f;
+  int x0 = std::floor(x);
+  int y0 = std::floor(y);
+  float dx = x - x0;
+  float dy = y - y0;
+
+  return (1 - dx) * (1 - dy) * texel(level, x0, y0) +
+         (1 - dx) * dy * texel(level, x0, y0 + 1) +
+         dx * (1 - dy) * texel(level, x0 + 1, y0) +
+         dx * dy * texel(level, x0 + 1, y0 + 1);
+}
+
 Vector3f MipMap::lookUp(Vector2f uv, Vector2f duv0, Vector2f duv1) const {
   float width = std::max(std::max(std::abs(duv0[0]), std::abs(duv0[1])),
                          std::max(std::abs(duv1[0]), std::abs(duv1[1])));
   float level = pyramid.size() - 1 + fm::log2(std::max(width, 1e-8f));
+  int x = uv[0] * pyramid[0]->size[0];
+  int y = uv[1] * pyramid[0]->size[1];
+  // return texel(0, x, y); // force no filter
+  return bilinear(0, uv); // force bilinear
+
+  if (level < 0) {
+    return bilinear(0, uv);
+  } else if (level >= pyramid.size() - 1) {
+    return texel(pyramid.size() - 1, 0, 0);
+  } else {
+    int iLevel = std::floor(level);
+    float dl = level - iLevel;
+    return (1 - dl) * bilinear(iLevel, uv) + dl * bilinear(iLevel + 1, uv);
+  }
 }

@@ -31,6 +31,8 @@ src/FunctionLayer/Shape/Sphere.cpp
 src/FunctionLayer/Shape/Parallelogram.cpp
 src/FunctionLayer/Texture/NormalTexture.cpp
 src/FunctionLayer/Texture/ImageTexture.cpp
+src/FunctionLayer/Texture/Texture.cpp
+src/FunctionLayer/Texture/Mipmap.cpp
 src/FunctionLayer/Material/Matte.cpp
 src/FunctionLayer/Material/Material.cpp
 src/FunctionLayer/Sampler/IndependentSampler.cpp

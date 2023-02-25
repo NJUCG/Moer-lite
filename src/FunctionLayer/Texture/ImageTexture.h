@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Mipmap.h"
 #include "Texture.h"
 #include <CoreLayer/ColorSpace/Spectrum.h>
 #include <ResourceLayer/Image.h>
@@ -9,10 +10,10 @@ public:
 
   ImageTexture(const Json &json);
 
+  virtual Spectrum evaluate(const Intersection &intersection) const override;
+
   virtual Spectrum evaluate(const TextureCoord &texCoord) const override;
 
-  virtual Spectrum lookUp(Vector2i xy) const override;
-
 private:
-  std::shared_ptr<Image> image;
+  std::shared_ptr<MipMap> mipmap;
 };

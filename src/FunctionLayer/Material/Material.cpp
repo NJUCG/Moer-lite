@@ -8,7 +8,7 @@ void Material::computeShadingGeometry(const Intersection &intersection,
     *tangent = intersection.tangent;
     *bitangent = intersection.bitangent;
   } else {
-    Vector3f localNormal = normalMap->eval(intersection);
+    Vector3f localNormal = normalMap->evaluate(intersection);
     *normal = normalize(localNormal[0] * intersection.tangent +
                         localNormal[1] * intersection.bitangent +
                         localNormal[2] * intersection.normal);

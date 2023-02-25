@@ -9,9 +9,9 @@ public:
 
   NormalTexture(const Json &json);
 
-  virtual Vector3f evaluate(const TextureCoord &texCoord) const override;
+  virtual Vector3f evaluate(const Intersection &intersection) const override;
 
-  virtual Vector3f lookUp(Vector2i xy) const override;
+  virtual Vector3f evaluate(const TextureCoord &texCoord) const override;
 
 private:
   std::shared_ptr<Image> normalmap;

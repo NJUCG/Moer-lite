@@ -3,6 +3,7 @@
 #include <FunctionLayer/Integrator/Integrator.h>
 #include <FunctionLayer/Sampler/Sampler.h>
 #include <FunctionLayer/Scene/Scene.h>
+#include <FunctionLayer/Texture/Mipmap.h>
 #include <ResourceLayer/Factory.h>
 #include <ResourceLayer/FileUtil.h>
 #include <ResourceLayer/Image.h>

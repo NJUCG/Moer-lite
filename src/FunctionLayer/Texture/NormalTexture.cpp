@@ -9,14 +9,15 @@ NormalTexture::NormalTexture(const Json &json) {
 
 // TODO 目前法线贴图没有任何过滤
 // 返回TBN坐标系下法线的表示
+Vector3f NormalTexture::evaluate(const Intersection &intersection) const {
+  TextureCoord texCoord = mapping->map(intersection);
+  return evaluate(texCoord);
+}
+
 Vector3f NormalTexture::evaluate(const TextureCoord &texCoord) const {
   int x = texCoord.coord[0] * size[0], y = texCoord.coord[1] * size[1];
   x = clamp(x, 0, size[0] - 1);
   y = clamp(y, 0, size[1] - 1);
   Vector3f xzy = normalmap->getValue({x, y});
   return xzy * 2.f - Vector3f(1.f);
-}
-
-Vector3f NormalTexture::lookUp(Vector2i xy) const {
-  return normalmap->getValue(xy) * 2 - Vector3f(1.f);
 }

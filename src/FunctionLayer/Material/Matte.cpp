@@ -25,8 +25,7 @@ MatteMaterial::computeBSDF(const Intersection &intersection) const {
   Vector3f normal, tangent, bitangent;
   computeShadingGeometry(intersection, &normal, &tangent, &bitangent);
 
-  //  Spectrum s = query(albedo, intersection);
-  Spectrum s = queryBilinearFiltering(albedo, intersection);
+  Spectrum s = albedo->evaluate(intersection);
 
   return std::make_shared<LambertReflection>(normal, tangent, bitangent, s);
 }
