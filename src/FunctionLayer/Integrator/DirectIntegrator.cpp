@@ -1,6 +1,7 @@
 #include "DirectIntegrator.h"
 #include <FunctionLayer/Material/Matte.h>
 
+// TODO 目前由于环境光采样还有些bug，同学们先不要在场景中配置环境光
 Spectrum
 DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
                                 std::shared_ptr<Sampler> sampler) const {
@@ -13,7 +14,7 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
     return spectrum;
   }
   auto intersection = intersectionOpt.value();
-  // computeRayDifferentials(&intersection, ray);
+  computeRayDifferentials(&intersection, ray);
 
   if (auto light = intersection.shape->light; light) {
     spectrum += light->evaluateEmission(intersection, -ray.direction);
