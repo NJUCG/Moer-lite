@@ -13,6 +13,8 @@ int log2Int(int v) {
 
 std::shared_ptr<Image> resizeHalf(std::shared_ptr<Image> origin) {
   int newX = origin->size[0] / 2, newY = origin->size[1] / 2;
+  newX = std::max(newX, 1);
+  newY = std::max(newY, 1);
   std::shared_ptr<Image> newImage =
       std::make_shared<Image>(Vector2i{newX, newY});
   for (int y = 0; y < newY; ++y) {
@@ -29,15 +31,11 @@ std::shared_ptr<Image> resizeHalf(std::shared_ptr<Image> origin) {
 
 MipMap::MipMap(std::shared_ptr<Image> origin) {
   Vector2i size = origin->size;
-  if (size[0] != size[1]) {
-    std::cerr << "目前只支持对长宽相等的图片做mipmap\n";
-    exit(1);
-  }
   if (!isPowerOf2(size[0])) {
     std::cerr << "目前只支持对长宽为2的次幂的图片做mipmap\n";
     exit(1);
   }
-  int nLevels = 1 + log2Int(size[0]);
+  int nLevels = 1 + log2Int(std::max(size[0], size[1]));
   pyramid.reserve(nLevels);
   pyramid.emplace_back(origin);
   for (int i = 1; i < nLevels; ++i) {

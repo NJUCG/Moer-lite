@@ -10,8 +10,8 @@ struct Intersection;
 
 struct TextureCoord {
   Vector2f coord;
-  Vector2f duvdx;
-  Vector2f duvdy;
+  Vector2f duvdx{.0f, .0f};
+  Vector2f duvdy{.0f, .0f};
 };
 
 class TextureMapping {

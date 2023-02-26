@@ -1,0 +1,73 @@
+{
+  "output" : {
+    "filename" : "test2.hdr"
+  },
+  "sampler" : {
+    "type" : "independent",
+    "xSamples" : 4,
+    "ySamples" : 4
+  },
+  "camera" : {
+    "type" : "pinhole",
+    "transform" : {
+      "position" : [0, 1.5, 7],
+      "up" : [0, 1, 0],
+      "lookAt" : [0, 0, 0]
+    },
+    "tNear" : 0.1,
+    "tFar" : 10000,
+    "verticalFov" : 45,
+    "timeStart" : 0,
+    "timeEnd" : 0,
+    "film" : {
+      "size" : [1200, 800]
+    }
+  },
+  "integrator" : {
+    "type" : "directSampleLight"
+  },
+  "scene" : {
+    "shapes" : [
+      {
+        "type" : "parallelogram",
+        "base" : [-10, 0, -10],
+        "edge1" : [20, 0, 0],
+        "edge0" : [0, 0, 20],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.8, 0.8, 0.8]
+        }
+      },
+      {
+        "type" : "triangle",
+        "file" : "models/bunny.obj",
+        "transform" : {
+          "rotate" : {
+            "axis" : [0, 1, 0],
+            "radian" : 0.3
+          }
+        },
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.5, 0.5, 0.5]
+        }
+      }
+    ],
+    "lights" : [
+      {
+        "type" : "areaLight",
+        "energy" : [20, 20, 20],
+        "shape" : {
+          "type" : "parallelogram",
+          "base" : [-1, 2.5, -1],
+          "edge1" : [2, 0, 0],
+          "edge0" : [0, 0, 2],
+          "material" : {
+            "type" : "matte",
+            "albedo" : [0.5, 0.5, 0.5]
+          }  
+        }
+      }
+    ]
+  }
+}

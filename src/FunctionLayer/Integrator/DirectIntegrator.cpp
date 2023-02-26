@@ -7,23 +7,21 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   Spectrum spectrum(.0f);
   auto intersectionOpt = scene.rayIntersect(ray);
 
-  if (!intersectionOpt.has_value())
-    // return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
-    return Spectrum(.0f);
+  if (!intersectionOpt.has_value()) {
+    if (scene.infiniteLights)
+      return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
+    return spectrum;
+  }
   auto intersection = intersectionOpt.value();
-  computeRayDifferentials(&intersection, ray);
-  auto material = intersection.shape->material;
-  auto bsdf = material->computeBSDF(intersection);
-  Spectrum f = bsdf->f(Vector3f(), Vector3f());
-  return f;
+  // computeRayDifferentials(&intersection, ray);
 
   if (auto light = intersection.shape->light; light) {
     spectrum += light->evaluateEmission(intersection, -ray.direction);
   }
-  {
+  if (scene.infiniteLights) {
     auto res = scene.infiniteLights->sample(intersection, sampler->next2D());
-    Ray shadowRay{intersection.position, res.direction, 1e-4f,
-                  res.distance}; // TODO 封装一下
+    Ray shadowRay{intersection.position + res.direction * 1e-4f, res.direction,
+                  1e-4f, res.distance}; // TODO 封装一下
     auto occlude = scene.rayIntersect(shadowRay);
     if (!occlude.has_value()) {
       auto material = intersection.shape->material;
@@ -31,9 +29,13 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
       Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
       float pdf = convertPDF(res, intersection);
       spectrum += res.energy * f / pdf;
+      //      std::cout << "emission = ";
+      //      res.energy.debugPrint();
+      //      std::cout << "bsdf = ";
+      //      f.debugPrint();
     }
+    return spectrum;
   }
-  return spectrum;
 
   //* 从场景中采样一个光源
   float pdfLight = .0f;

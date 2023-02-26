@@ -53,7 +53,8 @@ EnvironmentLight::EnvironmentLight(const Json &json) : InfiniteLight(json) {
 
 Spectrum EnvironmentLight::evaluateEmission(const Ray &ray) const {
   Vector2f uv = direction2uv(ray.direction);
-  return environmentMap->evaluate(TextureCoord{uv});
+  return environmentMap->evaluate(
+      TextureCoord{uv, Vector2f(.0f), Vector2f(.0f)});
 }
 
 LightSampleResult EnvironmentLight::sample(const Intersection &shadingPoint,
@@ -68,7 +69,7 @@ LightSampleResult EnvironmentLight::sample(const Intersection &shadingPoint,
 
   float x = fm::sin(theta) * fm::sin(phi), y = fm::cos(theta),
         z = fm::sin(theta) * fm::cos(phi);
-  TextureCoord texcod{Vector2f{u, v}};
+  TextureCoord texcod{Vector2f{u, v}, Vector2f(.0f), Vector2f(.0f)};
   Spectrum energy = environmentMap->evaluate(texcod);
   pdf *= environmentMap->size[0] * environmentMap->size[1] * INV_PI * INV_PI *
          .5f / (fm::sin(theta));
