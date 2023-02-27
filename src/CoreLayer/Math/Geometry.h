@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <FastMath/FastMath.h>
 #include <FastMath/VecMat.h>
 //* 对于绝大部分图形应用来说，32位的浮点数足以满足计算精度需求且速度更快，故lite版仅支持float
