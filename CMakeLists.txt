@@ -58,16 +58,24 @@ target_include_directories(Moer PUBLIC ./externals/json/include)
 target_include_directories(Moer PUBLIC ./externals/embree/include)
 
 if(WIN32)
-  target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/libs/win)
+  set(LIBS_PATH ${PROJECT_SOURCE_DIR}/libs/win)
 endif()
 
 if(UNIX AND NOT APPLE)
-  target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/libs/linux)
+  set(LIBS_PATH ${PROJECT_SOURCE_DIR}/libs/linux)
 endif()
 
 if(APPLE)
-  target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/libs/macos)
+  set(LIBS_PATH ${PROJECT_SOURCE_DIR}/libs/macos)
 endif()
 
+target_link_directories(Moer PUBLIC ${LIBS_PATH})
 target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/target/lib)
-target_link_libraries(Moer embree3 tinyobjloader)
+
+add_custom_command(TARGET Moer POST_BUILD
+  DEPENDS ${LIBS_PATH}/embree3.dll
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  ${LIBS_PATH}/embree3.dll $<TARGET_FILE_DIR:Moer>)
+
+target_link_libraries(Moer PUBLIC embree3)
+target_link_libraries(Moer PUBLIC tinyobjloader)
