@@ -1,7 +1,6 @@
 #include "DirectIntegrator.h"
 #include <FunctionLayer/Material/Matte.h>
 
-// TODO 目前由于环境光采样还有些bug，同学们先不要在场景中配置环境光
 Spectrum
 DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
                                 std::shared_ptr<Sampler> sampler) const {
@@ -9,8 +8,8 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   auto intersectionOpt = scene.rayIntersect(ray);
 
   if (!intersectionOpt.has_value()) {
-    if (scene.infiniteLights)
-      return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
+    for (auto light : scene.infiniteLights)
+      spectrum += light->evaluateEmission(ray);
     return spectrum;
   }
   auto intersection = intersectionOpt.value();
@@ -19,10 +18,12 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   if (auto light = intersection.shape->light; light) {
     spectrum += light->evaluateEmission(intersection, -ray.direction);
   }
-  if (scene.infiniteLights) {
-    auto res = scene.infiniteLights->sample(intersection, sampler->next2D());
+
+  //* 采样所有的环境光
+  for (auto light : scene.infiniteLights) {
+    auto res = light->sample(intersection, sampler->next2D());
     Ray shadowRay{intersection.position + res.direction * 1e-4f, res.direction,
-                  1e-4f, res.distance}; // TODO 封装一下
+                  1e-4f, res.distance};
     auto occlude = scene.rayIntersect(shadowRay);
     if (!occlude.has_value()) {
       auto material = intersection.shape->material;
@@ -31,7 +32,6 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
       float pdf = convertPDF(res, intersection);
       spectrum += res.energy * f / pdf;
     }
-    return spectrum;
   }
 
   //* 从场景中采样一个光源
@@ -62,8 +62,13 @@ DirectIntegratorSampleBSDF ::li(const Ray &ray, const Scene &scene,
                                 std::shared_ptr<Sampler> sampler) const {
   Spectrum spectrum(.0f);
   auto intersectionOpt = scene.rayIntersect(ray);
-  if (!intersectionOpt.has_value())
-    return scene.infiniteLights->evaluateEmission(ray); // TODO 换为环境光
+  if (!intersectionOpt.has_value()) {
+    for (auto light : scene.infiniteLights) {
+      spectrum += light->evaluateEmission(ray);
+    }
+    return spectrum;
+  }
+
   auto intersection = intersectionOpt.value();
   if (auto light = intersection.shape->light; light) {
     spectrum += light->evaluateEmission(intersection, -ray.direction);
@@ -82,9 +87,10 @@ DirectIntegratorSampleBSDF ::li(const Ray &ray, const Scene &scene,
   auto findLight = scene.rayIntersect(shadowRay);
   if (!findLight.has_value()) {
     //* 计算环境光
-    Spectrum envS = scene.infiniteLights->evaluateEmission(shadowRay);
-    //    envS = Spectrum(0.5);
-    spectrum += bsdfSampleResult.weight * envS;
+    for (auto light : scene.infiniteLights) {
+      Spectrum envS = light->evaluateEmission(shadowRay);
+      spectrum += bsdfSampleResult.weight * envS;
+    }
   } else {
     auto shape = findLight->shape;
     if (auto light = shape->light; light) {

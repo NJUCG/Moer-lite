@@ -19,7 +19,8 @@ Scene::Scene(const Json &json) {
     auto light = Factory::construct_class<Light>(lights[i]);
     //* 如果是环境光源，环境光源不加入光源分布
     if (light->type == LightType::EnvironmentLight) {
-      this->infiniteLights = std::static_pointer_cast<EnvironmentLight>(light);
+      this->infiniteLights.emplace_back(
+          std::static_pointer_cast<InfiniteLight>(light));
       continue;
     }
     lightsVec.emplace_back(light);

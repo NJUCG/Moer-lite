@@ -17,7 +17,7 @@ public:
 
   float pdf(std::shared_ptr<Light> light) const;
 
-  std::shared_ptr<EnvironmentLight> infiniteLights;
+  std::vector<std::shared_ptr<InfiniteLight>> infiniteLights;
 
 private:
   std::shared_ptr<Acceleration> acceleration;
