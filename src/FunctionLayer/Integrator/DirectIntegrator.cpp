@@ -30,10 +30,6 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
       Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
       float pdf = convertPDF(res, intersection);
       spectrum += res.energy * f / pdf;
-      //      std::cout << "emission = ";
-      //      res.energy.debugPrint();
-      //      std::cout << "bsdf = ";
-      //      f.debugPrint();
     }
     return spectrum;
   }
@@ -78,12 +74,16 @@ DirectIntegratorSampleBSDF ::li(const Ray &ray, const Scene &scene,
   auto bsdf = material->computeBSDF(intersection);
   auto bsdfSampleResult = bsdf->sample(-ray.direction, sampler->next2D());
 
+  Vector3f n = bsdf->normal;
+  Vector3f wh = normalize(-ray.direction + bsdfSampleResult.wi);
+
   //* 该入射方向上如果有光源，那么将得到一条有贡献的、长度为1的光路
   Ray shadowRay{intersection.position, bsdfSampleResult.wi};
   auto findLight = scene.rayIntersect(shadowRay);
   if (!findLight.has_value()) {
     //* 计算环境光
     Spectrum envS = scene.infiniteLights->evaluateEmission(shadowRay);
+    //    envS = Spectrum(0.5);
     spectrum += bsdfSampleResult.weight * envS;
   } else {
     auto shape = findLight->shape;

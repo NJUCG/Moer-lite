@@ -1,3 +1,5 @@
 # Moer-lite
-
-TODO 目前由于环境光采样还有些bug，同学们先不要在场景中配置环境光
+目前有三个示例场景
+- examples/area-lights
+- examples/two-spotlights
+- examples/bunny

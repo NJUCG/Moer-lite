@@ -35,6 +35,6 @@ int main(int argc, char **argv) {
       camera->film->deposit({x, y}, li / spp);
     }
   }
-  camera->film->savePNG(
+  camera->film->saveHDR(
       fetchRequired<std::string>(json["output"], "filename").c_str());
 }

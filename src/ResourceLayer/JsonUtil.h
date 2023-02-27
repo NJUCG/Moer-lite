@@ -19,6 +19,7 @@ template <typename TargetType>
 TargetType fetchRequired(const Json &json, const std::string &fieldName) {
   if (!json.contains(fieldName)) {
     std::cerr << fieldName << " is required but not exists!\n";
+    std::cerr << "In " << json << std::endl;
     std::exit(1);
   }
   return json[fieldName].get<TargetType>();

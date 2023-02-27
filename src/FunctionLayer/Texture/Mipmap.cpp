@@ -75,7 +75,7 @@ Vector3f MipMap::lookUp(Vector2f uv, Vector2f duv0, Vector2f duv1) const {
   int x = uv[0] * pyramid[0]->size[0];
   int y = uv[1] * pyramid[0]->size[1];
   // return texel(0, x, y); // force no filter
-  return bilinear(0, uv); // force bilinear
+  //  return bilinear(0, uv); // force bilinear
 
   if (level < 0) {
     return bilinear(0, uv);
