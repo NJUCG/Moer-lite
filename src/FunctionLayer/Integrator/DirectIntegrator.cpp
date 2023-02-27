@@ -37,20 +37,23 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
   //* 从场景中采样一个光源
   float pdfLight = .0f;
   auto light = scene.sampleLight(sampler->next1D(), &pdfLight);
-  //* 在光源上采样出一个点
-  auto lightSampleResult = light->sample(intersection, sampler->next2D());
 
-  //* 测试shadowray是否被场景遮挡
-  Ray shadowRay{intersection.position, lightSampleResult.direction, 1e-4f,
-                lightSampleResult.distance};
-  auto occlude = scene.rayIntersect(shadowRay);
-  if (!occlude.has_value()) {
-    auto material = intersection.shape->material;
-    auto bsdf = material->computeBSDF(intersection);
-    Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
-    lightSampleResult.pdf *= pdfLight;
-    float pdf = convertPDF(lightSampleResult, intersection);
-    spectrum += lightSampleResult.energy * f / pdf;
+  if (light && pdfLight != .0f) {
+    //* 在光源上采样出一个点
+    auto lightSampleResult = light->sample(intersection, sampler->next2D());
+
+    //* 测试shadowray是否被场景遮挡
+    Ray shadowRay{intersection.position, lightSampleResult.direction, 1e-4f,
+                  lightSampleResult.distance};
+    auto occlude = scene.rayIntersect(shadowRay);
+    if (!occlude.has_value()) {
+      auto material = intersection.shape->material;
+      auto bsdf = material->computeBSDF(intersection);
+      Spectrum f = bsdf->f(-ray.direction, shadowRay.direction);
+      lightSampleResult.pdf *= pdfLight;
+      float pdf = convertPDF(lightSampleResult, intersection);
+      spectrum += lightSampleResult.energy * f / pdf;
+    }
   }
   return spectrum;
 }

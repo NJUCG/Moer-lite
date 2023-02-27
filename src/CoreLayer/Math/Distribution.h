@@ -24,6 +24,11 @@ public:
   }
 
   T sample(float sample, float *pdf) const {
+    if (cdf.size() == 1) {
+      // no data in distribution
+      *pdf = .0f;
+      return T();
+    }
     auto entry = std::lower_bound(cdf.cbegin(), cdf.cend(), sample);
     size_t index = entry - cdf.cbegin() - 1;
     *pdf = cdf[index + 1] - cdf[index];

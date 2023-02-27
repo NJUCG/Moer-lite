@@ -9,6 +9,7 @@
 #include <ResourceLayer/Image.h>
 #include <ResourceLayer/JsonUtil.h>
 #include <fstream>
+#include <regex>
 #include <stdio.h>
 
 int main(int argc, char **argv) {
@@ -35,6 +36,15 @@ int main(int argc, char **argv) {
       camera->film->deposit({x, y}, li / spp);
     }
   }
-  camera->film->saveHDR(
-      fetchRequired<std::string>(json["output"], "filename").c_str());
+
+  //* 目前支持输出为png/hdr两种格式
+  std::string outputName =
+      fetchRequired<std::string>(json["output"], "filename");
+  if (std::regex_match(outputName, std::regex("(.*)(\\.png)"))) {
+    camera->film->savePNG(outputName.c_str());
+  } else if (std::regex_match(outputName, std::regex("(.*)(\\.hdr)"))) {
+    camera->film->saveHDR(outputName.c_str());
+  } else {
+    std::cout << "Only support output as PNG/HDR\n";
+  }
 }
