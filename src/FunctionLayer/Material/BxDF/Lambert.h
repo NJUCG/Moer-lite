@@ -9,17 +9,16 @@ public:
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
-    if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
-      return Spectrum(.0f);
+    // if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
+    //   return Spectrum(0.f);
     return albedo * INV_PI * wiLocal[1];
   }
 
   virtual BSDFSampleResult sample(const Vector3f &wo,
                                   const Vector2f &sample) const override {
-    Spectrum weight = albedo;
     Vector3f wi = squareToCosineHemisphere(sample);
     float pdf = squareToCosineHemispherePdf(wi);
-    return {weight, toWorld(wi), pdf, BSDFType::Diffuse};
+    return {albedo, toWorld(wi), pdf, BSDFType::Diffuse};
   }
 
 private:

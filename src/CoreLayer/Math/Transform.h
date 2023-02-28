@@ -26,7 +26,7 @@ public:
   //* 当对C应用该Transform后，toWorld返回point发生变换后的世界坐标系表达
   Point3f toWorld(const Point3f &point) const;
 
-protected:
+public:
   Matrix4f translate, invTranslate;
   Matrix4f rotate, invRotate;
   Matrix4f scale, invScale;

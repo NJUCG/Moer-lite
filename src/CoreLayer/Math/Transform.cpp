@@ -52,6 +52,7 @@ Transform::Transform() {
 Transform::Transform(const Matrix4f &_translation, const Matrix4f &_rotation,
                      const Matrix4f &_scalation)
     : translate(_translation), rotate(_rotation), scale(_scalation) {
+  invTranslate = invRotate = invScale = Matrix4f::identity();
   for (int i = 0; i < 3; ++i) {
     invTranslate.rows[i][3] = -translate.rows[i][3];
     invScale.rows[i][i] = 1.f / scale.rows[i][i];

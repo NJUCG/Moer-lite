@@ -38,6 +38,7 @@ add_executable(Moer
   src/FunctionLayer/Light/EnvironmentLight.cpp
   src/FunctionLayer/Shape/Shape.cpp
   src/FunctionLayer/Shape/Triangle.cpp
+  src/FunctionLayer/Shape/Cube.cpp
   src/FunctionLayer/Shape/Sphere.cpp
   src/FunctionLayer/Shape/Parallelogram.cpp
   src/FunctionLayer/Texture/NormalTexture.cpp

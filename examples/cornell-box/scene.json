@@ -1,0 +1,59 @@
+{
+  "output" : {
+    "filename" : "cornell-1.hdr"
+  },
+  "sampler" : {
+    "type" : "independent",
+    "xSamples" : 16,
+    "ySamples" : 16
+  },
+  "camera" : {
+    "type" : "pinhole",
+    "transform" : {
+      "position" : [2, 4, 8],
+      "up" : [0, 1, 0],
+      "lookAt" : [0, 0, 0]
+    },
+    "tNear" : 0.1,
+    "tFar" : 10000,
+    "verticalFov" : 45,
+    "timeStart" : 0,
+    "timeEnd" : 0,
+    "film" : {
+      "size" : [900, 600]
+    }
+  },
+  "integrator" : {
+    "type" : "directSampleBSDF"
+  },
+  "scene" : {
+    "shapes" : [
+      {
+        "type" : "cube",
+        "transform" : {
+          "scale" : [1, 2, 1.5],
+          "rotate" : {
+            "axis" : [1, 1, 1],
+            "radian" : 1.4
+          }
+        },
+        "material" : {
+          "type" : "matte",
+          "albedo" : {
+            "type" : "imageTex",
+            "file" : "images/tex.jpg"
+          }
+        }
+      }   
+    ],
+    "lights" : [
+      {
+        "type" : "environmentLight",
+        "texture" : {
+          "type" : "imageTex",
+          "file" : "images/indoor.hdr"
+        }
+      }
+    ]
+  }
+}
