@@ -8,9 +8,21 @@
 #include <ResourceLayer/FileUtil.h>
 #include <ResourceLayer/Image.h>
 #include <ResourceLayer/JsonUtil.h>
+#include <chrono>
 #include <fstream>
 #include <regex>
 #include <stdio.h>
+
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+
+inline void printProgress(float percentage) {
+  int val = (int)(percentage * 100);
+  int lpad = (int)(percentage * PBWIDTH);
+  int rpad = PBWIDTH - lpad;
+  printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+  fflush(stdout);
+}
 
 int main(int argc, char **argv) {
   const std::string sceneDir = std::string(argv[1]);
@@ -24,6 +36,9 @@ int main(int argc, char **argv) {
   auto sampler = Factory::construct_class<Sampler>(json["sampler"]);
   int spp = sampler->xSamples * sampler->ySamples;
   int width = camera->film->size[0], height = camera->film->size[1];
+
+  auto start = std::chrono::system_clock::now();
+
   for (int y = 0; y < height; ++y) {
     for (int x = 0; x < width; ++x) {
       Vector2f NDC{(float)x / width, (float)y / height};
@@ -34,8 +49,21 @@ int main(int argc, char **argv) {
         li += integrator->li(ray, *scene, sampler);
       }
       camera->film->deposit({x, y}, li / spp);
+
+      int finished = x + y * width;
+      if (finished % 5 == 0) {
+        printProgress((float)finished / (height * width));
+      }
     }
   }
+  printProgress(1.f);
+
+  auto end = std::chrono::system_clock::now();
+
+  printf("\nRendering costs %.2fs\n",
+         (std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
+                 .count() /
+             1000.f);
 
   //* 目前支持输出为png/hdr两种格式
   std::string outputName =
