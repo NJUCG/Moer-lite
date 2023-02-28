@@ -13,9 +13,8 @@ public:
 
   virtual BSDFSampleResult sample(const Vector3f &wo,
                                   const Vector2f &sample) const override {
-    //
     Vector3f woLocal = toLocal(wo);
     Vector3f wiLocal{-woLocal[0], woLocal[1], -woLocal[2]};
-    return {Spectrum(1.f), toWorld(wiLocal), 1.f};
+    return {Spectrum(1.f), toWorld(wiLocal), 1.f, BSDFType::Specular};
   }
 };

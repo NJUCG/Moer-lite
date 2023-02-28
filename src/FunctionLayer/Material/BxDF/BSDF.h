@@ -1,10 +1,14 @@
 #pragma once
 #include <CoreLayer/ColorSpace/Spectrum.h>
 #include <FunctionLayer/Shape/Intersection.h>
+
+enum class BSDFType { Diffuse, Specular };
+
 struct BSDFSampleResult {
   Spectrum weight;
   Vector3f wi;
   float pdf;
+  BSDFType type;
 };
 
 class BSDF {

@@ -34,6 +34,7 @@ src/FunctionLayer/Texture/ImageTexture.cpp
 src/FunctionLayer/Texture/Texture.cpp
 src/FunctionLayer/Texture/Mipmap.cpp
 src/FunctionLayer/Material/Matte.cpp
+src/FunctionLayer/Material/Mirror.cpp
 src/FunctionLayer/Material/Material.cpp
 src/FunctionLayer/Sampler/IndependentSampler.cpp
 src/ResourceLayer/Image.cpp

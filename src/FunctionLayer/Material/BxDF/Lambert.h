@@ -19,7 +19,7 @@ public:
     Spectrum weight = albedo;
     Vector3f wi = squareToCosineHemisphere(sample);
     float pdf = squareToCosineHemispherePdf(wi);
-    return {weight, toWorld(wi), pdf};
+    return {weight, toWorld(wi), pdf, BSDFType::Diffuse};
   }
 
 private:
