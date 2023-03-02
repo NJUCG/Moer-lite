@@ -1,5 +1,6 @@
 #include "Shape.h"
 #include <FunctionLayer/Material/Matte.h>
+#include <FunctionLayer/Material/Mirror.h>
 
 Shape::Shape(const Json &json) {
   if (json.contains("transform")) {

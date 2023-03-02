@@ -24,7 +24,7 @@
     }
   },
   "integrator" : {
-    "type" : "directSampleBSDF"
+    "type" : "directSampleLight"
   },
   "scene" : {
     "shapes" : [
@@ -45,7 +45,8 @@
         "edge0" : [0, 0, 20],
         "edge1" : [20,0,0],
         "material" : {
-          "type" : "mirror"
+          "type" : "matte",
+          "albedo" : [0.7, 0.7, 0.7]
         }
       }   
     ],

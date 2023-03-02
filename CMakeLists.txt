@@ -30,6 +30,7 @@ add_executable(Moer
   src/FunctionLayer/Acceleration/EmbreeBVH.cpp
   src/FunctionLayer/Integrator/NormalIntegrator.cpp
   src/FunctionLayer/Integrator/DirectIntegrator.cpp
+  src/FunctionLayer/Integrator/WhittedIntegrator.cpp
   src/FunctionLayer/Camera/Camera.cpp
   src/FunctionLayer/Camera/Pinhole.cpp
   src/FunctionLayer/Scene/Scene.cpp

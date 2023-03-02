@@ -26,5 +26,8 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
 2. 向助教发邮件；
 3. 在这个Github仓库的issues页面提出建议。
 
+## Update
+- 2023-3-2 添加了进度条，whitted-style积分器，镜面材质以及一个新场景cornell-box。
+
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）

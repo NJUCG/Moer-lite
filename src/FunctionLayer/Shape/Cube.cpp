@@ -12,9 +12,9 @@ Cube::Cube(const Json &json) : Shape(json) {
   pMin = pMax = transform.toWorld(boxMin);
   for (int i = 0; i < 8; ++i) {
     Point3f p;
-    p[0] = (i & 0x100) ? boxMax[0] : boxMin[0];
-    p[1] = (i & 0x010) ? boxMax[1] : boxMin[1];
-    p[2] = (i & 0x001) ? boxMax[2] : boxMin[2];
+    p[0] = (i & 0b100) ? boxMax[0] : boxMin[0];
+    p[1] = (i & 0b010) ? boxMax[1] : boxMin[1];
+    p[2] = (i & 0b001) ? boxMax[2] : boxMin[2];
     p = transform.toWorld(p);
 
     for (int j = 0; j < 3; ++j) {

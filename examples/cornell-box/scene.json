@@ -1,18 +1,18 @@
 {
   "output" : {
-    "filename" : "cornell-1.hdr"
+    "filename" : "cornell.hdr"
   },
   "sampler" : {
     "type" : "independent",
-    "xSamples" : 16,
-    "ySamples" : 16
+    "xSamples" : 4,
+    "ySamples" : 4
   },
   "camera" : {
     "type" : "pinhole",
     "transform" : {
-      "position" : [2, 4, 8],
+      "position" : [0, 0.5, 6],
       "up" : [0, 1, 0],
-      "lookAt" : [0, 0, 0]
+      "lookAt" : [0, 0.5, 0]
     },
     "tNear" : 0.1,
     "tFar" : 10000,
@@ -20,38 +20,109 @@
     "timeStart" : 0,
     "timeEnd" : 0,
     "film" : {
-      "size" : [900, 600]
+      "size" : [900, 900]
     }
   },
   "integrator" : {
-    "type" : "directSampleBSDF"
+    "type" : "whitted"
   },
   "scene" : {
     "shapes" : [
       {
+        "type" : "parallelogram",
+        "base" : [-1.5, -1, -1.5],
+        "edge0" : [0, 0, 3],
+        "edge1" : [3, 0, 0],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.5, 0.5, 0.5]
+        }
+      },
+      {
+        "type" : "parallelogram",
+        "base" : [-1.5, 2, -1.5],
+        "edge0" : [3, 0, 0],
+        "edge1" : [0, 0, 3],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.8, 0.8, 0.8]
+        }
+      },
+      {
+        "type" : "parallelogram",
+        "base" : [-1.5, -1, -1.5],
+        "edge0" : [0, 3, 0],
+        "edge1" : [0, 0, 3],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.7, 0.3, 0.3]
+        }
+      },
+      {
+        "type" : "parallelogram",
+        "base" : [1.5, -1, -1.5],
+        "edge1" : [0, 3, 0],
+        "edge0" : [0, 0, 3],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.3, 0.7, 0.3]
+        }
+      },
+      {
+        "type" : "parallelogram",
+        "base" : [1.5, -1, -1.5],
+        "edge0" : [0, 3, 0],
+        "edge1" : [-3, 0, 0],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.5, 0.5, 0.5]
+        }
+      },
+      {
         "type" : "cube",
         "transform" : {
-          "scale" : [1, 2, 1.5],
           "rotate" : {
-            "axis" : [1, 1, 1],
-            "radian" : 1.4
-          }
+            "axis" : [0, 1, 0],
+            "radian" : 0.5
+          },
+          "scale" : [0.45, 0.8, 0.45],
+          "translate" : [-0.5, -0.2, -0.6]
         },
         "material" : {
           "type" : "matte",
-          "albedo" : {
-            "type" : "imageTex",
-            "file" : "images/tex.jpg"
-          }
+          "albedo" : [0.3, 0.3 , 0.3]
         }
-      }   
+      },
+      {
+        "type" : "cube",
+        "transform" : {
+          "rotate" : {
+            "axis" : [0, 1, 0],
+            "radian" : -0.5
+          },
+          "scale" : [0.3, 0.4, 0.3],
+          "translate" : [0.6, -0.6, 0.3]
+        },
+        "material" : {
+          "type" : "mirror",
+          "albedo" : [0.3, 0.3 , 0.3]
+        }
+      }
+
     ],
     "lights" : [
       {
-        "type" : "environmentLight",
-        "texture" : {
-          "type" : "imageTex",
-          "file" : "images/indoor.hdr"
+        "type" : "areaLight",
+        "energy" : [30, 30, 30],
+        "shape" : {
+          "type" : "parallelogram",
+          "base" : [-0.3, 1.99, -0.3],
+          "edge0" : [0.6, 0, 0],
+          "edge1" : [0, 0, 0.6],
+          "material" : {
+            "type" : "matte",
+            "albedo" : [0.5, 0.5, 0.5]
+          }
         }
       }
     ]
