@@ -51,7 +51,6 @@ bool Cube::rayIntersectShape(const Ray &ray, float *distance, int *primID,
   direction = Vector3f{d[0], d[1], d[2]};
 
   float tNear = ray.tNear, tFar = ray.tFar;
-
   for (int i = 0; i < 3; ++i) {
     float invDir = 1.f / direction[i]; // 没有做除0检查，该算法貌似不需要？
     float t0 = (boxMin[i] - origin[i]) * invDir,
