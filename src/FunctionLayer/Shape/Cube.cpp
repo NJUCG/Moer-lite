@@ -25,8 +25,8 @@ Cube::Cube(const Json &json) : Shape(json) {
 
   // 在计算时，所有计算都是在局部坐标系内完成的，因此这里只对boxMin和boxMax做scale操作
   Matrix4f scale = transform.scale;
-  vecmat::vec4f min{boxMin[0], boxMin[0], boxMin[0], 1.f},
-      max{boxMax[0], boxMax[0], boxMax[0], 1.f};
+  vecmat::vec4f min{boxMin[0], boxMin[1], boxMin[2], 1.f},
+      max{boxMax[0], boxMax[1], boxMax[2], 1.f};
   min = scale * min, max = scale * max;
   min /= min[3], max /= max[3];
   boxMin = Point3f{min[0], min[1], min[2]};
