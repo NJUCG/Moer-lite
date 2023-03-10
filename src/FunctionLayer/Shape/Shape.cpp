@@ -28,8 +28,6 @@ Shape::Shape(const Json &json) {
   }
 }
 
-std::pair<Point3f, Point3f> Shape::getAABB() const { return {pMin, pMax}; }
-
 void UserShapeBound(const RTCBoundsFunctionArguments *args) {
   Shape *shape = static_cast<Shape *>(args->geometryUserPtr);
   auto [pMin, pMax] = shape->getAABB();

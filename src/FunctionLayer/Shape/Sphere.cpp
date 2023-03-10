@@ -6,8 +6,7 @@ Sphere::Sphere(const Json &json) : Shape(json) {
   radius = fetchRequired<float>(json, "radius");
 
   center = transform.toWorld(center);
-  pMin = center - Vector3f(radius);
-  pMax = center + Vector3f(radius);
+  boundingBox = AABB(center - Vector3f(radius), center + Vector3f(radius));
 }
 
 bool Sphere::rayIntersectShape(const Ray &ray, float *distance, int *primID,

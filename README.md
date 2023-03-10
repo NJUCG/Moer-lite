@@ -30,6 +30,8 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
 - 2023-3-2 添加了进度条，whitted-style积分器，镜面材质以及一个新场景cornell-box。
 - 2023-3-10 
   - 修改了Cube.cpp 28、29行bug（之前代码正确性不影响，但是逻辑不对）
+  - 修改了Triangle.cpp中的bug（之前当mesh文件不存在法线和纹理信息时会发生段错误）
+  - 对AABB进行封装（见Shape::getAABB）
 
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）

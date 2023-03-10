@@ -1,5 +1,6 @@
 #pragma once
 #include "Intersection.h"
+#include <FunctionLayer/Acceleration/AABB.h>
 #include <FunctionLayer/Ray/Ray.h>
 #include <ResourceLayer/JsonUtil.h>
 #include <embree3/rtcore.h>
@@ -16,8 +17,7 @@ public:
 
   virtual RTCGeometry getEmbreeGeometry(RTCDevice device) const;
 
-  // TODO 对AABB做一个封装
-  std::pair<Point3f, Point3f> getAABB() const;
+  AABB getAABB() const { return boundingBox; }
 
   virtual bool rayIntersectShape(const Ray &ray, float *distance, int *primID,
                                  float *u, float *v) const = 0;
@@ -37,5 +37,5 @@ public:
   std::shared_ptr<Material> material;
 
 protected:
-  Point3f pMin, pMax; // AABB包围盒，构建时初始化
+  AABB boundingBox;
 };

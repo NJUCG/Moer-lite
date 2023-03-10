@@ -9,7 +9,6 @@ Cube::Cube(const Json &json) : Shape(json) {
   boxMax = Point3f{1.f, 1.f, 1.f};
 
   // 构建AABB
-  pMin = pMax = transform.toWorld(boxMin);
   for (int i = 0; i < 8; ++i) {
     Point3f p;
     p[0] = (i & 0b100) ? boxMax[0] : boxMin[0];
@@ -18,8 +17,7 @@ Cube::Cube(const Json &json) : Shape(json) {
     p = transform.toWorld(p);
 
     for (int j = 0; j < 3; ++j) {
-      pMin[j] = std::min(pMin[j], p[j]);
-      pMax[j] = std::max(pMax[j], p[j]);
+      boundingBox.Expand(p);
     }
   }
 

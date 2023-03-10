@@ -53,16 +53,27 @@ void Triangle::fillIntersection(float distance, int primID, float u, float v,
                                    w * pw[1] + u * pu[1] + v * pv[1],
                                    w * pw[2] + u * pu[2] + v * pv[2]};
   //* 计算法线
-  Vector3f nw = transform.toWorld(mesh->normalBuffer[faceInfo[0].normalIndex]),
-           nu = transform.toWorld(mesh->normalBuffer[faceInfo[1].normalIndex]),
-           nv = transform.toWorld(mesh->normalBuffer[faceInfo[2].normalIndex]);
-  intersection->normal = normalize(w * nw + u * nu + v * nv);
+  if (mesh->normalBuffer.size() != 0) {
+    Vector3f nw =
+                 transform.toWorld(mesh->normalBuffer[faceInfo[0].normalIndex]),
+             nu =
+                 transform.toWorld(mesh->normalBuffer[faceInfo[1].normalIndex]),
+             nv =
+                 transform.toWorld(mesh->normalBuffer[faceInfo[2].normalIndex]);
+    intersection->normal = normalize(w * nw + u * nu + v * nv);
+  } else {
+    intersection->normal = normalize(cross(pu - pw, pv - pw));
+  }
 
   //* 计算纹理坐标
-  Vector2f tw = mesh->texcodBuffer[faceInfo[0].texcodIndex],
-           tu = mesh->texcodBuffer[faceInfo[1].texcodIndex],
-           tv = mesh->texcodBuffer[faceInfo[2].texcodIndex];
-  intersection->texCoord = w * tw + u * tu + v * tv;
+  if (mesh->texcodBuffer.size() != 0) {
+    Vector2f tw = mesh->texcodBuffer[faceInfo[0].texcodIndex],
+             tu = mesh->texcodBuffer[faceInfo[1].texcodIndex],
+             tv = mesh->texcodBuffer[faceInfo[2].texcodIndex];
+    intersection->texCoord = w * tw + u * tu + v * tv;
+  } else {
+    intersection->texCoord = Vector2f{.0f, .0f};
+  }
 
   // TODO 计算交点的切线和副切线
   Vector3f tangent{1.f, 0.f, .0f};
