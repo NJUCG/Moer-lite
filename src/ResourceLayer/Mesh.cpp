@@ -4,11 +4,11 @@
 #include <tiny_obj_loader.h>
 
 using namespace tinyobj;
-std::shared_ptr<Mesh> Mesh::loadFromFile(std::string filepath) {
+std::shared_ptr<MeshData> MeshData::loadFromFile(std::string filepath) {
   filepath = FileUtil::getFullPath(filepath);
 
   //* 避免同一个Mesh文件被加载多次，每次加载前先进行查询
-  static std::map<std::string, std::shared_ptr<Mesh>> meshPool{};
+  static std::map<std::string, std::shared_ptr<MeshData>> meshPool{};
 
   if (meshPool.count(filepath) != 0)
     return meshPool[filepath];
@@ -37,7 +37,7 @@ std::shared_ptr<Mesh> Mesh::loadFromFile(std::string filepath) {
     std::cerr << "目前只支持每个.obj文件中包含一个Mesh\n";
     exit(1);
   }
-  std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+  std::shared_ptr<MeshData> mesh = std::make_shared<MeshData>();
   const auto shape = shapes[0];
 
   size_t faceCount = shape.mesh.num_face_vertices.size(),

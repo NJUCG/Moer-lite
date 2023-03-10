@@ -18,7 +18,8 @@ void EmbreeBVH::build() {
   rtcCommitScene(scene);
 }
 
-std::optional<Intersection> EmbreeBVH::rayIntersect(Ray &ray) const {
+bool EmbreeBVH::rayIntersect(Ray &ray, int *geomID, int *primID, float *u,
+                             float *v) const {
   RTCIntersectContext context;
   RTCRayHit rtcRayHit;
   rtcInitIntersectContext(&context);
@@ -40,13 +41,13 @@ std::optional<Intersection> EmbreeBVH::rayIntersect(Ray &ray) const {
 
   //* 如果光线与加速结构没有交点
   if (rtcRayHit.hit.geomID == RTC_INVALID_GEOMETRY_ID)
-    return std::nullopt;
+    return false;
 
   //* 有交点，填充intersection数据结构
   ray.tFar = rtcRayHit.ray.tfar;
-  auto shape = shapes[rtcRayHit.hit.geomID];
-  Intersection intersection;
-  shape->fillIntersection(rtcRayHit.ray.tfar, rtcRayHit.hit.primID,
-                          rtcRayHit.hit.u, rtcRayHit.hit.v, &intersection);
-  return std::make_optional(intersection);
+  *geomID = rtcRayHit.hit.geomID;
+  *primID = rtcRayHit.hit.primID;
+  *u = rtcRayHit.hit.u;
+  *v = rtcRayHit.hit.v;
+  return true;
 }

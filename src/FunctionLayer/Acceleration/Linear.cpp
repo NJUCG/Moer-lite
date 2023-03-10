@@ -5,21 +5,18 @@ LinearAcceleration::LinearAcceleration() {
 }
 
 void LinearAcceleration::build() {
-  // do nothing
+  for (auto shape : shapes)
+    shape->initInternalAcceleration();
 }
 
-std::optional<Intersection> LinearAcceleration::rayIntersect(Ray &ray) const {
+bool LinearAcceleration::rayIntersect(Ray &ray, int *geomID, int *primID,
+                                      float *u, float *v) const {
   // Just traverse all shapes in the scene
-  float u, v;
-  int primID, geomID = -1;
+
   for (const auto shape : shapes) {
-    if (shape->rayIntersectShape(ray, &primID, &u, &v)) {
-      geomID = shape->geometryID;
+    if (shape->rayIntersectShape(ray, primID, u, v)) {
+      *geomID = shape->geometryID;
     }
   }
-  if (geomID == -1)
-    return std::nullopt;
-  Intersection its;
-  shapes[geomID]->fillIntersection(ray.tFar, primID, u, v, &its);
-  return std::make_optional(its);
+  return (*geomID != -1);
 }

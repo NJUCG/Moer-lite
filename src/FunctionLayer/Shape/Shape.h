@@ -31,6 +31,12 @@ public:
   virtual void uniformSampleOnSurface(Vector2f sample, Intersection *result,
                                       float *pdf) const = 0;
 
+  //* 当不使用embree时，TriangleMesh需要实现内部加速结构，调用该方法
+  virtual void initInternalAcceleration() {
+    // Default do nothing
+    return;
+  }
+
 public:
   int geometryID;
   std::shared_ptr<Light> light;

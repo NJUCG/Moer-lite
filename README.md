@@ -33,6 +33,7 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
   - 修改了Triangle.cpp中的bug（之前当mesh文件不存在法线和纹理信息时会发生段错误）
   - 对AABB进行封装（见Shape::getAABB）
   - Scene::rayIntersect、Shape::rayIntersectShape、Acceleration::rayIntersect、Integrator::li中const Ray& 修改为Ray&
+  - 修改了Acceleration求交的接口，现在每个加速结构需要实现bool Acceleration::rayIntersect(Ray &ray, int *geomID, int *primID, float *u, float *v) const函数
 
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）

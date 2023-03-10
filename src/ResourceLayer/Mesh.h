@@ -11,7 +11,7 @@ struct DataIndex {
   int texcodIndex; // 纹理坐标的索引
 };
 
-struct Mesh {
+struct MeshData {
 public:
   int faceCount;                      // 该Mesh三角形面的个数
   int vertexCount;                    // 该Mesh顶点的个数
@@ -23,5 +23,5 @@ public:
 
   //* 将一个.obj文件加载到内存中
   //* 请确保加载的.obj文件中只包含一个Mesh
-  static std::shared_ptr<Mesh> loadFromFile(std::string filepath);
+  static std::shared_ptr<MeshData> loadFromFile(std::string filepath);
 };
