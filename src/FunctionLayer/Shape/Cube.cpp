@@ -31,8 +31,7 @@ Cube::Cube(const Json &json) : Shape(json) {
   boxMax = Point3f{max[0], max[1], max[2]};
 }
 
-bool Cube::rayIntersectShape(const Ray &ray, float *distance, int *primID,
-                             float *u, float *v) const {
+bool Cube::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) const {
   // 我们将shape的旋转和平移的逆变换应用到光线上，在不改变两者的相对位置的情况下
   // 在局部坐标系中完成求交计算，局部坐标系中cube一直是Axis-aligned box
   Point3f origin = ray.origin;
@@ -88,13 +87,13 @@ bool Cube::rayIntersectShape(const Ray &ray, float *distance, int *primID,
   if (ray.tNear < tFar && tFar < ray.tFar) {
     Point3f hitpoint = origin + tFar * direction;
     compute(hitpoint, primID, u, v);
-    *distance = tFar;
+    ray.tFar = tFar;
     hit = true;
   }
   if (ray.tNear < tNear && tNear < ray.tFar) {
     Point3f hitpoint = origin + tNear * direction;
     compute(hitpoint, primID, u, v);
-    *distance = tNear;
+    ray.tFar = tNear;
     hit = true;
   }
   return hit;

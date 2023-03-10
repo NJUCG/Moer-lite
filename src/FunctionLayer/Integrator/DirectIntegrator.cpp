@@ -2,7 +2,7 @@
 #include <FunctionLayer/Material/Matte.h>
 
 Spectrum
-DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
+DirectIntegratorSampleLight::li(Ray &ray, const Scene &scene,
                                 std::shared_ptr<Sampler> sampler) const {
   Spectrum spectrum(.0f);
   auto intersectionOpt = scene.rayIntersect(ray);
@@ -61,7 +61,7 @@ DirectIntegratorSampleLight::li(const Ray &ray, const Scene &scene,
 REGISTER_CLASS(DirectIntegratorSampleLight, "directSampleLight")
 
 Spectrum
-DirectIntegratorSampleBSDF ::li(const Ray &ray, const Scene &scene,
+DirectIntegratorSampleBSDF ::li(Ray &ray, const Scene &scene,
                                 std::shared_ptr<Sampler> sampler) const {
   Spectrum spectrum(.0f);
   auto intersectionOpt = scene.rayIntersect(ray);

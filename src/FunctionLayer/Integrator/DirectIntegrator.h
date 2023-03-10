@@ -8,7 +8,7 @@ public:
 
   DirectIntegratorSampleLight(const Json &json) {}
 
-  virtual Spectrum li(const Ray &ray, const Scene &scene,
+  virtual Spectrum li(Ray &ray, const Scene &scene,
                       std::shared_ptr<Sampler> sampler) const override;
 };
 
@@ -19,6 +19,6 @@ public:
 
   DirectIntegratorSampleBSDF(const Json &json) {}
 
-  virtual Spectrum li(const Ray &ray, const Scene &scene,
+  virtual Spectrum li(Ray &ray, const Scene &scene,
                       std::shared_ptr<Sampler> sampler) const override;
 };

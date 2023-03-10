@@ -1,11 +1,9 @@
 #include "WhittedIntegrator.h"
 #include <FunctionLayer/Material/Material.h>
 
-Spectrum WhittedIntegrator::li(const Ray &_ray, const Scene &scene,
+Spectrum WhittedIntegrator::li(Ray &ray, const Scene &scene,
                                std::shared_ptr<Sampler> sampler) const {
   Spectrum spectrum(.0f), beta(1.0f);
-  Ray ray(_ray);
-
   do {
     auto itsOpt = scene.rayIntersect(ray);
 

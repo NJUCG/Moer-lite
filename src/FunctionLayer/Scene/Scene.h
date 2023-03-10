@@ -11,7 +11,7 @@ public:
 
   ~Scene() = default;
 
-  std::optional<Intersection> rayIntersect(const Ray &ray) const;
+  std::optional<Intersection> rayIntersect(Ray &ray) const;
 
   std::shared_ptr<Light> sampleLight(float sample, float *pdf) const;
 

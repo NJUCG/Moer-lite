@@ -39,7 +39,7 @@ Scene::Scene(const Json &json) {
   acceleration->build();
 }
 
-std::optional<Intersection> Scene::rayIntersect(const Ray &ray) const {
+std::optional<Intersection> Scene::rayIntersect(Ray &ray) const {
   return acceleration->rayIntersect(ray);
 }
 

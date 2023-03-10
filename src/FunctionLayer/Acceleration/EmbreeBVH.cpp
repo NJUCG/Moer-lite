@@ -18,7 +18,7 @@ void EmbreeBVH::build() {
   rtcCommitScene(scene);
 }
 
-std::optional<Intersection> EmbreeBVH::rayIntersect(const Ray &ray) const {
+std::optional<Intersection> EmbreeBVH::rayIntersect(Ray &ray) const {
   RTCIntersectContext context;
   RTCRayHit rtcRayHit;
   rtcInitIntersectContext(&context);
@@ -43,6 +43,7 @@ std::optional<Intersection> EmbreeBVH::rayIntersect(const Ray &ray) const {
     return std::nullopt;
 
   //* 有交点，填充intersection数据结构
+  ray.tFar = rtcRayHit.ray.tfar;
   auto shape = shapes[rtcRayHit.hit.geomID];
   Intersection intersection;
   shape->fillIntersection(rtcRayHit.ray.tfar, rtcRayHit.hit.primID,

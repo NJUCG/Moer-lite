@@ -19,8 +19,8 @@ public:
 
   AABB getAABB() const { return boundingBox; }
 
-  virtual bool rayIntersectShape(const Ray &ray, float *distance, int *primID,
-                                 float *u, float *v) const = 0;
+  virtual bool rayIntersectShape(Ray &ray, int *primID, float *u,
+                                 float *v) const = 0;
 
   virtual void fillIntersection(float distance, int primID, float u, float v,
                                 Intersection *intersection) const = 0;

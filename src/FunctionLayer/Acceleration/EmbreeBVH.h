@@ -13,8 +13,7 @@ public:
 
   virtual void build() override;
 
-  virtual std::optional<Intersection>
-  rayIntersect(const Ray &ray) const override;
+  virtual std::optional<Intersection> rayIntersect(Ray &ray) const override;
 
 private:
   //* 通过RTCDevice和RTCScene调用embree

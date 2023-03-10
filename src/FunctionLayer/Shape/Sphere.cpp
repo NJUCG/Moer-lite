@@ -9,8 +9,8 @@ Sphere::Sphere(const Json &json) : Shape(json) {
   boundingBox = AABB(center - Vector3f(radius), center + Vector3f(radius));
 }
 
-bool Sphere::rayIntersectShape(const Ray &ray, float *distance, int *primID,
-                               float *u, float *v) const {
+bool Sphere::rayIntersectShape(Ray &ray, int *primID, float *u,
+                               float *v) const {
   Point3f origin = ray.origin;
   Vector3f direction = ray.direction;
   Vector3f o2c = center - origin;
@@ -25,18 +25,18 @@ bool Sphere::rayIntersectShape(const Ray &ray, float *distance, int *primID,
 
   bool hit = false;
   if (ray.tNear <= t2 && t2 <= ray.tFar) {
-    *distance = t2;
+    ray.tFar = t2;
     hit = true;
   }
   if (ray.tNear <= t1 && t1 <= ray.tFar) {
-    *distance = t1;
+    ray.tFar = t1;
     hit = true;
   }
   if (hit) {
     *primID = 0;
     //* 计算u,v
     // TODO 需要考虑旋转
-    Vector3f normal = normalize(ray.at(*distance) - center);
+    Vector3f normal = normalize(ray.at(ray.tFar) - center);
     float cosTheta = normal[1];
     *v = fm::acos(cosTheta);
     if (std::abs(normal[2]) < 1e-4f) {

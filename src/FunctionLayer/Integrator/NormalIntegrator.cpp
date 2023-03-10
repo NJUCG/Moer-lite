@@ -1,7 +1,7 @@
 #include "NormalIntegtator.h"
 #include <FunctionLayer/Texture/ImageTexture.h>
 
-Spectrum NormalIntegrator::li(const Ray &ray, const Scene &scene,
+Spectrum NormalIntegrator::li(Ray &ray, const Scene &scene,
                               std::shared_ptr<Sampler> sampler) const {
   auto intersectionOpt = scene.rayIntersect(ray);
   if (!intersectionOpt.has_value())

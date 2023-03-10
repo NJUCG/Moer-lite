@@ -30,8 +30,8 @@ RTCGeometry Triangle::getEmbreeGeometry(RTCDevice device) const {
   return geometry;
 }
 
-bool Triangle::rayIntersectShape(const Ray &ray, float *distance, int *primID,
-                                 float *u, float *v) const {
+bool Triangle::rayIntersectShape(Ray &ray, int *primID, float *u,
+                                 float *v) const {
   //* 当使用embree加速时，该方法不会被调用
   // TODO 自行实现加速结构时请实现该方法
   return false;

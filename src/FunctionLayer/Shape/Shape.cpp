@@ -52,11 +52,11 @@ void UserShapeIntersect(const RTCIntersectFunctionNArguments *args) {
   Vector3f direction{rayhit->ray.dir_x, rayhit->ray.dir_y, rayhit->ray.dir_z};
   Ray ray{origin, direction, 1e-4f, rayhit->ray.tfar};
 
-  float distance, u, v;
+  float u, v;
   int primID;
-  bool hit = shape->rayIntersectShape(ray, &distance, &primID, &u, &v);
+  bool hit = shape->rayIntersectShape(ray, &primID, &u, &v);
   if (hit) {
-    rayhit->ray.tfar = distance;
+    rayhit->ray.tfar = ray.tFar;
     rayhit->hit.geomID = shape->geometryID;
     rayhit->hit.primID = primID;
     rayhit->hit.u = u;

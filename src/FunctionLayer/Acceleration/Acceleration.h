@@ -12,7 +12,7 @@ public:
   virtual ~Acceleration() = default;
 
   //* 所有空间加速结构需要实现的接口
-  virtual std::optional<Intersection> rayIntersect(const Ray &ray) const = 0;
+  virtual std::optional<Intersection> rayIntersect(Ray &ray) const = 0;
 
   //* 根据场景中的所有几何体构建加速结构
   virtual void build() = 0;
