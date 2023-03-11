@@ -41,6 +41,7 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
     - bool OctreeAcceleration::rayIntersect
   - 增加了`examples/lab1-test0`测试场景，用于测试加速结构的效率
   - 目前可以修改配置文件中scene的acceleration参数用来测试不同的加速结构，现在可选的参数有`embree`（default）、`linear`（没有任何求交加速）、`octree`（需要实现）
+  - 修改了面光源存在时运行发生段错误
 
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）
