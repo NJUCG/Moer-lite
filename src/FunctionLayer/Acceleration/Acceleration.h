@@ -5,7 +5,7 @@
 #include <optional>
 #include <vector>
 
-enum class AccelerationType { Embree, Linear };
+enum class AccelerationType { Embree, Linear, Octree };
 
 //* 所有空间加速结构的基类
 class Acceleration {
@@ -41,6 +41,8 @@ public:
 
 public:
   static AccelerationType type;
+
+  AABB boundingBox;
 
 protected:
   std::vector<std::shared_ptr<Shape>> shapes; //* 场景中的所有几何体

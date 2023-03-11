@@ -30,7 +30,16 @@ void AABB::Expand(const Point3f &other) {
   pMax = maxP(pMax, other);
 }
 
-bool AABB::rayIntersect(const Ray &ray, float *tMin, float *tMax) const {
+bool AABB::Overlap(const AABB &other) const {
+  for (int dim = 0; dim < 3; ++dim) {
+    if (pMin[dim] > other.pMax[dim] || pMax[dim] < other.pMin[dim]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool AABB::RayIntersect(const Ray &ray, float *tMin, float *tMax) const {
   float tNear = ray.tNear, tFar = ray.tFar;
   for (int i = 0; i < 3; ++i) {
     float invDir = 1.f / ray.direction[i];
@@ -49,4 +58,9 @@ bool AABB::rayIntersect(const Ray &ray, float *tMin, float *tMax) const {
   if (tMax)
     *tMax = tFar;
   return true;
+}
+
+Point3f AABB::Center() const {
+  return Point3f{(pMin[0] + pMax[0]) * .5f, (pMin[1] + pMax[1]) * .5f,
+                 (pMin[2] + pMax[2]) * .5f};
 }

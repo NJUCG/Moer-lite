@@ -157,7 +157,7 @@ void TriangleMesh::fillIntersection(float distance, int primID, float u,
 }
 
 void TriangleMesh::initInternalAcceleration() {
-  acceleration = std::make_shared<LinearAcceleration>();
+  acceleration = Acceleration::createAcceleration();
   int primCount = meshData->faceCount;
   for (int primID = 0; primID < primCount; ++primID) {
     int vtx0Idx = meshData->faceBuffer[primID][0].vertexIndex,
@@ -168,5 +168,7 @@ void TriangleMesh::initInternalAcceleration() {
     acceleration->attachShape(triangle);
   }
   acceleration->build();
+  // TriangleMesh的包围盒就是其内部加速结构的包围盒
+  boundingBox = acceleration->boundingBox;
 }
 REGISTER_CLASS(TriangleMesh, "triangle")

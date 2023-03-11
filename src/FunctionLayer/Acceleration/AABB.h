@@ -19,8 +19,12 @@ public:
 
   void Expand(const Point3f &other);
 
-  bool rayIntersect(const Ray &ray, float *tMin = nullptr,
+  bool Overlap(const AABB &other) const;
+
+  bool RayIntersect(const Ray &ray, float *tMin = nullptr,
                     float *tMax = nullptr) const;
+
+  Point3f Center() const;
 
 public:
   Point3f pMin, pMax;
