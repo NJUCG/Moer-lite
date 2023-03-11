@@ -31,6 +31,7 @@ add_executable(Moer
   src/FunctionLayer/Acceleration/Acceleration.cpp
   src/FunctionLayer/Acceleration/EmbreeBVH.cpp
   src/FunctionLayer/Acceleration/Linear.cpp
+  src/FunctionLayer/Acceleration/Octree.cpp
 
   src/FunctionLayer/Integrator/NormalIntegrator.cpp
   src/FunctionLayer/Integrator/DirectIntegrator.cpp

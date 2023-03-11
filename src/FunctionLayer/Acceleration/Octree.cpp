@@ -11,7 +11,7 @@ OctreeAcceleration::OctreeAcceleration() {
 }
 
 OctreeAcceleration::~OctreeAcceleration() {
-  // do nothing
+  //
 }
 
 void OctreeAcceleration::build() {
