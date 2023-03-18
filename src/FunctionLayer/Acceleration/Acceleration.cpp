@@ -2,19 +2,23 @@
 #include "EmbreeBVH.h"
 #include "Linear.h"
 #include "Octree.h"
+#include "BVH.h"
 // Default acceleration type is embree
 AccelerationType Acceleration::type = AccelerationType::Embree;
 
 std::map<std::string, AccelerationType> accelerationTypeMap = {
     {"embree", AccelerationType::Embree},
     {"linear", AccelerationType::Linear},
-    {"octree", AccelerationType::Octree}};
+    {"octree", AccelerationType::Octree},
+    {"bvh",AccelerationType::BVH}};
 
 std::map<AccelerationType, std::function<std::shared_ptr<Acceleration>()>>
     accelerationBuildMap = {
         {AccelerationType::Embree, std::make_shared<EmbreeBVH>},
         {AccelerationType::Linear, std::make_shared<LinearAcceleration>},
-        {AccelerationType::Octree, std::make_shared<OctreeAcceleration>}};
+        {AccelerationType::Octree, std::make_shared<Octree>},
+        {AccelerationType::BVH, std::make_shared<BVH>}
+};
 
 void Acceleration::setAccelerationType(std::string type) {
   if (accelerationTypeMap.count(type) == 0) {

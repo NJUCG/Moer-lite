@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "acc-test-2.png"
+    "filename" : "monkey-bvh.png"
   },
   "sampler" : {
     "type" : "independent",
@@ -27,16 +27,20 @@
     "type" : "normal"
   },
   "scene" : {
-    "acceleration" : "octree",
+    "acceleration" : "bvh",
     "shapes" : [
       {
         "type" : "triangle",
         "file" : "models/Monkey.obj",
         "material" : {
-          "type" : "matte",
-          "albedo" : [0.8, 0.8, 0.8]
+          "type": "matte",
+          "albedo": [
+            0.8,
+            0.8,
+            0.8
+          ]
         }
-      }   
+      }
     ],
     "lights" : [
 

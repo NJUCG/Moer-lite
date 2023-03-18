@@ -5,7 +5,7 @@
 #include <optional>
 #include <vector>
 
-enum class AccelerationType { Embree, Linear, Octree };
+enum class AccelerationType { Embree, Linear, Octree,BVH };
 
 //* 所有空间加速结构的基类
 class Acceleration {

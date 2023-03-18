@@ -3,6 +3,7 @@
 #include <FunctionLayer/Ray/Ray.h>
 #include <ResourceLayer/Factory.h>
 #include <ResourceLayer/JsonUtil.h>
+#include <CoreLayer/Math/Transform.h>
 
 struct CameraSample {
   Vector2f xy;

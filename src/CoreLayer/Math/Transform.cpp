@@ -72,3 +72,32 @@ Point3f Transform::toWorld(const Point3f &point) const {
   v4 /= v4[3];
   return Point3f{v4[0], v4[1], v4[2]};
 }
+
+AABB Transform::toWorld(const AABB &b) const {
+    AABB ret;
+    ret = ret.Union(toWorld(Point3f(b.pMin[0], b.pMin[1], b.pMin[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMax[0], b.pMin[1], b.pMin[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMin[0], b.pMax[1], b.pMin[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMin[0], b.pMin[1], b.pMax[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMin[0], b.pMax[1], b.pMax[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMax[0], b.pMax[1], b.pMin[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMax[0], b.pMin[1], b.pMax[2])));
+    ret = ret.Union(toWorld(Point3f(b.pMax[0], b.pMax[1], b.pMax[2])));
+    return ret;
+}
+
+Ray Transform::inverseRay(const Ray &ray) const {
+    Point3f origin = ray.origin;
+    Vector3f direction = ray.direction;
+
+    vecmat::vec4f o{origin[0], origin[1], origin[2], 1.f},
+            d{direction[0], direction[1], direction[2], 0.f};
+
+    o = invRotate * invTranslate * o;
+    d = invRotate * invTranslate * d;
+
+    o /= o[3];
+    origin = Point3f{o[0], o[1], o[2]};
+    direction = Vector3f{d[0], d[1], d[2]};
+    return {origin,direction,ray.tNear,ray.tFar};
+}

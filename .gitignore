@@ -2,5 +2,7 @@
 .cache
 /target
 /scenes
+/cmake-build-debug
+/cmake-build-release
+.idea
 .vscode
-/examples/acceleration-test
