@@ -4,13 +4,14 @@ struct Octree::OctreeNode {
     AABB boundingBox;
     std::shared_ptr<OctreeNode> subNodes[8];
     int primCount = -1;
-    int primIdxBuffer[MAX_LEAF_SIZE];
+    int primIdxBuffer[ocLeafMaxSize];
 };
 Octree::OctreeNode * Octree::recursiveBuild(const AABB &aabb,
                        const std::vector<int> &primIdxBuffer) {
   //* todo 完成递归构建八叉树
   //* 构建方法请看实验手册
   //* 要注意的一种特殊是当节点的某个子包围盒和当前节点所有物体都相交，我们就不用细分了，当前节点作为叶子节点即可。
+    return nullptr;
 }
 void Octree::build() {
   //* 首先计算整个场景的范围
@@ -33,4 +34,5 @@ void Octree::build() {
 bool Octree::rayIntersect(Ray &ray, int *geomID, int *primID,
                           float *u, float *v) const {
   //*todo 完成八叉树求交
+  return false;
 }
