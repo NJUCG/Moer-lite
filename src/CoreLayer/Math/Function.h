@@ -6,7 +6,7 @@ template <typename T> T clamp(T t, T lower, T upper) {
   return t;
 }
 
-//* 求解二元一次方程组
+//* 求解一元二次方程组
 inline bool Quadratic(float A, float B, float C, float *t0, float *t1) {
     float discrim = B * B - 4 *  A  * C;
     if (discrim < 0.) return false;
