@@ -7,6 +7,7 @@ bool Cylinder::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) cons
     //* 3.检验交点是否在圆柱范围内
     //* 4.更新ray的tFar,减少光线和其他物体的相交计算次数
     //* Write your code here.
+    return false;
 }
 
 void Cylinder::fillIntersection(float distance, int primID, float u, float v, Intersection *intersection) const {

@@ -8,6 +8,7 @@ bool Disk::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) const {
     //* 4.检验交点是否在圆环内
     //* 5.更新ray的tFar,减少光线和其他物体的相交计算次数
     //* Write your code here.
+    return false;
 }
 
 void Disk::fillIntersection(float distance, int primID, float u, float v, Intersection *intersection) const {
