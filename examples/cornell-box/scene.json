@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "cornell.hdr"
+    "filename" : "cornell.png"
   },
   "sampler" : {
     "type" : "independent",
