@@ -9,6 +9,8 @@ Spectrum PathIntegrator::li(Ray &ray, const Scene &scene,
   auto intersectionOpt = scene.rayIntersect(ray);
 
   auto depth = 0u;
+  bool specularBounce = false;
+
   while (true) {
     if (!intersectionOpt.has_value()) {
       for (auto light : scene.infiniteLights)
@@ -19,7 +21,7 @@ Spectrum PathIntegrator::li(Ray &ray, const Scene &scene,
     auto intersection = intersectionOpt.value();
     computeRayDifferentials(&intersection, ray);
 
-    if (depth == 0)
+    if (depth == 0 || specularBounce)
       if (auto light = intersection.shape->light; light) {
         spectrum += light->evaluateEmission(intersection, -ray.direction);
       }
@@ -74,9 +76,10 @@ Spectrum PathIntegrator::li(Ray &ray, const Scene &scene,
     if (bsdf_sample_result.weight.isZero())
       break;
 
-    throughput *= bsdf_sample_result.weight / bsdf_sample_result.pdf;
+    throughput *= bsdf_sample_result.weight;
     ray = Ray{intersection.position, bsdf_sample_result.wi};
 
+    specularBounce = bsdf_sample_result.type == BSDFType::Specular;
     intersectionOpt = scene.rayIntersect(ray);
   }
 
