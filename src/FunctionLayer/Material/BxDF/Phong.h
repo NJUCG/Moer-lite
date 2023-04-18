@@ -6,9 +6,9 @@ class PhongReflection : public BSDF {
 public:
   PhongReflection(const Vector3f &_normal, const Vector3f &_tangent,
                   const Vector3f &_bitangent, Spectrum _albedo, float _kd,
-                  float _p)
-      : BSDF(_normal, _tangent, _bitangent), albedo(_albedo), kd(_kd),
-        ks(1.f - _kd), p(_p), specularReflectance(1.f) {}
+                  float _ks, float _p)
+      : BSDF(_normal, _tangent, _bitangent), albedo(_albedo), kd(_kd), ks(_ks),
+        p(_p), specularReflectance(1.f) {}
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
     // TODO

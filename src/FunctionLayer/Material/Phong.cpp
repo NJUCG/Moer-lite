@@ -21,6 +21,7 @@ PhongMaterial::PhongMaterial(const Json &json) : Material(json) {
   }
 
   kd = fetchRequired<float>(json, "kd");
+  ks = fetchRequired<float>(json, "ks");
   p = fetchRequired<float>(json, "p");
 }
 
@@ -31,7 +32,7 @@ PhongMaterial::computeBSDF(const Intersection &intersection) const {
 
   Spectrum s = albedo->evaluate(intersection);
   return std::make_shared<PhongReflection>(normal, tangent, bitangent, s, kd,
-                                           p);
+                                           ks, p);
 }
 
 REGISTER_CLASS(PhongMaterial, "phong")
