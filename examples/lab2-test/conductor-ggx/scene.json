@@ -1,0 +1,139 @@
+{
+  "output" : {
+    "filename" : "conductor-ggx.hdr"
+  },
+  "sampler" : {
+    "type" : "independent",
+    "xSamples" : 32,
+    "ySamples" : 32
+  },
+  "camera" : {
+    "type" : "pinhole",
+    "transform" : {
+      "position" : [0, 1, 4],
+      "up" : [0, 1, 0],
+      "lookAt" : [0, 0, 0]
+    },
+    "tNear" : 0.1,
+    "tFar" : 10000,
+    "verticalFov" : 22,
+    "timeStart" : 0,
+    "timeEnd" : 0,
+    "film" : {
+      "size" : [1000, 300]
+    }
+  },
+  "integrator" : {
+    "type" : "directSampleLight"
+  },
+  "scene" : {
+    "shapes" : [
+      {
+        "type" : "sphere",
+        "material" : {
+          "type" : "conductor",
+          "albedo" : [0.8, 0.8, 0.8],
+          "eta" : [0.15494, 0.11648, 0.13809],
+          "k" : [4.81810, 3.11562, 2.14240],
+          "roughness" : 0.01,
+          "ndf" : "ggx"
+        },
+        "center" : [-2, 0, 0],
+        "radius" : 0.45,
+        "transform" : {
+          "translate" : [0, 0, 0]
+        }
+      },
+      {
+        "type" : "sphere",
+        "material" : {
+          "type" : "conductor",
+          "albedo" : [0.8, 0.8, 0.8],
+          "eta" : [0.15494, 0.11648, 0.13809],
+          "k" : [4.81810, 3.11562, 2.14240],
+          "roughness" : 0.25,
+          "ndf" : "ggx"
+        },
+        "center" : [-1, 0, 0],
+        "radius" : 0.45,
+        "transform" : {
+          "translate" : [0, 0, 0]
+        }
+      },
+      {
+        "type" : "sphere",
+        "material" : {
+          "type" : "conductor",
+          "albedo" : [0.8, 0.8, 0.8],
+          "eta" : [0.15494, 0.11648, 0.13809],
+          "k" : [4.81810, 3.11562, 2.14240],
+          "roughness" : 0.5,
+          "ndf" : "ggx"
+        },
+        "center" : [0, 0, 0],
+        "radius" : 0.45,
+        "transform" : {
+          "translate" : [0, 0, 0]
+        }
+      },
+      {
+        "type" : "sphere",
+        "material" : {
+          "type" : "conductor",
+          "albedo" : [0.8, 0.8, 0.8],
+          "eta" : [0.15494, 0.11648, 0.13809],
+          "k" : [4.81810, 3.11562, 2.14240],
+          "roughness" : 0.75,
+          "ndf" : "ggx"
+        },
+        "center" : [1, 0, 0],
+        "radius" : 0.45,
+        "transform" : {
+          "translate" : [0, 0, 0]
+        }
+      },
+      {
+        "type" : "sphere",
+        "material" : {
+          "type" : "conductor",
+          "albedo" : [0.8, 0.8, 0.8],
+          "eta" : [0.15494, 0.11648, 0.13809],
+          "k" : [4.81810, 3.11562, 2.14240],
+          "roughness" : 0.99,
+          "ndf" : "ggx"
+        },
+        "center" : [2, 0, 0],
+        "radius" : 0.45,
+        "transform" : {
+          "translate" : [0, 0, 0]
+        }
+      },
+      {
+        "type" : "parallelogram",
+        "base" : [-10, -0.45, -10],
+        "edge0" : [0, 0, 20],
+        "edge1" : [20,0,0],
+        "material" : {
+          "type" : "matte",
+          "albedo" : [0.7, 0.7, 0.7]
+        }
+      }   
+    ],
+    "lights" : [
+      {
+          "type" : "areaLight",
+          "energy" : [50, 50, 50],
+          "shape" : {
+            "type" : "parallelogram",
+            "base" : [0, 3, 4],
+            "edge0" : [0, 0, 4],
+            "edge1" : [4, 0, 0],
+            "material" : {
+              "type" : "matte",
+              "albedo" : [0.5, 0.5, 0.5]
+            }
+          }
+        }
+    ]
+  }
+}
