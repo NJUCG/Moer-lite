@@ -44,6 +44,10 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
   - 修改了面光源存在时运行发生段错误
 - 2023-3-18
   lab1有关内容更新 具体请看实验手册
+
+- 2023-4-18
+  更新了lab2，新增代码以及实验手册请切换到本仓库lab-2分支进行查看
+  添加了lab0的手册
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）
 - 加速环境光的采样
