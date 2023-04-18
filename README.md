@@ -48,6 +48,10 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
 - 2023-4-18
   更新了lab2，新增代码以及实验手册请切换到本仓库lab-2分支进行查看
   添加了lab0的手册
+
+## 纠错
+- Parallelogram.cpp 中的 Parallelogram::uniformSampleOnSurface方法，其中 area 应为 `cross(edge0, edge1).length()`， 即去掉.5f的系数（感谢苏尧同学的指正）
+
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）
 - 加速环境光的采样

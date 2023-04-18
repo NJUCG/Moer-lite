@@ -77,7 +77,7 @@ void Parallelogram::fillIntersection(float distance, int primID, float u,
 void Parallelogram::uniformSampleOnSurface(Vector2f sample,
                                            Intersection *intersection,
                                            float *pdf) const {
-  const static float area = .5f * cross(edge0, edge1).length();
+  const static float area = cross(edge0, edge1).length();
   *pdf = 1.f / area;
   fillIntersection(.0f /*unused */, 0 /*unused*/, sample[0], sample[1],
                    intersection);
