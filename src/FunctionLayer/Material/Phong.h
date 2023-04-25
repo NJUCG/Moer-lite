@@ -11,7 +11,7 @@ public:
   computeBSDF(const Intersection &intersection) const override;
 
 private:
-  std::shared_ptr<Texture<Spectrum>> albedo;
-  float kd, ks; // 漫反射系数，高光（镜面反射）系数
-  float p;      // 高光衰减系数
+  std::shared_ptr<Texture<Spectrum>> kd; // 漫反射系数
+  std::shared_ptr<Texture<Spectrum>> ks; // 高光（镜面反射）系数
+  float p;                               // 高光衰减系数
 };
