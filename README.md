@@ -57,6 +57,10 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
   3. Conductor材质
   4. Dielectric材质
   5. GGX和Beckmann 分布
+  
+- 2023-4-46
+
+  修复了lab2中框架Phong模型和Oren-Nayar模型的参数问题
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）
 - 加速环境光的采样

@@ -5,8 +5,8 @@
 class OrenNayarBSDF : public BSDF {
 public:
   OrenNayarBSDF(const Vector3f &_normal, const Vector3f &_tangent,
-                const Vector3f &_bitangent, Spectrum _albedo, float sigma)
-      : BSDF(_normal, _tangent, _bitangent), albedo(_albedo) {}
+                const Vector3f &_bitangent, Spectrum _albedo, float _sigma)
+      : BSDF(_normal, _tangent, _bitangent), albedo(_albedo), sigma(_sigma) {}
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
     // TODO
