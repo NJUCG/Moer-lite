@@ -33,7 +33,7 @@
         "material" : {
           "type" : "oren-nayar",
           "albedo" : [0.8, 0.8, 0.8],
-          "roughness" : 0.01
+          "roughness" : 0
         },
         "center" : [-2, 0, 0],
         "radius" : 0.45,
@@ -46,7 +46,7 @@
         "material" : {
           "type" : "oren-nayar",
           "albedo" : [0.8, 0.8, 0.8],
-          "roughness" : 0.25
+          "roughness" : 0.1
         },
         "center" : [-1, 0, 0],
         "radius" : 0.45,
@@ -59,7 +59,7 @@
         "material" : {
           "type" : "oren-nayar",
           "albedo" : [0.8, 0.8, 0.8],
-          "roughness" : 0.5
+          "roughness" : 0.3
         },
         "center" : [0, 0, 0],
         "radius" : 0.45,
@@ -72,7 +72,7 @@
         "material" : {
           "type" : "oren-nayar",
           "albedo" : [0.8, 0.8, 0.8],
-          "roughness" : 0.75
+          "roughness" : 2
         },
         "center" : [1, 0, 0],
         "radius" : 0.45,
@@ -85,7 +85,7 @@
         "material" : {
           "type" : "oren-nayar",
           "albedo" : [0.8, 0.8, 0.8],
-          "roughness" : 0.99
+          "roughness" : 20
         },
         "center" : [2, 0, 0],
         "radius" : 0.45,
