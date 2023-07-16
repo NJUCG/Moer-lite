@@ -33,6 +33,6 @@ public:
 
     float cos_theta = std::sqrt(1.f / (1.f + tan_theta_2));
     float sin_theta = std::sqrt(1.f - cos_theta * cos_theta);
-    return {sin_theta * std::cos(phi), sin_theta * std::sin(phi), cos_theta};
+    return {sin_theta * std::cos(phi), cos_theta, sin_theta * std::sin(phi)};
   }
 };
