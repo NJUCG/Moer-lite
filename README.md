@@ -29,12 +29,14 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
 
 ## Update
 - 2023-3-2 添加了进度条，whitted-style积分器，镜面材质以及一个新场景cornell-box。
+
 - 2023-3-10
   - 修改了Cube.cpp 28、29行bug（之前代码正确性不影响，但是逻辑不对）
   - 修改了Triangle.cpp中的bug（之前当mesh文件不存在法线和纹理信息时会发生段错误）
   - 对AABB进行封装（见Shape::getAABB）
   - Scene::rayIntersect、Shape::rayIntersectShape、Acceleration::rayIntersect、Integrator::li中const Ray& 修改为Ray&
   - 修改了Acceleration求交的接口，现在每个加速结构需要实现bool Acceleration::rayIntersect(Ray &ray, int *geomID, int *primID, float *u, float *v) const函数
+  
 - 2023-3-11
   - 增加了Octree八叉树，实现八叉树需要你实现以下两个方法
     - std::shared_ptr<OctreeNode> Octree::recursiveBuild
@@ -42,12 +44,17 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
   - 增加了`examples/lab1-test0`测试场景，用于测试加速结构的效率
   - 目前可以修改配置文件中scene的acceleration参数用来测试不同的加速结构，现在可选的参数有`embree`（default）、`linear`（没有任何求交加速）、`octree`（需要实现）
   - 修改了面光源存在时运行发生段错误
+  
 - 2023-3-18
   lab1有关内容更新 具体请看实验手册
 
 - 2023-4-18
   更新了lab2，新增代码以及实验手册请切换到本仓库lab-2分支进行查看
   添加了lab0的手册
+  
+- 2023-10-6
+
+  修正了lab2对于微表面模型公式中，G项的描述错误
 
 ## 纠错
 - Parallelogram.cpp 中的 Parallelogram::uniformSampleOnSurface方法，其中 area 应为 `cross(edge0, edge1).length()`， 即去掉.5f的系数（感谢苏尧同学的指正）
