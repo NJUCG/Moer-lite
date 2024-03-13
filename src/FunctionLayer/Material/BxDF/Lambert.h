@@ -11,7 +11,7 @@ public:
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
     // if (woLocal[1] <= .0f || wiLocal[1] <= .0f)
     //   return Spectrum(0.f);
-    return albedo * INV_PI * wiLocal[1];
+    return albedo * INV_PI * std::max(wiLocal[1], 0.0f);
   }
 
   virtual BSDFSampleResult sample(const Vector3f &wo,
