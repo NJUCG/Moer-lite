@@ -1,0 +1,13 @@
+// Static tasks configuration.
+//
+// Example:
+[
+  {
+    "label": "Build Moer-lite",
+    "command": "mkdir -p build; cd build; cmake ..; make -j"
+  },
+  {
+    "label": "Run two-spotlights example",
+    "command": "cd target; bin/Moer ../examples/two-spotlights"
+  }
+]
