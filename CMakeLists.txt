@@ -80,8 +80,7 @@ endif()
 
 if(APPLE)
   set(LIBS_PATH ${PROJECT_SOURCE_DIR}/libs/macos)
-  # set(EMBREE_DLL ${LIBS_PATH}/libembree3.3.dylib ${LIBS_PATH}/libtbb.12.2.dylib)
-  set(EMBREE_DLL ${LIBS_PATH}/libembree4.4.dylib ${LIBS_PATH}/libtbb.12.11.dylib)
+  set(EMBREE_DLL ${LIBS_PATH}/libembree3.3.dylib ${LIBS_PATH}/libtbb.12.2.dylib)
 endif()
 
 
@@ -93,21 +92,8 @@ add_custom_command(TARGET Moer POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different
   ${EMBREE_DLL} $<TARGET_FILE_DIR:Moer>)
 
-target_link_libraries(Moer PUBLIC embree4)
+target_link_libraries(Moer PUBLIC embree3)
 target_link_libraries(Moer PUBLIC tinyobjloader)
-
-# if(APPLE)
-#   execute_process(
-#     COMMAND uname -m
-#     RESULT_VARIABLE result
-#     OUTPUT_VARIABLE MOER_OSX_NATIVE_ARCHITECTURE
-#     OUTPUT_STRIP_TRAILING_WHITESPACE
-#   )
-
-#     if(${MOER_OSX_NATIVE_ARCHITECTURE} STREQUAL "arm64")
-#         set_target_properties(Moer PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-#     endif()
-# endif()
 
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
   set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES

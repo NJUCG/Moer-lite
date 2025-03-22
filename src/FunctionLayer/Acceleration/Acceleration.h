@@ -5,7 +5,7 @@
 #include <optional>
 #include <vector>
 
-enum class AccelerationType { Embree, Linear, Octree,BVH };
+enum class AccelerationType { Embree, Linear, Octree, BVH };
 
 //* 所有空间加速结构的基类
 class Acceleration {
@@ -38,6 +38,9 @@ public:
 
   //* 向加速结构中增加一个几何体
   void attachShape(std::shared_ptr<Shape> shape) { shapes.emplace_back(shape); }
+
+  //* 获取已添加的几何体
+  std::shared_ptr<Shape> getShape(size_t index) { return shapes[index]; }
 
 public:
   static AccelerationType type;

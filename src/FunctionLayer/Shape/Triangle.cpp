@@ -2,7 +2,9 @@
 #include "CoreLayer/Math/Constant.h"
 #include "CoreLayer/Math/Geometry.h"
 #include <FunctionLayer/Acceleration/Linear.h>
+#include <cassert>
 #include <cstdlib>
+#include <memory>
 //--- Triangle ---
 Triangle::Triangle(int _primID, int _vtx0Idx, int _vtx1Idx, int _vtx2Idx,
                    const TriangleMesh *_mesh)
@@ -59,8 +61,9 @@ bool Triangle::rayIntersectShape(Ray &ray, int *primID, float *u,
 
   // Step 7: Calculate the Distance Parameter
   auto t_intersect = inv_det * dot(E2, Q);
-  if (t_intersect < 0) // Intersects in the reverse direction
+  if (t_intersect < 0 || t_intersect > ray.tFar)
     return false;
+  ray.tFar = t_intersect;
 
   // Output results
   *primID = this->primID;
@@ -72,8 +75,40 @@ bool Triangle::rayIntersectShape(Ray &ray, int *primID, float *u,
 
 void Triangle::fillIntersection(float distance, int primID, float u, float v,
                                 Intersection *intersection) const {
-  // 该函数实际上不会被调用
-  return;
+  intersection->distance = distance;
+  intersection->shape = this;
+
+  auto V0 = mesh->transform.toWorld(mesh->meshData->vertexBuffer[vtx0Idx]),
+       V1 = mesh->transform.toWorld(mesh->meshData->vertexBuffer[vtx1Idx]),
+       V2 = mesh->transform.toWorld(mesh->meshData->vertexBuffer[vtx2Idx]);
+  auto E1 = V1 - V0, E2 = V2 - V0;
+
+  auto position = V0 + u * E1 + v * E2;
+  intersection->position = mesh->transform.toWorld(position);
+
+  auto normal = cross(E1, E2);
+  intersection->normal = mesh->transform.toWorld(normalize(normal));
+
+  // Tangent and Bitangents
+  // Reference:
+  // https://sotrh.github.io/learn-wgpu/intermediate/tutorial11-normals/#the-tangent-and-the-bitangent
+  auto uv0 = mesh->meshData->texcodBuffer[vtx0Idx];
+  auto uv1 = mesh->meshData->texcodBuffer[vtx1Idx];
+  auto uv2 = mesh->meshData->texcodBuffer[vtx2Idx];
+
+  auto Euv1 = uv1 - uv0, Euv2 = uv2 - uv0;
+
+  auto r = 1.0f / (Euv1.x() * Euv2.y() - Euv1.y() * Euv2.x());
+  auto tangent = (E1 * Euv2.y() - E2 * Euv1.y()) * r;
+  auto bitangent = cross(normal, tangent);
+
+  intersection->tangent = mesh->transform.toWorld(normalize(tangent));
+  intersection->bitangent = mesh->transform.toWorld(normalize(bitangent));
+
+  intersection->texCoord = uv0 + u * Euv1 + v * Euv2;
+
+  intersection->dpdu = mesh->transform.toWorld(normalize(E1));
+  intersection->dpdv = mesh->transform.toWorld(normalize(E2));
 }
 
 //--- TriangleMesh ---
@@ -117,19 +152,20 @@ bool TriangleMesh::rayIntersectShape(Ray &ray, int *primID, float *u,
 void TriangleMesh::fillIntersection(float distance, int primID, float u,
                                     float v, Intersection *intersection) const {
   //* todo 填充光线与三角网格求交得到的交点信息
-  intersection->distance = distance;
-  intersection->shape = this;
+  // intersection->distance = distance;
+  // intersection->shape = this;
+
   //* 1. 在三角形内部用插值计算交点坐标
   //* 2. 在三角形内部用插值计算法线
   //* 3. 在三角形内部用插值计算纹理坐标
   //* 4. 在三角形内部用插值计算交点的切线和副切线
 
-  auto [didx0, didx1, didx2] = this->meshData->faceBuffer[primID];
-  auto [vidx0, vidx1, vidx2] =
-      std::tie(didx0.vertexIndex, didx1.vertexIndex, didx2.vertexIndex);
-  auto [v0, v1, v2] = std::tie(this->meshData->vertexBuffer[vidx0],
-                               this->meshData->vertexBuffer[vidx1],
-                               this->meshData->vertexBuffer[vidx2]);
+  auto triangle =
+      std::dynamic_pointer_cast<Triangle>(acceleration->getShape(primID));
+  assert(triangle->primID == primID);
+
+  triangle->fillIntersection(distance, primID, u, v, intersection);
+  intersection->shape = this; // overwrite
 }
 
 void TriangleMesh::initInternalAcceleration() {
