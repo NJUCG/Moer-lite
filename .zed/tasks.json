@@ -9,5 +9,9 @@
   {
     "label": "Run two-spotlights example",
     "command": "cd target; bin/Moer ../examples/two-spotlights"
+  },
+  {
+    "label": "monkey-bvh",
+    "command": "cd build; make -j; cd ../target/bin; lldb -o run ./Moer ../../examples/lab1-test/monkey-bvh"
   }
 ]

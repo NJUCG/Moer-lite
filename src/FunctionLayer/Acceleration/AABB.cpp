@@ -1,4 +1,5 @@
 #include "AABB.h"
+#include "CoreLayer/Math/Geometry.h"
 
 Point3f minP(const Point3f &p1, const Point3f &p2) {
   return Point3f{std::min(p1[0], p2[0]), std::min(p1[1], p2[1]),
@@ -39,9 +40,14 @@ bool AABB::Overlap(const AABB &other) const {
   return true;
 }
 
+Vector2f const2vec(const float x) { return Vector2f(x, x); }
+
 bool AABB::RayIntersect(const Ray &ray, float *tMin, float *tMax) const {
-  //* todo 实现AABB与光线求交
-  return false;
+  auto tNear = (pMin - ray.origin) / ray.direction;
+  auto tFar = (pMax - ray.origin) / ray.direction;
+
+  return std::max({tNear[0], tNear[1], tNear[2]}) <=
+         std::min({tFar[0], tFar[1], tFar[2]});
 }
 
 Point3f AABB::Center() const {
