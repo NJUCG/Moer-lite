@@ -60,4 +60,5 @@ public:
 private:
   std::shared_ptr<MeshData> meshData;
   std::shared_ptr<Acceleration> acceleration;
+  std::unordered_map<int, std::shared_ptr<Triangle>> primid_triangle_map;
 };

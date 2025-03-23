@@ -29,6 +29,7 @@ struct BVHInternalNode {
   AABB bounding_box;
   BVH::BVHNode *left = nullptr;
   BVH::BVHNode *right = nullptr;
+  std::span<std::shared_ptr<Shape>> shapes;
 
   BVHInternalNode(std::span<std::shared_ptr<Shape>> shapes);
 };

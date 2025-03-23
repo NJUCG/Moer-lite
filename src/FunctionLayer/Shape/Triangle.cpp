@@ -160,8 +160,9 @@ void TriangleMesh::fillIntersection(float distance, int primID, float u,
   //* 3. 在三角形内部用插值计算纹理坐标
   //* 4. 在三角形内部用插值计算交点的切线和副切线
 
-  auto triangle =
-      std::dynamic_pointer_cast<Triangle>(acceleration->getShape(primID));
+  auto found = primid_triangle_map.find(primID);
+  assert(found != primid_triangle_map.end());
+  auto triangle = found->second;
   assert(triangle->primID == primID);
 
   triangle->fillIntersection(distance, primID, u, v, intersection);
@@ -178,6 +179,7 @@ void TriangleMesh::initInternalAcceleration() {
     std::shared_ptr<Triangle> triangle =
         std::make_shared<Triangle>(primID, vtx0Idx, vtx1Idx, vtx2Idx, this);
     acceleration->attachShape(triangle);
+    primid_triangle_map[primID] = triangle;
   }
   acceleration->build();
   // TriangleMesh的包围盒就是其内部加速结构的包围盒
