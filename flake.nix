@@ -30,6 +30,7 @@
             cmake
             clang_19
             llvmPackages_19.clang-tools
+            llvmPackages_19.openmp
           ];
         };
       }

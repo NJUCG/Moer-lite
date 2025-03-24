@@ -4,14 +4,18 @@
 [
   {
     "label": "Build Moer-lite",
-    "command": "mkdir -p build; cd build; cmake ..; make -j"
+    "command": "mkdir -p build && cd build && cmake .. && make -j"
   },
   {
     "label": "Run two-spotlights example",
-    "command": "cd target; bin/Moer ../examples/two-spotlights"
+    "command": "cd target && bin/Moer ../examples/two-spotlights"
   },
   {
     "label": "monkey-bvh",
-    "command": "cd build; make -j; cd ../target/bin; lldb -o run ./Moer ../../examples/lab1-test/monkey-bvh"
+    "command": "cd build && make -j && cd ../target/bin && lldb -o run ./Moer ../../examples/lab1-test/monkey-bvh"
+  },
+  {
+    "label": "bunny-bvh-normal",
+    "command": "cd build && make -j && cd ../target/bin && ./Moer ../../examples/lab1-test/bunny-bvh-normal/ && open ./bunny-bvh-normal.hdr"
   }
 ]

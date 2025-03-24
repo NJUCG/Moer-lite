@@ -1,11 +1,11 @@
 {
   "output": {
-    "filename": "bunny-bvh.hdr"
+    "filename": "bunny-normal.hdr"
   },
   "sampler": {
     "type": "independent",
-    "xSamples": 8,
-    "ySamples": 8
+    "xSamples": 1,
+    "ySamples": 1
   },
   "camera": {
     "type": "pinhole",
@@ -13,7 +13,7 @@
       "position": [
         0,
         1,
-        4
+        8
       ],
       "up": [
         0,
@@ -28,21 +28,21 @@
     },
     "tNear": 0.1,
     "tFar": 10000,
-    "verticalFov": 45,
+    "verticalFov": 30,
     "timeStart": 0,
     "timeEnd": 0,
     "film": {
       "size": [
-        600,
-        400
+        150,
+        100
       ]
     }
   },
   "integrator": {
-    "type": "directSampleLight"
+    "type": "normal"
   },
   "scene": {
-    "acceleration": "bvh",
+    "acceleration": "linear",
     "shapes": [
       {
         "type": "triangle",

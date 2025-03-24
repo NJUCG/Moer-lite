@@ -10,6 +10,7 @@
 #include <ResourceLayer/JsonUtil.h>
 #include <chrono>
 #include <fstream>
+#include <omp.h>
 #include <regex>
 #include <stdio.h>
 
@@ -41,7 +42,12 @@ int main(int argc, char **argv) {
 
   auto total = width * height;
   auto percent = int(total / 100.0f);
+  auto progress = 0;
+  omp_set_max_active_levels(2);
+
+#pragma omp parallel for schedule(dynamic)
   for (int y = 0; y < height; ++y) {
+#pragma omp parallel for schedule(dynamic)
     for (int x = 0; x < width; ++x) {
       Vector2f NDC{(float)x / width, (float)y / height};
       Spectrum li(.0f);
@@ -52,9 +58,13 @@ int main(int argc, char **argv) {
       }
       camera->film->deposit({x, y}, li / spp);
 
-      int finished = x + y * width;
-      if (finished % percent == 0) {
-        printProgress((float)finished / total);
+      int current_progress = -1;
+#pragma omp atomic capture
+      current_progress = ++progress;
+
+      if (current_progress % percent == 0) {
+#pragma omp critical
+        printProgress((float)current_progress / total);
       }
     }
   }

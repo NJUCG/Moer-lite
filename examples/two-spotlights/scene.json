@@ -4,8 +4,8 @@
   },
   "sampler" : {
     "type" : "independent",
-    "xSamples" : 4,
-    "ySamples" : 4
+    "xSamples" : 2,
+    "ySamples" : 2
   },
   "camera" : {
     "type" : "pinhole",
@@ -27,6 +27,7 @@
     "type" : "directSampleLight"
   },
   "scene" : {
+    "acceleration": "bvh",
     "shapes" : [
       {
         "type" : "parallelogram",

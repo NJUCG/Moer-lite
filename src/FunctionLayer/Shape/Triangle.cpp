@@ -41,7 +41,7 @@ bool Triangle::rayIntersectShape(Ray &ray, int *primID, float *u,
   auto det = dot(E1, P);
 
   // If it's close to 0, then ray is parallel to surface, no intersection
-  if (abs(det) < EPSILON)
+  if (abs(det) < 1e-8)
     return false;
 
   // Step 4: Calculate Inverse Determinant
