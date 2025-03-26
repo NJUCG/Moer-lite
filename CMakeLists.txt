@@ -83,6 +83,7 @@ target_include_directories(Moer PUBLIC ./externals)
 target_include_directories(Moer PUBLIC ./src)
 target_include_directories(Moer PUBLIC ./externals/json/include)
 target_include_directories(Moer PUBLIC ./externals/embree/include)
+target_include_directories(Moer PUBLIC ./externals/indicators)
 
 if(WIN32)
   set(LIBS_PATH ${PROJECT_SOURCE_DIR}/libs/win)

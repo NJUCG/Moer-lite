@@ -10,19 +10,28 @@
 #include <ResourceLayer/JsonUtil.h>
 #include <chrono>
 #include <fstream>
+#include <indicators.hpp>
 #include <omp.h>
 #include <regex>
 #include <stdio.h>
 
-#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-#define PBWIDTH 60
+using namespace indicators;
 
 inline void printProgress(float percentage) {
-  int val = (int)(percentage * 100);
-  int lpad = (int)(percentage * PBWIDTH);
-  int rpad = PBWIDTH - lpad;
-  printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
-  fflush(stdout);
+  static indicators::ProgressBar bar{
+      option::BarWidth{30},
+      option::Start{" ["},
+      option::Fill{"█"},
+      option::Lead{"█"},
+      option::Remainder{"-"},
+      option::End{"]"},
+      option::PrefixText{"Rendering"},
+      option::ForegroundColor{Color::blue},
+      option::ShowElapsedTime{true},
+      option::ShowRemainingTime{true},
+      option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}};
+
+  bar.set_progress((size_t)(percentage * 100));
 }
 
 int main(int argc, char **argv) {
