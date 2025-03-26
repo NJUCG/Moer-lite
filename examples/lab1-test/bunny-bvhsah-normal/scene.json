@@ -1,6 +1,6 @@
 {
   "output": {
-    "filename": "bunny-bvh-normal.hdr"
+    "filename": "bunny-bvhsah-normal.hdr"
   },
   "sampler": {
     "type": "independent",
@@ -42,7 +42,7 @@
     "type": "normal"
   },
   "scene": {
-    "acceleration": "bvh",
+    "acceleration": "bvh-sah",
     "shapes": [
       {
         "type": "triangle",

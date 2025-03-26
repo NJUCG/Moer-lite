@@ -26,6 +26,8 @@ inline void printProgress(float percentage) {
 }
 
 int main(int argc, char **argv) {
+  omp_set_max_active_levels(4);
+
   const std::string sceneDir = std::string(argv[1]);
   FileUtil::setWorkingDirectory(sceneDir);
   std::string sceneJsonPath = FileUtil::getFullPath("scene.json");
@@ -39,11 +41,9 @@ int main(int argc, char **argv) {
   int width = camera->film->size[0], height = camera->film->size[1];
 
   auto start = std::chrono::system_clock::now();
-
   auto total = width * height;
   auto percent = int(total / 100.0f);
   auto progress = 0;
-  omp_set_max_active_levels(2);
 
 #pragma omp parallel for schedule(dynamic)
   for (int y = 0; y < height; ++y) {

@@ -33,17 +33,3 @@ struct BVHInternalNode {
 
   BVHInternalNode(std::span<std::shared_ptr<Shape>> shapes);
 };
-
-// From https://stackoverflow.com/a/75457696
-// Rust-like `match` for C++
-// https://en.cppreference.com/w/cpp/utility/variant/visit
-template <class... Ts> struct overloaded : Ts... {
-  using Ts::operator()...;
-};
-// explicit deduction guide (not needed as of C++20)
-template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
-
-template <typename Val, typename... Ts> auto match(Val &&val, Ts... ts) {
-  return std::visit(overloaded{std::forward<Ts>(ts)...},
-                    std::forward<Val>(val));
-}

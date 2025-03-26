@@ -9,7 +9,7 @@
 // otherwise creates an internal node
 BVH::BVHNode *create_bvh_node(std::span<std::shared_ptr<Shape>> shapes) {
   assert(shapes.size() > 0);
-  if (shapes.size() == 1)
+  if (shapes.size() <= 5)
     return new BVH::BVHNode(BVHLeaf(shapes));
   else
     return new BVH::BVHNode(BVHInternalNode(shapes));

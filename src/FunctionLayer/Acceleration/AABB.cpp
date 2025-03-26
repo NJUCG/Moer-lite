@@ -81,3 +81,9 @@ Point3f AABB::Center() const {
   return Point3f{(pMin[0] + pMax[0]) * .5f, (pMin[1] + pMax[1]) * .5f,
                  (pMin[2] + pMax[2]) * .5f};
 }
+
+float AABB::SurfaceArea() const {
+  auto length = pMax - pMin;
+  return 2 * (length[0] * length[1] + length[1] * length[2] +
+              length[2] * length[0]);
+}

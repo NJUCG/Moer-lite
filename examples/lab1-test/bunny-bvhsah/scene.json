@@ -1,11 +1,11 @@
 {
   "output": {
-    "filename": "bunny-bvh-normal.hdr"
+    "filename": "bunny-bvhsah.hdr"
   },
   "sampler": {
     "type": "independent",
-    "xSamples": 1,
-    "ySamples": 1
+    "xSamples": 8,
+    "ySamples": 8
   },
   "camera": {
     "type": "pinhole",
@@ -39,10 +39,10 @@
     }
   },
   "integrator": {
-    "type": "normal"
+    "type": "directSampleLight"
   },
   "scene": {
-    "acceleration": "bvh",
+    "acceleration": "bvh-sah",
     "shapes": [
       {
         "type": "triangle",

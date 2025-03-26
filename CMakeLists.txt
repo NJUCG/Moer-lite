@@ -5,7 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(Moer-lite LANGUAGES CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined")
 # set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=thread")
@@ -64,7 +64,20 @@ add_executable(Moer
   src/ResourceLayer/Image.cpp
   src/ResourceLayer/Mesh.cpp
   src/ResourceLayer/FileUtil.cpp
-        src/FunctionLayer/Shape/Disk.cpp src/FunctionLayer/Shape/Disk.h src/FunctionLayer/Shape/Cone.cpp src/FunctionLayer/Shape/Cone.h src/FunctionLayer/Shape/Cylinder.cpp src/FunctionLayer/Shape/Cylinder.h src/FunctionLayer/Integrator/UVIntegrator.cpp src/FunctionLayer/Integrator/UVIntegrator.h src/FunctionLayer/Acceleration/BVH.cpp src/FunctionLayer/Acceleration/BVH.h)
+
+  src/FunctionLayer/Shape/Disk.cpp
+  src/FunctionLayer/Shape/Disk.h
+  src/FunctionLayer/Shape/Cone.cpp
+  src/FunctionLayer/Shape/Cone.h
+  src/FunctionLayer/Shape/Cylinder.cpp
+  src/FunctionLayer/Shape/Cylinder.h
+  src/FunctionLayer/Integrator/UVIntegrator.cpp
+  src/FunctionLayer/Integrator/UVIntegrator.h
+  src/FunctionLayer/Acceleration/BVH.cpp
+  src/FunctionLayer/Acceleration/BVH.h
+  src/FunctionLayer/Acceleration/BVHSAH.cpp
+  src/FunctionLayer/Acceleration/BVHSAH.h
+)
 
 target_include_directories(Moer PUBLIC ./externals)
 target_include_directories(Moer PUBLIC ./src)
