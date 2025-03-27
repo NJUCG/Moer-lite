@@ -21,7 +21,7 @@ public:
 
   bool Overlap(const AABB &other) const;
 
-  bool RayIntersect(const Ray &ray, float *tMin = nullptr,
+  bool RayIntersect(Ray &ray, float *tMin = nullptr,
                     float *tMax = nullptr) const;
 
   Point3f Center() const;

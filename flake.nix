@@ -17,9 +17,10 @@
       system:
       let
         pkgs = import nixpkgs {
-          system = builtins.trace "System input is ${system}" (if (builtins.match ".*darwin.*" system != null)
+          system = if (builtins.match ".*darwin.*" system != null)
             then "x86_64-darwin"
-            else system);
+            else system;
+          # inherit system;
         };
       in
       {

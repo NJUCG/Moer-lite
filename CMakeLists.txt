@@ -114,6 +114,19 @@ target_link_libraries(Moer PUBLIC tinyobjloader)
 find_package(OpenMP REQUIRED)
 target_link_libraries(Moer PRIVATE OpenMP::OpenMP_CXX)
 
+if(APPLE)
+  execute_process(
+    COMMAND uname -m
+    RESULT_VARIABLE result
+    OUTPUT_VARIABLE MOER_OSX_NATIVE_ARCHITECTURE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  if(${MOER_OSX_NATIVE_ARCHITECTURE} STREQUAL "arm64")
+    set_target_properties(Moer PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+  endif()
+endif()
+
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
   set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})

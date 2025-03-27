@@ -30,6 +30,7 @@ struct BVHInternalNode {
   BVH::BVHNode *left = nullptr;
   BVH::BVHNode *right = nullptr;
   std::span<std::shared_ptr<Shape>> shapes;
+  int splitAxis;
 
   BVHInternalNode(std::span<std::shared_ptr<Shape>> shapes);
 };

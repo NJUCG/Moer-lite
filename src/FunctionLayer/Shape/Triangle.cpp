@@ -115,6 +115,16 @@ void Triangle::fillIntersection(float distance, int primID, float u, float v,
 TriangleMesh::TriangleMesh(const Json &json) : Shape(json) {
   const auto &filepath = fetchRequired<std::string>(json, "file");
   meshData = MeshData::loadFromFile(filepath);
+
+  for (int primID = 0; primID < meshData->faceCount; ++primID) {
+    int vtx0Idx = meshData->faceBuffer[primID][0].vertexIndex,
+        vtx1Idx = meshData->faceBuffer[primID][1].vertexIndex,
+        vtx2Idx = meshData->faceBuffer[primID][2].vertexIndex;
+    std::shared_ptr<Triangle> triangle =
+        std::make_shared<Triangle>(primID, vtx0Idx, vtx1Idx, vtx2Idx, this);
+
+    primid_triangle_map[primID] = triangle;
+  }
 }
 
 RTCGeometry TriangleMesh::getEmbreeGeometry(RTCDevice device) const {
@@ -173,13 +183,7 @@ void TriangleMesh::initInternalAcceleration() {
   acceleration = Acceleration::createAcceleration();
   int primCount = meshData->faceCount;
   for (int primID = 0; primID < primCount; ++primID) {
-    int vtx0Idx = meshData->faceBuffer[primID][0].vertexIndex,
-        vtx1Idx = meshData->faceBuffer[primID][1].vertexIndex,
-        vtx2Idx = meshData->faceBuffer[primID][2].vertexIndex;
-    std::shared_ptr<Triangle> triangle =
-        std::make_shared<Triangle>(primID, vtx0Idx, vtx1Idx, vtx2Idx, this);
-    acceleration->attachShape(triangle);
-    primid_triangle_map[primID] = triangle;
+    acceleration->attachShape(primid_triangle_map[primID]);
   }
   acceleration->build();
   // TriangleMesh的包围盒就是其内部加速结构的包围盒

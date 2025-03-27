@@ -9,7 +9,7 @@
 // otherwise creates an internal node
 BVH::BVHNode *create_bvh_node(std::span<std::shared_ptr<Shape>> shapes) {
   assert(shapes.size() > 0);
-  if (shapes.size() <= 5)
+  if (shapes.size() <= 8)
     return new BVH::BVHNode(BVHLeaf(shapes));
   else
     return new BVH::BVHNode(BVHInternalNode(shapes));
@@ -69,6 +69,7 @@ BVHInternalNode::BVHInternalNode(std::span<std::shared_ptr<Shape>> shapes) {
   }
 
   auto axis = get_best_axis(shapes);
+  this->splitAxis = axis;
   std::sort(shapes.begin(), shapes.end(), [axis](auto a, auto b) {
     auto centerA = a->getAABB().Center();
     auto centerB = b->getAABB().Center();
@@ -98,20 +99,21 @@ bool BVHNode_rayIntersect(BVH::BVHNode *root, Ray &ray, int *geomID,
   return match(
       *root,
       [&](BVHLeaf leaf) {
+        auto intersected = false;
         for (auto shape : leaf.shapes) {
           if (shape->rayIntersectShape(ray, primID, u, v)) {
             *geomID = shape->geometryID;
-            return true;
+            intersected = true;
           }
         }
-        return false;
+        return intersected;
       },
       [&](BVHInternalNode node) {
         if (node.bounding_box.RayIntersect(ray) == false)
           return false;
 
-        if (ray.direction[0] >= 0) {
-          // Positive on X direction
+        if (ray.direction[node.splitAxis] >= 0) {
+          // Positive on splitted axis
           // Will check left child first
           auto intersect_left = BVHNode_rayIntersect(node.left, ray, geomID,
                                                      primID, u, v, depth + 1);
@@ -119,7 +121,7 @@ bool BVHNode_rayIntersect(BVH::BVHNode *root, Ray &ray, int *geomID,
                                                       primID, u, v, depth + 1);
           return intersect_left || intersect_right;
         } else {
-          // Negative on X direction
+          // Negative on splitted axis
           // Will check right child first
           auto intersect_right = BVHNode_rayIntersect(node.right, ray, geomID,
                                                       primID, u, v, depth + 1);

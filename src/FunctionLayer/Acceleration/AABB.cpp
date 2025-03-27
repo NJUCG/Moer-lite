@@ -42,11 +42,13 @@ bool AABB::Overlap(const AABB &other) const {
 
 Vector2f const2vec(const float x) { return Vector2f(x, x); }
 
+// Calculate minimum value for each axis
 Vector3f vec_min(const Vector3f &v1, const Vector3f &v2) {
   return Vector3f{std::min(v1[0], v2[0]), std::min(v1[1], v2[1]),
                   std::min(v1[2], v2[2])};
 }
 
+// Calculate maximum value for each axis
 Vector3f vec_max(const Vector3f &v1, const Vector3f &v2) {
   return Vector3f{std::max(v1[0], v2[0]), std::max(v1[1], v2[1]),
                   std::max(v1[2], v2[2])};
@@ -58,17 +60,18 @@ Vector3f clamp(const Vector3f &v, float min_val, float max_val) {
                   std::clamp(v[2], min_val, max_val)};
 }
 
-bool AABB::RayIntersect(const Ray &ray, float *tMin, float *tMax) const {
+bool AABB::RayIntersect(Ray &ray, float *tMin, float *tMax) const {
   auto tA = (pMin - ray.origin) / ray.direction;
   auto tB = (pMax - ray.origin) / ray.direction;
 
-  auto t_near = clamp(vec_min(tA, tB), 0, ray.tFar);
-  auto t_far = clamp(vec_max(tA, tB), 0, ray.tFar);
+  auto t_near = vec_min(tA, tB);
+  auto t_far = vec_max(tA, tB);
 
   auto latest_entry = std::max({t_near[0], t_near[1], t_near[2]});
   auto earliest_exit = std::min({t_far[0], t_far[1], t_far[2]});
 
-  auto result = latest_entry <= earliest_exit;
+  auto result = ray.tNear <= latest_entry && latest_entry <= earliest_exit &&
+                earliest_exit <= ray.tFar;
 
   // if (result) {
   //   ray.tFar = earliest_exit;

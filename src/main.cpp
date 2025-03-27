@@ -27,6 +27,7 @@ inline void printProgress(float percentage) {
       option::End{"]"},
       option::PrefixText{"Rendering"},
       option::ForegroundColor{Color::blue},
+      option::ShowPercentage{true},
       option::ShowElapsedTime{true},
       option::ShowRemainingTime{true},
       option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}};
@@ -53,6 +54,7 @@ int main(int argc, char **argv) {
   auto total = width * height;
   auto percent = int(total / 100.0f);
   auto progress = 0;
+  printProgress(0.f);
 
 #pragma omp parallel for schedule(dynamic)
   for (int y = 0; y < height; ++y) {

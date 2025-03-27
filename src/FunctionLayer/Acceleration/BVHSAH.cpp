@@ -11,7 +11,7 @@
 BVHSAH::BVHSAHNode *
 create_bvh_sah_node(std::span<std::shared_ptr<Shape>> shapes) {
   assert(shapes.size() > 0);
-  if (shapes.size() <= 3)
+  if (shapes.size() <= 10)
     return new BVHSAH::BVHSAHNode(BVHSAHLeaf(shapes));
   else
     return new BVHSAH::BVHSAHNode(BVHSAHInternalNode(shapes));
@@ -46,7 +46,7 @@ float costAtSplit(std::span<std::shared_ptr<Shape>> shapes, int splitIndex) {
   }
 
   auto right_box = shapes[splitIndex]->getAABB();
-  for (auto shape : shapes.last(splitIndex)) {
+  for (auto shape : shapes.subspan(splitIndex)) {
     right_box.Expand(shape->getAABB());
   }
 
@@ -61,7 +61,7 @@ float costAtSplit(std::span<std::shared_ptr<Shape>> shapes, int splitIndex) {
 
 // For shapes sorted on a whatever axis, get the best cost and split index
 std::tuple<float, size_t> getBestSplit(std::span<std::shared_ptr<Shape>> shapes,
-                                       size_t samplePoints = 10) {
+                                       size_t samplePoints = 100) {
   assert(shapes.size() >= 2);
   samplePoints = std::min(samplePoints, shapes.size() - 1);
 
