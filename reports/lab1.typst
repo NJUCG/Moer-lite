@@ -1,0 +1,168 @@
+#import "@preview/showybox:2.0.4": showybox
+#import "@preview/colorful-boxes:1.4.2": *
+#import "@preview/suiji:0.3.0"
+
+#set text(lang: "zh", region: "CN")
+#set heading(numbering: (..nums) => {
+  // https://github.com/typst/typst/discussions/3341#discussioncomment-8364172
+  let sequence = nums.pos()
+  // discard first entry (chapter number)
+  let _ = sequence.remove(0)
+  if sequence.len() > 0 {
+    numbering("1.", ..sequence)
+  }
+})
+#set math.equation(numbering: "(1)")
+
+#let theory(body) = {
+  showybox(
+    title: "Möller-Trumbore算法",
+    title-style: (
+      boxed-style: (
+        anchor: (
+          x: center,
+          y: horizon
+        ),
+        radius: (top-left: 10pt, bottom-right: 10pt, rest: 0pt),
+      )
+    ),
+    frame: (
+      border-color: blue,
+      title-color: blue.lighten(30%),
+      body-color: blue.lighten(95%),
+      footer-color: blue.lighten(80%),
+      thickness: 1.5pt,
+      radius: 20pt,
+    ),
+    body
+  )
+}
+
+
+= Lab1实验报告
+
+== 物体求交
+
+本次实验实现了
+
+- 三角形和光线求交
+- AABB和光线求交
+
+下面分别概述他们的逻辑。
+
+=== 三角形和光线求交
+
+对于三角形和光线求交，我选择了Möller-Trumbore算法来实现。其基本思路如下：
+
+#theory[
++ 假如光在原点$O$，往$d$方向射出；三角形顶点分别为$A$、$B$、$C$；光线传播了的距离为$t$。
++ 如果光线与三角形相交，则有
+
+  $ E_1 &= B - A $
+  $ E_2 &= C - A $
+  $ O + d dot t &= A + alpha dot E_1 + beta dot E_2 $ <equation>
+
++ 其中 #ref(<equation>) 实际上是三个方程，因为这些点和边都是三维的。即：
+  $ O_x + d_x dot t &= A_x + alpha dot E_(1x) + beta dot E_(2x) $
+  $ O_y + d_y dot t &= A_y + alpha dot E_(1y) + beta dot E_(2y) $
+  $ O_z + d_z dot t &= A_z + alpha dot E_(1z) + beta dot E_(2z) $
+
++ 三个未知数（$alpha$、$beta$、$t$），三个方程，即可解出。
+
++ 最后再判断一下，$alpha$、$beta$、$t$是否满足以下条件：
+  $
+  alpha + beta &<= 1 \
+  alpha &>= 0 \
+  beta &>= 0 \
+  t &>= 0
+  $
+  即可得到相交判断的结果。
+]
+
+
+
+=== AABB和光线求交
+
+对于AABB和光线求交，我根据讲义上描述的方式来求解，具体实现如下：
+
+```cpp
+// 获取光线经过某个方向上的两个面的时间
+auto tA = (pMin - ray.origin) / ray.direction;
+auto tB = (pMax - ray.origin) / ray.direction;
+
+// 更早的时间就是进入时间，更晚的时间就是退出时间
+auto t_near = vec_min(tA, tB);
+auto t_far = vec_max(tA, tB);
+
+// 计算最晚进入和最早退出时间
+auto latest_entry = std::max({t_near[0], t_near[1], t_near[2]});
+auto earliest_exit = std::min({t_far[0], t_far[1], t_far[2]});
+
+// 最晚进入时间必须早于最早退出时间，而且他们必须有一部分在光线范围以内
+auto result = latest_entry <= earliest_exit && ray.tNear <= earliest_exit &&
+              ray.tFar >= latest_entry;
+```
+
+== 加速结构
+
+本次实验实现了BVH加速结构。我参考一些资料，对其做了SAH优化。
+
+=== BVH加速结构
+
+BVH就是把物体放在一颗二叉搜索树上，然后使用AABB来快速判断光线与物体不相交的情况。
+建立一个BVH节点时，我先遍历所有的物体建立一个AABB。
+然后就遍历xyz轴，找到物体坐标极值差最大的那个轴，然后以极值中点为分界线把物体分成两部分。
+
+=== SAH优化
+
+#theory[
+  SAH就是通过表面积估算来找到更优的划分方法。它定义对于一个BVH节点，
+  为它求交的代价为$ C = C_t + C_i dot P_"Left" dot N_"Left" + C_i dot P_"Right" dot N_"Right" $
+  其中$P$表示光线与其相交的概率，$N$表示节点内部三角形的数量。
+
+  对于$P$，SAH的估算方法就是子节点的AABB的表面积除以父节点的表面积：
+  $ P_"Left" = "SA"("Left") / "SA"("Total") $
+  $ P_"Right" = "SA"("Right") / "SA"("Total") $
+]
+
+所以，带SAH优化的BVH在建树分割的时候，就要
++ 遍历xyz三个轴
++ 对于每个轴，采样不同的分割点，计算其开销
++ 最后，综合三个轴和很多分割点，选择开销最小的分割点
+
+=== 性能对比
+
+== 一点想法
+
+#let notes(..bodies) = {
+  let bodies = bodies.pos()
+  let rng = suiji.gen-rng-f(6543)
+  let (rng, rotate_degs) = suiji.integers-f(rng, low: -5, high: 5, size: bodies.len())
+
+  return stack(
+    dir: ltr,
+    spacing: 1fr,
+    ..bodies.enumerate().map(((idx, note)) => {
+      let rot = rotate_degs.at(idx)
+      stickybox(rotation:  rot * 1deg, width: 7cm, note)
+    })
+  )
+};
+
+#linebreak()
+
+#stack(
+  dir: ltr,
+  notes(
+[
+=== 考虑提供AABB求交的一点测试样例？
+
+我一开始就写错了……
+],
+[
+=== 为仓库加上OpenMP多线程？
+
+按照像素来并行还是比较方便的，大家的计算比较独立，不容易产生竞争；而for循环的并行
+在OpenMP里又特别简单。用OpenMP实现并行只需要大约不到10行的代码，速度却能提升一倍。
+]),
+)

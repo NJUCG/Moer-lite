@@ -70,12 +70,8 @@ bool AABB::RayIntersect(Ray &ray, float *tMin, float *tMax) const {
   auto latest_entry = std::max({t_near[0], t_near[1], t_near[2]});
   auto earliest_exit = std::min({t_far[0], t_far[1], t_far[2]});
 
-  auto result = ray.tNear <= latest_entry && latest_entry <= earliest_exit &&
-                earliest_exit <= ray.tFar;
-
-  // if (result) {
-  //   ray.tFar = earliest_exit;
-  // }
+  auto result = latest_entry <= earliest_exit && ray.tNear <= earliest_exit &&
+                ray.tFar >= latest_entry;
 
   return result;
 }
