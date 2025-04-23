@@ -9,3 +9,4 @@
 .direnv
 /compile_commands.json
 /reports/*.pdf
+/reports/*.png
