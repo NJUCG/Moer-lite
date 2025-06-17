@@ -1,5 +1,7 @@
 #pragma once
+#include "CoreLayer/Math/Geometry.h"
 #include <CoreLayer/Math/Math.h>
+#include <math.h>
 //* 使用RGB三通道颜色空间
 
 class SpectrumRGB {
@@ -60,6 +62,26 @@ public:
   SpectrumRGB &operator/=(float f) {
     rgb /= f;
     return *this;
+  }
+
+  auto sqrt_color() const {
+    return SpectrumRGB(sqrt(rgb[0]), sqrt(rgb[1]), sqrt(rgb[2]));
+  }
+
+  auto luminance() const {
+    auto C = [](auto x) {
+      if (x <= 04045)
+        return x / 12.92;
+      else {
+        return pow((x + 0.055) / 1.055, 2.4);
+      }
+    };
+
+    auto linear_rgb = Vector3f(C(rgb[0]), C(rgb[1]), C(rgb[2]));
+    auto Y = 0.2126 * linear_rgb[0] + 0.7152 * linear_rgb[1] +
+             0.0722 * linear_rgb[2];
+
+    return Y;
   }
 
   float operator[](int i) const { return rgb[i]; }

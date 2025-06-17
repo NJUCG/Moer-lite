@@ -5,7 +5,6 @@
 #include <FunctionLayer/Ray/Ray.h>
 #include <ResourceLayer/JsonUtil.h>
 #include <embree3/rtcore.h>
-#include <optional>
 
 class Light;
 class Material;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <algorithm>
 #include <FastMath/FastMath.h>
 #include <FastMath/VecMat.h>
+#include <algorithm>
 //* 对于绝大部分图形应用来说，32位的浮点数足以满足计算精度需求且速度更快，故lite版仅支持float
 //* 在4维齐次坐标下对点以及向量进行变换时会有不同处理，故相较于直接使用数学意义上的向量，我们进行了一个简单的封装
 
@@ -62,6 +62,8 @@ public:
     xyz = xyz.cwiseDiv(rhs.xyz);
     return *this;
   }
+
+  vecmat::vec3f vec3f() const { return vecmat::vec3f(xyz[0], xyz[1], xyz[2]); }
 
   //* 访问x, y, z，此处不对i进行检查
   float operator[](int i) const { return xyz[i]; }

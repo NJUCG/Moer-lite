@@ -60,6 +60,7 @@ add_executable(Moer
   src/FunctionLayer/Material/Matte.cpp
   src/FunctionLayer/Material/Mirror.cpp
   src/FunctionLayer/Material/Material.cpp
+  src/FunctionLayer/Material/BSDFMaterial.cpp
   src/FunctionLayer/Sampler/IndependentSampler.cpp
   src/ResourceLayer/Image.cpp
   src/ResourceLayer/Mesh.cpp
