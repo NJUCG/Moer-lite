@@ -1,6 +1,6 @@
 {
   "output": {
-    "filename": "bunny-bvh.hdr"
+    "filename": "bunny-bvh-disney.hdr"
   },
   "sampler": {
     "type": "independent",
@@ -50,16 +50,16 @@
         "material": {
           "type": "disney",
           "base_color": [
-            0.8,
-            0.8,
-            0.8
+            1.0,
+            0.0,
+            1.0
           ],
           "subsurface": 0.1,
-          "metallic": 0.5,
-          "specular": 0.5,
+          "metallic": 0.9,
+          "specular": 0.1,
           "specular_tint": [
-            0.9,
-            0.9,
+            1.0,
+            0.0,
             0.0
           ],
           "roughness": 0.5,
@@ -67,18 +67,37 @@
           "sheen": 0.1,
           "sheen_tint": [
             0.0,
-            0.5,
-            0.8
+            0.0,
+            0.9
           ],
           "clearcoat": 0.7,
           "clearcoat_roughness": 0.1,
-          "ior": 0.3,
+          "ior": 0.8,
           "transmission": 0.1,
           "transmission_roughness": 0.1
         },
         "transform": {
           "translate": [
+            -1,
             0,
+            0
+          ]
+        }
+      },
+      {
+        "type": "triangle",
+        "file": "models/bunny.obj",
+        "material": {
+          "type": "matte",
+          "albedo": [
+            0.8,
+            0.8,
+            0.8
+          ]
+        },
+        "transform": {
+          "translate": [
+            1,
             0,
             0
           ]
@@ -118,6 +137,32 @@
           "type": "imageTex",
           "file": "images/indoor.hdr"
         }
+      },
+      {
+        "type": "spotLight",
+        "position": [
+          1.5,
+          0.5,
+          0.8
+        ],
+        "energy": [
+          25,
+          25,
+          25
+        ]
+      },
+      {
+        "type": "spotLight",
+        "position": [
+          -1.5,
+          0.5,
+          0.8
+        ],
+        "energy": [
+          25,
+          25,
+          25
+        ]
       }
     ]
   }

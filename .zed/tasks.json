@@ -29,5 +29,17 @@
   {
     "label": "bunny-bvhsah",
     "command": "cd build && make -j && cd ../target/bin && ./Moer ../../examples/lab1-test/bunny-bvhsah/ && open ./bunny-bvhsah.hdr"
-  }
+  },
+  {
+    "label": "bunny-bvh-disney",
+    "command": "cd build && make -j && cd ../target/bin && ./Moer ../../examples/disney-bsdf/bunny-bvh-disney-bsdf/ && open ./bunny-bvh-disney.hdr"
+  },
+  {
+    "label": "cornellbox-disney",
+    "command": "cd build && make -j && cd ../target/bin && ./Moer ../../examples/disney-bsdf/cornell-box/ && open ./cornell.hdr"
+  },
+  {
+    "label": "balls-disney",
+    "command": "cd build && make -j && cd ../target/bin && ./Moer ../../examples/disney-bsdf/balls/ && open ./balls.hdr"
+  },
 ]
