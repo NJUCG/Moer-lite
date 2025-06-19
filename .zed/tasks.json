@@ -40,6 +40,6 @@
   },
   {
     "label": "balls-disney",
-    "command": "cd build && make -j && cd ../target/bin && ./Moer ../../examples/disney-bsdf/balls/ && open ./balls.hdr"
+    "command": "python3 examples/disney-bsdf/balls/gen_scene.py && cd build && make -j && cd ../target/bin && ./Moer ../../examples/disney-bsdf/balls/ && open ./balls.png"
   },
 ]

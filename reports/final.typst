@@ -1,0 +1,17 @@
+#import "@preview/showybox:2.0.4": showybox
+#import "@preview/colorful-boxes:1.4.2": *
+#import "@preview/suiji:0.3.0"
+#import "@preview/cetz:0.3.2": canvas, draw
+#import "@preview/cetz-plot:0.1.1": plot, chart
+
+#set text(lang: "zh", region: "CN")
+#set heading(numbering: (..nums) => {
+  // https://github.com/typst/typst/discussions/3341#discussioncomment-8364172
+  let sequence = nums.pos()
+  // discard first entry (chapter number)
+  let _ = sequence.remove(0)
+  if sequence.len() > 0 {
+    numbering("1.", ..sequence)
+  }
+})
+#set math.equation(numbering: "(1)")

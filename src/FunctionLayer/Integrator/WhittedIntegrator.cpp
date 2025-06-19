@@ -1,4 +1,5 @@
 #include "WhittedIntegrator.h"
+#include "CoreLayer/ColorSpace/Spectrum.h"
 #include <FunctionLayer/Material/Material.h>
 
 Spectrum WhittedIntegrator::li(Ray &ray, const Scene &scene,
@@ -23,6 +24,7 @@ Spectrum WhittedIntegrator::li(Ray &ray, const Scene &scene,
     auto bsdf = its.shape->material->computeBSDF(its);
 
     auto bsdfSampleResult = bsdf->sample(-ray.direction, sampler->next2D());
+    // return bsdfSampleResult.weight / PI; // TODO: Remove this
 
     // If the surface is specular, spwan the ray
     if (bsdfSampleResult.type == BSDFType::Specular) {

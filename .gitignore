@@ -10,3 +10,4 @@
 /compile_commands.json
 /reports/*.pdf
 /reports/*.png
+.DS_Store

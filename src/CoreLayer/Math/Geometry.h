@@ -3,6 +3,7 @@
 #include <FastMath/FastMath.h>
 #include <FastMath/VecMat.h>
 #include <algorithm>
+#include <cassert>
 //* 对于绝大部分图形应用来说，32位的浮点数足以满足计算精度需求且速度更快，故lite版仅支持float
 //* 在4维齐次坐标下对点以及向量进行变换时会有不同处理，故相较于直接使用数学意义上的向量，我们进行了一个简单的封装
 
@@ -110,7 +111,9 @@ inline Vector3f operator-(const Vector3f &vec) { return Vector3f(.0f) - vec; }
 //* 向量单位化，不对0向量做特殊处理
 inline Vector3f normalize(const Vector3f &vec) {
   float len = vec.length();
-  return vec / len;
+  auto result = vec / len;
+  assert(abs(result.length() - 1) < 1e-5);
+  return result;
 }
 
 //* 表示三维空间中的一个点

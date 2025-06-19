@@ -44,8 +44,9 @@ auto adot(const Vector3f &a, const Vector3f &b) { return abs(dot(a, b)); }
 // This should be used for diffuse, metal, clearcoat and sheen
 #define HANDLE_INSIDE_OBJ(ret_val)                                             \
   do {                                                                         \
-    if (dot(wi, normal) <= 0)                                                  \
-      return ret_val;                                                          \
+    if (dot(wi, normal) <= 0) {                                                \
+      /*return ret_val;*/                                                      \
+    }                                                                          \
   } while (0)
 
 class DisneyBSDF : public BSDF {
@@ -120,16 +121,22 @@ protected:
     auto Fm = C0 + (Spectrum(1.0) - C0) * pow(1 - dot(h, wo), 5);
 
     // Dm
+    // UCSD Homework's Dm sometimes can be very near to 0
+    // and looks trange. Using formula from ChatGPT.
     auto aspect = sqrt(1.0 - 0.9 * anisotropic);
-    auto alpha_min = 1e-5;
+    auto alpha_min = 1e-4;
     auto alpha_x = std::max(alpha_min, roughness * roughness / aspect);
     auto alpha_y = std::max(alpha_min, roughness * roughness * aspect);
-    auto hl = toLocal(h);
-    auto Dm =
-        1.0 /
-        (PI * alpha_x * alpha_y *
-         pow(pow(hl[0] / alpha_x, 2) + pow(hl[1] / alpha_y, 2) + pow(hl[2], 2),
-             2));
+    auto hl = normalize(toLocal(h));
+    // auto Dm =
+    //     1.0 /
+    //     (PI * alpha_x * alpha_y *
+    //      pow(pow(hl[0] / alpha_x, 2) + pow(hl[1] / alpha_y, 2) + pow(hl[2],
+    //      2),
+    //          2));
+    auto alpha = pow(roughness, 2);
+    auto Dm = pow(alpha, 2) /
+              (PI * pow(pow(dot(normal, h), 2) * (alpha * alpha - 1) + 1, 2));
 
     // Gm
     auto A = [this, alpha_x, alpha_y](Vector3f w) {
@@ -232,13 +239,16 @@ protected:
     return Csheen * pow(1 - adot(h, wo), 5) * adot(normal, wo);
   }
 
-  auto f_disney(const Vector3f &wi, const Vector3f &wo,
-                const Vector3f &h) const {
+  auto f_disney(const Vector3f &wi, const Vector3f &wo) const {
+    // half vector
+    auto h = (wi + wo) / (wi + wo).length();
     return (1.0 - specular) * (1.0 - metallic) * f_diffuse(wi, wo, h) +
            (1.0 - metallic) * sheen * f_sheen(wi, wo, h) +
            (1.0 - specular * (1.0 - metallic)) * f_metal(wi, wo, h) +
            0.25 * clearcoat * f_clearcoat(wi, wo, h) +
            (1.0 - metallic) * specular * f_glass(wi, wo, h);
+    // return f_sheen(wi, wo, h);
+    // return Spectrum(0.01);
   }
 
 public:
@@ -252,17 +262,12 @@ public:
     auto wi = squareToCosineHemisphere(sample);
     auto pdf = squareToCosineHemispherePdf(wi);
 
-    // half vector
-    auto h = (wi + wo) / (wi + wo).length();
-    auto cos_theta = toLocal(wi)[1];
-    return {f_disney(wi, wo, h) * PI, toWorld(wi), pdf, BSDFType::Diffuse};
+    return {f_disney(wi, wo) * PI, toWorld(wi), pdf, BSDFType::Diffuse};
   }
 
   virtual Spectrum f(const Vector3f &wo, const Vector3f &wi) const override {
-    // half vector
-    auto h = (wi + wo) / (wi + wo).length();
     auto cos_theta = toLocal(wi)[1];
-    return f_disney(wi, wo, h) * std::max(cos_theta, 0.0f);
+    return f_disney(wi, wo) * std::max(cos_theta, 0.0f);
   }
 
 private:
