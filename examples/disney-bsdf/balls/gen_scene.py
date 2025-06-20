@@ -39,7 +39,7 @@ def main():
     # 场景配置模板
     scene = {
         "output": {"filename": "balls.png"},
-        "sampler": {"type": "independent", "xSamples": 12, "ySamples": 12},
+        "sampler": {"type": "independent", "xSamples": 24, "ySamples": 24},
         "camera": {
             "type": "pinhole",
             "transform": {"position": [0, 0, 12], "up": [0, 1, 0], "lookAt": [0, 0, 0]},

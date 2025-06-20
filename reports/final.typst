@@ -3,6 +3,7 @@
 #import "@preview/suiji:0.3.0"
 #import "@preview/cetz:0.3.2": canvas, draw
 #import "@preview/cetz-plot:0.1.1": plot, chart
+#import "@preview/zebraw:0.5.5": *
 
 #set text(lang: "zh", region: "CN")
 #set heading(numbering: (..nums) => {
@@ -15,3 +16,408 @@
   }
 })
 #set math.equation(numbering: "(1)")
+#show link: set text(fill: blue)
+#show link: underline
+#show: zebraw
+
+#let notes(..bodies) = {
+  let bodies = bodies.pos()
+  let rng = suiji.gen-rng-f(6543)
+  let (rng, rotate_degs) = suiji.integers-f(rng, low: -5, high: 5, size: bodies.len())
+
+  return stack(
+    dir: ltr,
+    spacing: 1fr,
+    ..bodies.enumerate().map(((idx, note)) => {
+      let rot = rotate_degs.at(idx)
+      stickybox(rotation:  rot * 1deg, width: 7cm, note)
+    })
+  )
+};
+
+= Disney BSDF
+
+== 动机
+其实这次实验本来想做基于体素的全局光照的，奈何基于GPU的渲染框架的代码还是有些难读了。操作GPU总是需要写特别多代码，
+又是bind group layout又是index buffer之类的，本来就不好读，再加上框架本身的复杂性，上手实在太难了。光是
+尝试读懂`rend3`的代码就花了差不多一个星期，这个本就半死的项目又基本上没啥文档。一个星期后我终于发现：根本读不懂！
+只好放弃。
+
+于是我就决定做个简单点的，就在`moer-lite`上实现Disney BSDF吧。这个框架一来之前用过，比较熟悉；二来是纯CPU的
+渲染器，没有那些操作GPU的复杂度。
+
+== 最终效果
+#figure(
+  image("balls.png"),
+  caption: [最终渲染效果]
+)
+
+图中的球有以下属性：
+#zebraw(
+  ```python
+  # 参数变化序列（每行4个球）
+  param_variations = [
+      # 金属度变化行
+      [{"metallic": v, "roughness": 0.3} for v in [0.0, 0.3, 0.6, 1.0]],
+      # 粗糙度变化行
+      [{"roughness": v, "metallic": 0.0} for v in [0.0, 0.3, 0.6, 1.0]],
+      # 次表面散射变化行
+      [{"subsurface": v} for v in [0.0, 0.3, 0.6, 1.0]],
+      # 各向异性变化行
+      [{"anisotropic": v} for v in [0.0, 0.3, 0.6, 1.0]],
+      # 镜面反射变化行
+      [{"specular": v} for v in [0.0, 0.3, 0.6, 1.0]],
+      # 透射率变化行
+      [{"transmission": v, "ior": 1.5} for v in [0.0, 0.3, 0.6, 1.0]],
+      # 清漆涂层变化行
+      [{"clearcoat": v, "clearcoat_roughness": 0.1} for v in [0.0, 0.3, 0.5, 1.0]],
+      # 镜面色调变化行 (特殊处理，因为这是向量)
+      [{"specular_tint": [v, v, v]} for v in [0.0, 0.3, 0.6, 1.0]]
+  ]
+  ```
+)
+
+== 动手实现
+手册上的难度评分诚不我欺，disney bsdf确实比较简单，对着公式照抄就好了。
+
+在`moer-lite`中实现也不难，首先在`src/FunctionLayer/Material/BxDF`中新增一个bxdf函数，再在
+`src/FunctionLayer/Material`中新增一个材质来使用这个函数即可。至于函数具体的实现，我找到了一个
+#link("https://cseweb.ucsd.edu/~tzli/cse272/wi2023/homework1.pdf")[别人的作业手册]，我就照着其中
+的公式把Diffuse, Metal, Clearcoat, Glass, Sheen给分别算了一遍，最后把它们合并起来。
+
+=== Diffuse
+
+#zebraw(
+  highlight-lines: (
+    ..range(4,10),
+    (10, [
+      以上实现base diffuse
+      $
+        f_"baseDiffuse" &= "baseColor" / pi F_D(omega_i) F_D(omega_o) |n dot omega_o| \
+        F_D(omega) &= (1 + (F_"D90" - 1)(1 - |n dot omega|^5) \
+        F_"D90" &= 1/2 + 2 dot "roughness" dot |h dot omega_o|^2 \
+        h &= (omega_i + omega_o)/(||omega_i + omega_o||)
+      $
+    ]),
+
+    ..range(12, 23),
+    (23, [
+      以上实现subsurface
+      $
+        f_"subsurface" &= (1.25 "baseColor") / pi (F_"SS"(omega_i) F_"SS"(omega_o) (1 / (|n dot omega_i| + |n dot omega_o|) - 0.5) + 0.5) |n dot omega_o| \
+        F_"SS"(omega) &= 1 + (F_"SS90" - 1)(1 - |n dot omega|)^5 \
+        F_"SS90" &= "roughness" dot |h dot omega_o|^2
+      $
+    ]),
+    (26, [$
+      f_"diffuse" &= (1-"subsurface") dot f_"baseDiffuse" + "subsurface" dot f_"subsurface"
+    $])
+  ),
+  ```cpp
+  auto f_diffuse(const Vector3f &wi, const Vector3f &wo,
+                 const Vector3f &h) const {
+    HANDLE_INSIDE_OBJ(Spectrum(0.0));
+    // Base diffuse
+    auto fd90 = 0.5 + 2.0 * roughness * pow(dot(h, wo), 2);
+    auto fd = [this, fd90](auto w) {
+      return 1.0 + (fd90 - 1) * pow(1.0 - adot(this->normal, w), 5);
+    };
+
+    auto f_base_diffuse = base_color / PI * fd(wi) * fd(wo) * adot(normal, wo);
+
+    // Subsurface
+    auto fss90 = roughness * pow(dot(h, wo), 2);
+    auto fss = [this, fss90](auto w) {
+      return 1.0 + (fss90 - 1.0) * pow(1.0 - adot(normal, w), 5);
+    };
+
+    auto f_subsurface =
+        1.25 * base_color / PI *
+        (fss(wi) * fss(wo) *
+             (1.0 / (adot(normal, wi) + adot(normal, wo)) - 0.5) +
+         0.5) *
+        adot(normal, wo);
+
+    // Combine them
+    return (1.0 - subsurface) * f_base_diffuse + subsurface * f_subsurface;
+  }
+  ```
+)
+
+=== Metal
+#zebraw(
+  highlight-lines: (
+    ..range(5, 15),
+    (15, [$
+      hat(F)_m &= C_0 + (1-C_0)(1-(h dot omega_o))^5 \
+      C_0 &= "specular" dot R_0(eta)(1-"metallic")K_s + "metallic" dot "baseColor" \
+      K_s &= (1-"specularTint") + "specularTint" dot C_"tint" \
+      R_0(eta) &= (eta-1)^2 / (eta+1)^2 \
+      C_"tint" &= "baseColor" / "luminance"("baseColor")
+    $]),
+
+    ..range(17, 30),
+    (30, [
+      在我找的那份作业PDF中，$D_m$是这样定义的：
+    $
+      D_m &= 1 / (  pi alpha_x alpha_y ( (h_x^l / alpha_x )^2 + (h_y^l / alpha_y)^2 + (h_z^l)^2  )^2  ) \
+      "aspect" &= sqrt(1 - 0.9 "anisotropic") \
+      alpha_x &= max(alpha_min, "roughness"^2 / "aspect") \
+      alpha_y &= max(alpha_min, "roughness"^2 dot "aspect")
+    $
+    但是经过实测，发现这样渲染出来的metal效果似乎没啥作用。我发现是$alpha_y$可能会很小，
+    导致$h_y^l / alpha_y$比较大，再平方两下就使得$D_m$非常接近$0$了。而最终的式子
+    是$F_m * D_m * G_m / (4 |n dot omega_i|)$，一个$D_m$使整个metal效果就接近
+    0了。
+
+    于是我去#link("https://chatgpt.com/share/6854e62e-0bcc-800f-b88b-d7fbf6401041", [问了问gpt])，metallic效果中的$D_m$是怎么做的，得到了这些：
+    $
+      D(h) &= alpha^2 / ( pi [ (n dot h)^2 (alpha^2 - 1) + 1 ]^2 )
+    $
+    这个式子的结果就正常多了，于是我最终保留了这个。
+    ]),
+
+    ..range(32, 40),
+    (40, [$
+        G_m &= G(omega_i) G(omega_o) \
+        G(omega) &= 1 / ( 1 + Lambda(omega) ) \
+        Lambda(omega) &= ( sqrt(1 + (  (omega_l.x dot alpha_x)^2 + (omega_l.y dot alpha_y)^2  ) / (omega_l dot z^2)) - 1 ) / 2
+      $]),
+
+    (42, [$
+      f_"metal" &= F_m * D_m * G_m / (4 |n dot omega_i|)
+    $])
+  ),
+  ```cpp
+  auto f_metal(const Vector3f &wi, const Vector3f &wo,
+               const Vector3f &h) const {
+    HANDLE_INSIDE_OBJ(Spectrum(0.0));
+
+    auto base_luminance = base_color.luminance();
+    auto Ctint = base_luminance > 0 ? base_color / base_luminance : 1;
+    auto Ks = (Spectrum(1.0) - specular_tint) + specular_tint * Ctint;
+    auto R0 = [](auto eta) {
+      auto upper = pow(eta - 1.0, 2);
+      auto lower = pow(eta + 1.0, 2);
+      return upper / lower;
+    };
+    auto C0 =
+        specular * R0(ior) * (1.0 - metallic) * Ks + metallic * base_color;
+    auto Fm = C0 + (Spectrum(1.0) - C0) * pow(1 - dot(h, wo), 5);
+
+    auto aspect = sqrt(1.0 - 0.9 * anisotropic);
+    auto alpha_min = 1e-4;
+    auto alpha_x = std::max(alpha_min, roughness * roughness / aspect);
+    auto alpha_y = std::max(alpha_min, roughness * roughness * aspect);
+    auto hl = normalize(toLocal(h));
+    // auto Dm =
+    //     1.0 /
+    //     (PI * alpha_x * alpha_y *
+    //      pow(pow(hl[0] / alpha_x, 2) + pow(hl[1] / alpha_y, 2) + pow(hl[2],
+    //      2),
+    //          2));
+    auto alpha = pow(roughness, 2);
+    auto Dm = pow(alpha, 2) /
+              (PI * pow(pow(dot(normal, h), 2) * (alpha * alpha - 1) + 1, 2));
+
+    auto A = [this, alpha_x, alpha_y](Vector3f w) {
+      auto wl = toLocal(w);
+      auto sqrt_inner_upper = pow(wl[0] * alpha_x, 2) + pow(wl[1] * alpha_y, 2);
+      auto sqrt_inner = 1.0 + sqrt_inner_upper / pow(wl[2], 2);
+      auto upper = sqrt(sqrt_inner) - 1.0;
+      return upper / 2.0;
+    };
+    auto G = [A](auto w) { return 1.0 / (1.0 + A(w)); };
+    auto Gm = G(wi) * G(wo);
+
+    return Fm * Dm * Gm / (4 * adot(normal, wi));
+  }
+  ```
+)
+
+
+=== Clearcoat
+#zebraw(
+  highlight-lines: (
+    ..range(4, 10),
+    (10, [$
+      Lambda_c (omega) &= ( sqrt(1 + (  (omega_l.x dot 0.25)^2 + (omega_l.y dot 0.25)^2  ) / (omega_l dot z^2)) - 1 ) / 2
+    $]),
+
+    (11, [$ G_c (omega) = 1 / (1 + Lambda_c(omega)) $]),
+    (12, [$ G_c = G_c(omega_i) G_c(omega_o) $]),
+
+    ..range(14, 20),
+    (20, [$
+      D_c &= (alpha_g^2 - 1)/(
+        pi log(alpha_g^2) ( 1 + (alpha_g^2-1) (h_z^l)^2 )
+      )
+    $]),
+
+    ..range(22, 26),
+    (26, [$ R_0(eta) = (eta-1)^2 / (eta+1)^2 $]),
+
+    ..range(27, 28),
+    (28, [$ F_c &= R_0(1.5) + (1-R_0(1.5))(1-|h dot omega_o|)^5 $]),
+
+    (30, [$ f_"clearcoat" &= (F_c D_c G_c) / (4 |n dot omega_i|) $])
+  ),
+  ```cpp
+  auto f_clearcoat(const Vector3f &wi, const Vector3f &wo,
+                   const Vector3f &h) const {
+    HANDLE_INSIDE_OBJ(0.0);
+    auto A = [this](Vector3f w) {
+      auto wl = toLocal(w);
+      auto sqrt_inner_upper = pow(wl[0] * 0.25, 2) + pow(wl[1] * 0.25, 2);
+      auto sqrt_inner = 1.0 + sqrt_inner_upper / pow(wl[2], 2);
+      auto upper = sqrt(sqrt_inner) - 1.0;
+      return upper / 2.0;
+    };
+    auto G = [A](auto w) { return 1.0 / (1.0 + A(w)); };
+    auto Gc = G(wi) * G(wo);
+
+    // 原公式使用clearcoat gloss，它等于1-clearcoat_roughness
+    auto alpha_g =
+        clearcoat_roughness * 0.1 + (1.0 - clearcoat_roughness) * 0.001;
+    auto alpha_g2 = pow(alpha_g, 2);
+    auto hl = toLocal(h);
+    auto Dc = (alpha_g2 - 1.0) /
+              (PI * log(alpha_g2) * (1.0 + (alpha_g2 - 1.0) * pow(hl[2], 2)));
+
+    auto R0 = [](auto eta) {
+      auto upper = pow(eta - 1.0, 2);
+      auto lower = pow(eta + 1.0, 2);
+      return upper / lower;
+    };
+    auto R0_15 = R0(1.5);
+    auto Fc = R0_15 + (1 - R0_15) * pow(1 - adot(h, wo), 5);
+
+    return Fc * Dc * Gc / (4 * adot(normal, wi));
+  }
+  ```
+)
+
+=== Glass
+#zebraw(
+  highlight-lines: (
+    ..range(10, 29),
+    (29, [$D_g$和$G_g$跟metal的算法是一样的]),
+
+    ..range(5, 8),
+    (8, [$
+      F_g &= 1/2 (R_s^2 + R_p^2) \
+      R_s &= (h dot omega_i - eta h dot omega_o) / (h dot omega_i + eta h dot omega_o) \
+      R_p &= (eta h dot omega_i - h dot omega_o) / (eta h dot omega_i + h dot omega_o)
+    $]),
+
+    ..range(31, 40),
+    (40, [$
+      f_"glass" = cases(
+        ("baseColor" F_g D_g G_g) / (4 |n dot omega_i|) & "if" (n_g dot omega_i) (n_g dot omega_o) > 0,
+        (sqrt("baseColor") (1-F_g) D_g G_g |h dot omega_o h dot omega_i|) / (|n dot omega_i| (h dot omega_i + eta h dot omega_o)^2) & "otherwise"
+      )
+    $])
+  ),
+  ```cpp
+  auto f_glass(const Vector3f &wi, const Vector3f &wo,
+               const Vector3f &h) const {
+    auto condition = dot(normal, wi) * dot(normal, wo);
+
+    auto hwin = dot(h, wi), hwout = dot(h, wo);
+    auto Rs = (hwin - ior * hwout) / (hwin + ior * hwout);
+    auto Rp = (ior * hwin - hwout) / (ior * hwin + hwout);
+    auto Fg = 0.5 * (pow(Rs, 2) + pow(Rp, 2));
+
+    auto aspect = sqrt(1.0 - 0.9 * anisotropic);
+    auto alpha_min = 1e-5;
+    auto alpha_x = std::max(alpha_min, roughness * roughness / aspect);
+    auto alpha_y = std::max(alpha_min, roughness * roughness * aspect);
+    auto hl = toLocal(h);
+    auto Dg =
+        1.0 /
+        (PI * alpha_x * alpha_y *
+         pow(pow(h[0] / alpha_x, 2) + pow(h[1] / alpha_y, 2) + pow(h[2], 2),
+             2));
+
+    auto A = [this, alpha_x, alpha_y](Vector3f w) {
+      auto wl = toLocal(w);
+      auto sqrt_inner_upper = pow(w[0] * alpha_x, 2) + pow(w[1] * alpha_y, 2);
+      auto sqrt_inner = 1.0 + sqrt_inner_upper / pow(w[2], 2);
+      auto upper = sqrt(sqrt_inner) - 1.0;
+      return upper / 2.0;
+    };
+    auto G = [A](auto w) { return 1.0 / (1.0 + A(w)); };
+    auto Gg = G(wi) * G(wo);
+
+    if (condition > 0) {
+      auto upper = base_color * Fg * Dg * Gg;
+      auto lower = 4.0 * adot(normal, wi);
+      return upper / lower;
+    } else {
+      auto upper = base_color.sqrt_color() * (1.0 - Fg) * Dg * Gg *
+                   abs(dot(h, wo) * dot(h, wi));
+      auto lower = adot(normal, wi) * pow(dot(h, wi) + ior * dot(h, wo), 2);
+      return upper / lower;
+    }
+  }
+  ```
+)
+
+=== Sheen
+#zebraw(
+  highlight-lines: (
+    ..range(4, 5),
+    (5, [$
+      C_"tint" = cases(
+        "baseColor" / "luminance"("baseColor") & "if" "luminance"("baseColor") > 0,
+        1 & "otherwise"
+      )
+    $]),
+
+    (6, [$
+      C_"sheen" &= (1 - "sheenTint") + "sheenTint" dot C_"tint"
+    $]),
+
+    (8, [$
+      f_"sheen" &= C_"sheen" (1- |h dot omega_o|)^5 |n dot omega_o|
+    $])
+  ),
+  ```cpp
+  auto f_sheen(const Vector3f &wi, const Vector3f &wo,
+               const Vector3f &h) const {
+    HANDLE_INSIDE_OBJ(Spectrum(0.0));
+    auto base_luminance = base_color.luminance();
+    auto Ctint = base_luminance > 0 ? base_color / base_luminance : 1;
+    auto Csheen = (Spectrum(1.0) - sheen_tint) + sheen_tint * Ctint;
+
+    return Csheen * pow(1 - adot(h, wo), 5) * adot(normal, wo);
+  }
+  ```
+)
+
+=== 放到一起
+
+终于把每个部份都弄完了，让我们把它们合并起来吧：
+#zebraw(
+  highlight-lines: (
+    ..range(3, 8),
+    (8, [$
+      f_"disney" =& (1-"specularTransmission") dot (1-"metallic") dot f_"diffuse" + \
+      & (1-"metallic") dot "sheen" dot f_"sheen" + \
+      & (1-"specularTransmission" dot (1-"metallic")) dot hat(f)_"metal" + \
+      & 0.25 dot "clearcoat" dot f_"clearcoat" + \
+      & (1-"metallic") dot "specularTransmission" dot f_"glass"
+    $])
+  ),
+  ```cpp
+  auto f_disney(const Vector3f &wi, const Vector3f &wo) const {
+    // half vector
+    auto h = (wi + wo) / (wi + wo).length();
+    return (1.0 - specular) * (1.0 - metallic) * f_diffuse(wi, wo, h) +
+           (1.0 - metallic) * sheen * f_sheen(wi, wo, h) +
+           (1.0 - specular * (1.0 - metallic)) * f_metal(wi, wo, h) +
+           0.25 * clearcoat * f_clearcoat(wi, wo, h) +
+           (1.0 - metallic) * specular * f_glass(wi, wo, h);
+  }
+  ```
+)
