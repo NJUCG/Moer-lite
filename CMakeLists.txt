@@ -37,8 +37,11 @@ add_executable(Moer
   src/FunctionLayer/Integrator/NormalIntegrator.cpp
   src/FunctionLayer/Integrator/DirectIntegrator.cpp
   src/FunctionLayer/Integrator/WhittedIntegrator.cpp
+
   src/FunctionLayer/Camera/Camera.cpp
   src/FunctionLayer/Camera/Pinhole.cpp
+  src/FunctionLayer/Camera/ThinLens.cpp
+  
   src/FunctionLayer/Scene/Scene.cpp
   src/FunctionLayer/Light/SpotLight.cpp
   src/FunctionLayer/Light/AreaLight.cpp
