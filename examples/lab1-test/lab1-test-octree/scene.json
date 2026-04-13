@@ -1,0 +1,49 @@
+{
+  "output" : {
+    "filename" : "monkey-octree.png"
+  },
+  "sampler" : {
+    "type" : "independent",
+    "xSamples" : 1,
+    "ySamples" : 1
+  },
+  "camera" : {
+    "type" : "pinhole",
+    "transform" : {
+      "position" : [0, 1, 5],
+      "up" : [0, 1, 0],
+      "lookAt" : [0, 0, 0]
+    },
+    "tNear" : 0.1,
+    "tFar" : 10000,
+    "verticalFov" : 45,
+    "timeStart" : 0,
+    "timeEnd" : 0,
+    "film" : {
+      "size" : [1200, 800]
+    }
+  },
+  "integrator" : {
+    "type" : "normal"
+  },
+  "scene" : {
+    "acceleration" : "octree",
+    "shapes" : [
+      {
+        "type" : "triangle",
+        "file" : "models/Monkey.obj",
+        "material" : {
+          "type": "matte",
+          "albedo": [
+            0.8,
+            0.8,
+            0.8
+          ]
+        }
+      }
+    ],
+    "lights" : [
+
+    ]
+  }
+}

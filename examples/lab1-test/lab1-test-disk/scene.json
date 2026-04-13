@@ -1,0 +1,71 @@
+{
+  "output" : {
+    "filename" : "disk-normal.png"
+  },
+  "sampler" : {
+    "type" : "independent",
+    "xSamples" : 1,
+    "ySamples" : 1
+  },
+  "camera" : {
+    "type" : "pinhole",
+    "transform" : {
+      "position" : [0, 1, 4],
+      "up" : [0, 1, 0],
+      "lookAt" : [0, 1, 0]
+    },
+    "tNear" : 0.1,
+    "tFar" : 10000,
+    "verticalFov" : 45,
+    "timeStart" : 0,
+    "timeEnd" : 0,
+    "film" : {
+      "size" : [600, 400]
+    }
+  },
+  "integrator" : {
+    "type" : "normal"
+  },
+  "scene" : {
+    "shapes" : [
+      {
+        "type": "disk",
+        "radius": 0.5,
+        "transform": {
+          "translate": [-1,1,0],
+          "rotate" : {
+            "axis" : [0,0,1],
+            "radian" : 3.14
+          }
+        }},
+      {
+        "type": "disk",
+        "radius": 1,
+        "inner_radius" : 0.5,
+        "phi_max" : 3,
+        "transform": {
+          "translate": [1,0,0],
+          "rotate" : {
+            "axis" : [0,1,0],
+            "radian" : 1
+          }
+        }
+      },{
+        "type": "disk",
+        "radius": 1,
+        "inner_radius" : 0.7,
+        "phi_max" : 5,
+        "transform": {
+          "translate": [1,1,0],
+          "rotate" : {
+            "axis" : [1,0,0],
+            "radian" : 3.14
+          },
+          "scale" : [2,2,2]
+        }
+      }
+    ],
+    "lights" : [
+    ]
+  }
+}
